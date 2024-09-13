@@ -63,10 +63,16 @@ class Login extends DBConnection
 		}
 	}
 
-	public function logout()
+	public function logout_farmer()
 	{
 		if ($this->settings->sess_des()) {
 			redirect('farmer/login.php');
+		}
+	}
+	public function logout_admin()
+	{
+		if ($this->settings->sess_des()) {
+			redirect('admin/login.php');
 		}
 	}
 	function login_user()
@@ -112,8 +118,11 @@ switch ($action) {
 	case 'login_user':
 		echo $auth->login_user();
 		break;
-	case 'logout':
-		echo $auth->logout();
+	case 'logout_farmer':
+		echo $auth->logout_farmer();
+		break;
+	case 'logout_admin':
+		echo $auth->logout_admin();
 		break;
 	default:
 		echo $auth->index();
