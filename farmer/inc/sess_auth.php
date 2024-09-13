@@ -16,7 +16,7 @@ if (isset($_SESSION['userdata']) && strpos($link, 'login.php')) {
     redirect('farmer/index.php');
 }
 $module = array('', 'farmer', 'faculty', 'student');
-if (isset($_SESSION['userdata']) && (strpos($link, 'index.php') || strpos($link, 'farmer/')) && $_SESSION['userdata']['login_type'] !=  1) {
+if (isset($_SESSION['userdata']) && (strpos($link, 'index.php') || strpos($link, 'farmer/')) && $_SESSION['userdata']['login_type'] !=  2) {
     echo "<script>alert('Access Denied!');location.replace('" . base_url . $module[$_SESSION['userdata']['login_type']] . "');</script>";
     exit;
 }

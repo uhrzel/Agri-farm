@@ -47,6 +47,13 @@ $(document).ready(function () {
             _frm.prepend(_msg);
             _frm.find("input").addClass("is-invalid");
             $('[name="username"]').focus();
+          } else if (resp.status == "incorrect_role") {
+            var _frm = $("#login-frm-admin");
+            var _msg =
+              "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Access Denied! Admin Role</div>";
+            _frm.prepend(_msg);
+            _frm.find("input").addClass("is-invalid");
+            $('[name="username"]').focus();
           }
           end_loader();
         }
@@ -76,6 +83,13 @@ $(document).ready(function () {
             var _frm = $("#login-frm-farmer");
             var _msg =
               "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Incorrect username or password</div>";
+            _frm.prepend(_msg);
+            _frm.find("input").addClass("is-invalid");
+            $('[name="username"]').focus();
+          } else if (resp.status == "incorrect_role") {
+            var _frm = $("#login-frm-farmer");
+            var _msg =
+              "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Access Denied! Farmers Role</div>";
             _frm.prepend(_msg);
             _frm.find("input").addClass("is-invalid");
             $('[name="username"]').focus();

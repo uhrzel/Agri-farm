@@ -24,42 +24,55 @@ class Login extends DBConnection
 	{
 		extract($_POST);
 
-		$stmt = $this->conn->prepare("SELECT * from users where username = ? and password = ? ");
+		$stmt = $this->conn->prepare("SELECT * from users where username = ? and password = ?");
 		$password = md5($password);
 		$stmt->bind_param('ss', $username, $password);
 		$stmt->execute();
 		$result = $stmt->get_result();
+
 		if ($result->num_rows > 0) {
-			foreach ($result->fetch_array() as $k => $v) {
-				if (!is_numeric($k) && $k != 'password') {
-					$this->settings->set_userdata($k, $v);
+			$user = $result->fetch_assoc();
+			if ($user['type'] == 1) { // Admin type
+				foreach ($user as $k => $v) {
+					if ($k != 'password') {
+						$this->settings->set_userdata($k, $v);
+					}
 				}
+				$this->settings->set_userdata('login_type', 1);
+				return json_encode(array('status' => 'success'));
+			} else {
+				return json_encode(array('status' => 'incorrect_role'));
 			}
-			$this->settings->set_userdata('login_type', 2);
-			return json_encode(array('status' => 'success'));
 		} else {
-			return json_encode(array('status' => 'incorrect', 'last_qry' => "SELECT * from users where username = '$username' and password = md5('$password') "));
+			return json_encode(array('status' => 'incorrect'));
 		}
 	}
+
 	public function login_farmer()
 	{
 		extract($_POST);
 
-		$stmt = $this->conn->prepare("SELECT * from users where username = ? and password = ? ");
+		$stmt = $this->conn->prepare("SELECT * from users where username = ? and password = ?");
 		$password = md5($password);
 		$stmt->bind_param('ss', $username, $password);
 		$stmt->execute();
 		$result = $stmt->get_result();
+
 		if ($result->num_rows > 0) {
-			foreach ($result->fetch_array() as $k => $v) {
-				if (!is_numeric($k) && $k != 'password') {
-					$this->settings->set_userdata($k, $v);
+			$user = $result->fetch_assoc();
+			if ($user['type'] == 2) { // Farmer type
+				foreach ($user as $k => $v) {
+					if ($k != 'password') {
+						$this->settings->set_userdata($k, $v);
+					}
 				}
+				$this->settings->set_userdata('login_type', 2);
+				return json_encode(array('status' => 'success'));
+			} else {
+				return json_encode(array('status' => 'incorrect_role'));
 			}
-			$this->settings->set_userdata('login_type', 1);
-			return json_encode(array('status' => 'success'));
 		} else {
-			return json_encode(array('status' => 'incorrect', 'last_qry' => "SELECT * from users where username = '$username' and password = md5('$password') "));
+			return json_encode(array('status' => 'incorrect'));
 		}
 	}
 
