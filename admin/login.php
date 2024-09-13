@@ -27,8 +27,8 @@
     <!-- /.login-logo -->
     <div class="card card-primary my-2">
       <div class="card-body">
-        <p class="login-box-msg">Farmers - Login</p>
-        <form id="login-frm-farmer" action="" method="post">
+        <p class="login-box-msg">Admin - Login</p>
+        <form id="login-frm-admin" action="" method="post">
           <div class="input-group mb-3">
             <input type="text" class="form-control" name="username" autofocus placeholder="Username">
             <div class="input-group-append">

@@ -24,13 +24,12 @@ window.alert_toast = function ($msg = "TEST", $bg = "success", $pos = "") {
 };
 
 $(document).ready(function () {
-  // Login
-  $("#login-frm").submit(function (e) {
+  $("#login-frm-admin").submit(function (e) {
     e.preventDefault();
     start_loader();
     if ($(".err_msg").length > 0) $(".err_msg").remove();
     $.ajax({
-      url: _base_url_ + "classes/Login.php?f=login",
+      url: _base_url_ + "classes/Login.php?f=login_admin",
       method: "POST",
       data: $(this).serialize(),
       error: (err) => {
@@ -40,9 +39,9 @@ $(document).ready(function () {
         if (resp) {
           resp = JSON.parse(resp);
           if (resp.status == "success") {
-            location.replace(_base_url_ + "farmer");
+            location.replace(_base_url_ + "admin");
           } else if (resp.status == "incorrect") {
-            var _frm = $("#login-frm");
+            var _frm = $("#login-frm-admin");
             var _msg =
               "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Incorrect username or password</div>";
             _frm.prepend(_msg);
@@ -54,6 +53,39 @@ $(document).ready(function () {
       },
     });
   });
+  // Login
+  $("#login-frm-farmer").submit(function (e) {
+    e.preventDefault();
+    start_loader();
+    if ($(".err_msg").length > 0) $(".err_msg").remove();
+    $.ajax({
+      url: _base_url_ + "classes/Login.php?f=login_farmer",
+      method: "POST",
+      data: $(this).serialize(),
+      error: (err) => {
+        console.log(err);
+      },
+      success: function (resp) {
+        console.log(resp); // Log the raw response
+        if (resp) {
+          resp = JSON.parse(resp);
+          console.log(resp); // Log the parsed response
+          if (resp.status == "success") {
+            location.replace(_base_url_ + "farmer");
+          } else if (resp.status == "incorrect") {
+            var _frm = $("#login-frm-farmer");
+            var _msg =
+              "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Incorrect username or password</div>";
+            _frm.prepend(_msg);
+            _frm.find("input").addClass("is-invalid");
+            $('[name="username"]').focus();
+          }
+          end_loader();
+        }
+      },
+    });
+  });
+
   //Establishment Login
   $("#flogin-frm").submit(function (e) {
     e.preventDefault();
