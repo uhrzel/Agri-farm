@@ -646,6 +646,48 @@ class Master extends DBConnection
 		}
 		return json_encode($resp);
 	}
+	function save_production_harvesting()
+	{
+		extract($_POST);
+		$data = "";
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id', 'crops'))) {
+				if (!empty($data)) $data .= ",";
+				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
+			}
+		}
+		if (isset($_POST['crops'])) {
+			if (!empty($data)) $data .= ",";
+			$data .= " `crops`='" . addslashes(htmlentities($crops)) . "' ";
+		}
+		$check = $this->conn->query("SELECT * FROM `production_harvesting` WHERE `crops` = '{$crops}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
+		if ($this->capture_err())
+			return $this->capture_err();
+		if ($check > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Crops entry already exists.";
+			return json_encode($resp);
+			exit;
+		}
+		if (empty($id)) {
+			$sql = "INSERT INTO `production_harvesting` SET {$data} ";
+			$save = $this->conn->query($sql);
+		} else {
+			$sql = "UPDATE `production_harvesting` SET {$data} WHERE id = '{$id}' ";
+			$save = $this->conn->query($sql);
+		}
+		if ($save) {
+			$resp['status'] = 'success';
+			if (empty($id))
+				$this->settings->set_flashdata('success', "New Production Harvesting entry successfully saved.");
+			else
+				$this->settings->set_flashdata('success', "Production Harvesting entry successfully updated.");
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = $this->conn->error . "[{$sql}]";
+		}
+		return json_encode($resp);
+	}
 }
 
 $Master = new Master();
@@ -721,6 +763,9 @@ switch ($action) {
 		break;
 	case 'delete_client':
 		echo $Master->delete_client();
+		break;
+	case 'save_production_harvesting':
+		echo $Master->save_production_harvesting();
 		break;
 	default:
 		// echo $sysset->index();

@@ -88,6 +88,38 @@
                   </p>
                 </a>
               </li>
+              <li class="nav-header">Farmers Records</li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>farmer/?page=farmer_records/production" class="nav-link nav-farmer_records_production">
+                  <i class="nav-icon fas fa-tractor"></i> <!-- Changed to seedling icon -->
+                  <p>Production and Harvesting</p>
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>farmer/?page=farmer_records/inorganic_fertilizers" class="nav-link nav-farmer_records_inorganic_fertilizers">
+                  <i class="nav-icon fas fa-seedling"></i> <!-- Changed to seedling icon -->
+                  <p>Inorganic Fertilizers</p>
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>farmer/?page=farmer_records/organic_fertilizers" class="nav-link nav-farmer_records_organic_fertilizers">
+                  <i class="nav-icon fas fa-leaf"></i> <!-- Changed to leaf icon -->
+                  <p>Organic Fertilizers</p>
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>farmer/?page=farmer_records/pesticides" class="nav-link nav-farmer_records_pesticides">
+                  <i class="nav-icon fas fa-bug"></i> <!-- Changed to bug icon -->
+                  <p>Pesticides</p>
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>farmer/?page=farmer_records/sanitizers" class="nav-link nav-farmer_records_sanitizers">
+                  <i class="nav-icon fas fa-pump-soap"></i> <!-- Changed to pump soap icon -->
+                  <p>Sanitizers</p>
+                </a>
+              </li>
+
               <!--  <li class="nav-item dropdown">
                 <a href="<?php echo base_url ?>farmer/?page=system_info" class="nav-link nav-system_info">
                   <i class="nav-icon fas fa-cogs"></i>
@@ -118,22 +150,19 @@
 </aside>
 <script>
   $(document).ready(function() {
+
     var page = '<?php echo isset($_GET['page']) ? $_GET['page'] : 'home' ?>';
-    var s = '<?php echo isset($_GET['s']) ? $_GET['s'] : '' ?>';
-    page = page.replace(/\//g, '_');
-    console.log(page)
+    /*  console.log("Current page parameter:", page); */
+    var pageClass = 'nav-' + page.replace(/\//g, '_');
+    /*  console.log("Computed class:", pageClass); */
 
-    if ($('.nav-link.nav-' + page).length > 0) {
-      $('.nav-link.nav-' + page).addClass('active')
-      if ($('.nav-link.nav-' + page).hasClass('tree-item') == true) {
-        $('.nav-link.nav-' + page).closest('.nav-treeview').siblings('a').addClass('active')
-        $('.nav-link.nav-' + page).closest('.nav-treeview').parent().addClass('menu-open')
-      }
-      if ($('.nav-link.nav-' + page).hasClass('nav-is-tree') == true) {
-        $('.nav-link.nav-' + page).parent().addClass('menu-open')
-      }
-
+    $('.nav-link').removeClass('active');
+    $('.nav-link.' + pageClass).addClass('active');
+    var $activeLink = $('.nav-link.' + pageClass);
+    if ($activeLink.length) {
+      $activeLink.closest('.nav-treeview').siblings('a').addClass('active');
+      $activeLink.closest('.nav-treeview').parent().addClass('menu-open');
     }
-    $('.nav-link.active').addClass('bg-gradient-green')
-  })
+    $('.nav-link.active').addClass('bg-gradient-green');
+  });
 </script>
