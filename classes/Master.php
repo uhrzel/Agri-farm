@@ -839,6 +839,143 @@ class Master extends DBConnection
 		}
 		return json_encode($resp);
 	}
+	function save_pesticides()
+	{
+		extract($_POST);
+		$data = "";
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id', 'brand_name'))) {
+				if (!empty($data)) $data .= ",";
+				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
+			}
+		}
+
+		if (isset($_POST['brand_name']) && !empty($crops_applied)) {
+			if (!empty($data)) $data .= ",";
+			$data .= " `brand_name`='" . $this->conn->real_escape_string($brand_name) . "' ";
+		}
+
+		// Check if an entry with the same brand already exists
+		$check = $this->conn->query("SELECT * FROM `pesticides` WHERE `brand_name` = '{$brand_name}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
+		if ($this->capture_err()) {
+			return $this->capture_err();
+		}
+
+
+		if ($check > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Brand Name entry already exists.";
+			return json_encode($resp);
+			exit;
+		}
+
+		// Insert or update depending on whether an ID is provided
+		if (empty($id)) {
+			$sql = "INSERT INTO `pesticides` SET {$data} ";
+			$save = $this->conn->query($sql);
+		} else {
+			$sql = "UPDATE `pesticides` SET {$data} WHERE id = '{$id}' ";
+			$save = $this->conn->query($sql);
+		}
+
+		if ($save) {
+			$resp['status'] = 'success';
+			if (empty($id)) {
+				$this->settings->set_flashdata('success', "Pesticides entry successfully saved.");
+			} else {
+				$this->settings->set_flashdata('success', "Pesticides Fertilizer entry successfully updated.");
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = $this->conn->error . "[{$sql}]";
+		}
+
+		// Return the response as JSON
+		return json_encode($resp);
+	}
+
+	function delete_pesticides()
+	{
+		extract($_POST);
+		$del = $this->conn->query("UPDATE `pesticides` set delete_flag = 1 where id = '{$id}'");
+		if ($del) {
+			$resp['status'] = 'success';
+			$this->settings->set_flashdata('success', " Pesticides Details Successfully Deleted.");
+		} else {
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
+
+	function save_sanitizer()
+	{
+		extract($_POST);
+		$data = "";
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id', 'brand_name'))) {
+				if (!empty($data)) $data .= ",";
+				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
+			}
+		}
+
+		if (isset($_POST['brand_name'])) {
+			if (!empty($data)) $data .= ",";
+			$data .= " `brand_name`='" . $this->conn->real_escape_string($brand_name) . "' ";
+		}
+
+		// Check if an entry with the same brand already exists
+		$check = $this->conn->query("SELECT * FROM `sanitizers` WHERE `brand_name` = '{$brand_name}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
+		if ($this->capture_err()) {
+			return $this->capture_err();
+		}
+
+
+		if ($check > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Brand Name entry already exists.";
+			return json_encode($resp);
+			exit;
+		}
+
+		// Insert or update depending on whether an ID is provided
+		if (empty($id)) {
+			$sql = "INSERT INTO `sanitizers` SET {$data} ";
+			$save = $this->conn->query($sql);
+		} else {
+			$sql = "UPDATE `sanitizers` SET {$data} WHERE id = '{$id}' ";
+			$save = $this->conn->query($sql);
+		}
+
+		if ($save) {
+			$resp['status'] = 'success';
+			if (empty($id)) {
+				$this->settings->set_flashdata('success', "Sanitizer entry successfully saved.");
+			} else {
+				$this->settings->set_flashdata('success', "Sanitizer entry successfully updated.");
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = $this->conn->error . "[{$sql}]";
+		}
+
+		// Return the response as JSON
+		return json_encode($resp);
+	}
+
+	function delete_sanitizer()
+	{
+		extract($_POST);
+		$del = $this->conn->query("UPDATE `sanitizers` set delete_flag = 1 where id = '{$id}'");
+		if ($del) {
+			$resp['status'] = 'success';
+			$this->settings->set_flashdata('success', " Pesticides Details Successfully Deleted.");
+		} else {
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
 }
 
 $Master = new Master();
@@ -931,6 +1068,18 @@ switch ($action) {
 		break;
 	case 'delete_organic_fertilizers':
 		echo $Master->delete_organic_fertilizers();
+		break;
+	case 'save_pesticides':
+		echo $Master->save_pesticides();
+		break;
+	case 'delete_pesticides':
+		echo $Master->delete_pesticides();
+		break;
+	case 'save_sanitizer':
+		echo $Master->save_sanitizer();
+		break;
+	case 'delete_sanitizer':
+		echo $Master->delete_sanitizer();
 		break;
 	default:
 		// echo $sysset->index();

@@ -5,7 +5,7 @@
 <?php endif; ?>
 <div class="card card-outline card-primary">
     <div class="card-header">
-        <h3 class="card-title">List of Sanitizers Records</h3>
+        <h3 class="card-title">List of Pesticides Records</h3>
         <div class="card-tools">
             <a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> Create New</a>
         </div>
@@ -28,11 +28,13 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Sanitizers</th>
+                            <th>Type</th>
                             <th>Active Ingredient</th>
                             <th>Brand Name</th>
-                            <th>Intended Use</th>
-                            <th>Frequency Use</th>
+                            <th>Supplier</th>
+                            <th>Crops Applied to</th>
+                            <th>Targer Pest</th>
+                            <th>Frequency of Application</th>
                             <th>Expiry Date</th>
                             <th>Action</th>
                         </tr>
@@ -41,17 +43,19 @@
                         <?php
                         $i = 1;
                         // Adjust query to select from production_harvesting table
-                        $qry = $conn->query("SELECT * FROM `sanitizers` where delete_flag = 0  ORDER BY `id` DESC");
+                        $qry = $conn->query("SELECT * FROM `pesticides` where delete_flag = 0  ORDER BY `id` DESC");
                         while ($row = $qry->fetch_assoc()):
                             // Format the harvest date range if needed
                             /*  $harvest_date = $row['date_planted'] . ' to ' . $row['date_harvest']; */
                         ?>
                             <tr>
                                 <td class="text-center"><?php echo $i++; ?></td>
-                                <td><?php echo htmlspecialchars($row['sanitizer_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['type']); ?></td>
                                 <td><?php echo htmlspecialchars($row['active_ingredient']); ?></td>
                                 <td><?php echo htmlspecialchars($row['brand_name']); ?></td>
-                                <td><?php echo htmlspecialchars($row['intended_use']); ?></td>
+                                <td><?php echo htmlspecialchars($row['supplier']); ?></td>
+                                <td><?php echo htmlspecialchars($row['crops_applied']); ?></td>
+                                <td><?php echo htmlspecialchars($row['target_pest']); ?></td>
                                 <td><?php echo htmlspecialchars($row['frequency']); ?></td>
                                 <td><?php echo htmlspecialchars($row['expiry_date']); ?></td>
                                 <td align="center">
@@ -81,16 +85,16 @@
         $('.delete_data').click(function() {
             console.log($(this).attr('data-id')); // Check if the correct ID is retrieved
 
-            _conf("Are you sure to delete this Sanitizer Record Permanently?", "delete_sanitizer", [$(this).attr('data-id')])
+            _conf("Are you sure to delete this Pesticides Record Permanently?", "delete_pesticides", [$(this).attr('data-id')])
         })
         $('#create_new').click(function() {
-            uni_modal("<i class='fa fa-plus'></i> Add New Sanitizer", "farmer_records/manage_sanitizer.php")
+            uni_modal("<i class='fa fa-plus'></i> Add New Pesticides", "farmer_records/manage_pesticides.php")
         })
         $('.view_data').click(function() {
-            uni_modal("<i class='fa fa-eye'></i> Sanitizer Details", "farmer_records/view_sanitizer.php?id=" + $(this).attr('data-id'))
+            uni_modal("<i class='fa fa-eye'></i> Pesticides Details", "farmer_records/view_pesticides.php?id=" + $(this).attr('data-id'))
         })
         $('.edit_data').click(function() {
-            uni_modal("<i class='fa fa-edit'></i> Update Sanitizer Details", "farmer_records/manage_sanitizer.php?id=" + $(this).attr('data-id'))
+            uni_modal("<i class='fa fa-edit'></i> Update Pesticides Details", "farmer_records/manage_pesticides.php?id=" + $(this).attr('data-id'))
         })
         $('.table').dataTable({
             columnDefs: [{
@@ -102,10 +106,10 @@
         $('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
     })
 
-    function delete_sanitizer($id) {
+    function delete_pesticides($id) {
         start_loader();
         $.ajax({
-            url: _base_url_ + "classes/Master.php?f=delete_sanitizer",
+            url: _base_url_ + "classes/Master.php?f=delete_pesticides",
             method: "POST",
             data: {
                 id: $id

@@ -16,9 +16,9 @@ FIRST Download
 
 7. Open PHPMyAdmin (http://localhost/phpmyadmin)
 
-8. Create a database with name cbpos_db.SQL
+8. Create a database with name store.SQL
 
-6. Import cbpos_db.sql file(given inside the zip package in SQL file folder)
+6. Import store.sql file(given inside the zip package in SQL file folder)
 
 7.Run the script http://localhost/cbpos
 
@@ -26,10 +26,16 @@ FIRST Download
 
 Admin
 user: admin
-pass: admin123	
+pass: admin
 
-create your own user
+farmer
+user: farmer
+pass: farmer
 
+customer
+user: customer
+pass: customer
 
-****** https:1sourcecodr.blogspot.com ******
-Subcribe my You tube Channel **** 1 Source code ****
+ATI/BPI
+to be followed
+
