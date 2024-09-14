@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: May 20, 2024 at 01:22 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- Host: 127.0.0.1:3307
+-- Generation Time: Sep 14, 2024 at 03:22 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -42,10 +42,7 @@ CREATE TABLE `brands` (
 --
 
 INSERT INTO `brands` (`id`, `name`, `description`, `image_path`, `status`, `delete_flag`, `date_created`) VALUES
-(21, 'Silka', 'Silka is a renowned brand specializing in skincare products known for their effective formulations and commitment to enhancing skin health. With a focus on gentle yet powerful ingredients, Silka offers a range of products tailored to various skincare needs, including moisturizers, cleansers, and whitening solutions. Emphasizing quality and affordability, Silka strives to empower individuals to achieve radiant, healthy-looking skin.', 'uploads/brands/21.jfif?v=1716040885', 1, 0, '2024-05-18 22:01:25'),
-(22, 'Nivea', 'Nivea is a globally recognized brand celebrated for its extensive range of skincare and personal care products. Renowned for its iconic blue packaging and rich history spanning over a century, Nivea offers a diverse selection of moisturizers, cleansers, body lotions, deodorants, and sun care solutions. Emphasizing innovation, quality, and gentle formulations suitable for all skin types, Nivea is dedicated to helping individuals maintain healthy, nourished skin from head to toe.', 'uploads/brands/22.png?v=1716202433', 1, 0, '2024-05-20 18:53:53'),
-(23, 'Avon', 'Avon is a well-established beauty and cosmetics brand renowned for its diverse range of products and direct-selling business model. Founded in 1886, Avon has grown into a global icon, offering a wide array of skincare, makeup, fragrance, and personal care items. Through its network of independent sales representatives, Avon provides personalized service and convenient access to its products, empowering individuals to explore beauty solutions tailored to their needs. Known for its commitment to innovation, inclusivity, and social responsibility, Avon continues to be a trusted name in the beauty industry, offering quality products at accessible prices.', 'uploads/brands/23.png?v=1716202743', 1, 0, '2024-05-20 18:59:03'),
-(24, 'Axe', 'Axe, also known as Lynx in some regions, is a popular brand of men\'s grooming products, including body sprays, deodorants, shower gels, and hair care items. Launched in the early 1980s, Axe has become synonymous with youthful masculinity and confidence. The brand is known for its edgy marketing campaigns and distinct fragrances that appeal to a younger demographic. Axe products are designed to help men feel fresh, confident, and ready to tackle the day, with a focus on modern, dynamic lifestyles.', 'uploads/brands/24.jpg?v=1716202847', 1, 0, '2024-05-20 19:00:47');
+(23, 'Vegetables', 'Avon is a well-established beauty and cosmetics brand renowned for its diverse range of products and direct-selling business model. Founded in 1886, Avon has grown into a global icon, offering a wide array of skincare, makeup, fragrance, and personal care items. Through its network of independent sales representatives, Avon provides personalized service and convenient access to its products, empowering individuals to explore beauty solutions tailored to their needs. Known for its commitment to innovation, inclusivity, and social responsibility, Avon continues to be a trusted name in the beauty industry, offering quality products at accessible prices.', 'uploads/brands/23.jpg?v=1725941647', 1, 0, '2024-05-20 18:59:03');
 
 -- --------------------------------------------------------
 
@@ -82,10 +79,8 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `category`, `description`, `status`, `delete_flag`, `date_created`) VALUES
-(1, 'Skin Care', 'Revitalize your skin with our nourishing skincare products, designed to hydrate, rejuvenate, and enhance your natural glow.', 1, 0, '2022-02-17 11:27:11'),
-(12, 'Deodorant', 'Stay fresh all day with our effective and gentle deodorant, providing long-lasting odor protection without irritation.', 1, 0, '2024-05-20 18:55:57'),
-(13, 'Lipstick', 'Elevate your look with our luxurious lipstick collection, offering vibrant colors and nourishing formulas for irresistible lips that last all day.', 1, 0, '2024-05-20 18:56:16'),
-(14, 'Perfume', 'Indulge in our captivating perfumes, each crafted with exquisite notes to evoke your unique style and leave a lasting impression wherever you go.', 1, 0, '2024-05-20 18:56:36');
+(1, 'Fruits', 'Revitalize your skin with our nourishing skincare products, designed to hydrate, rejuvenate, and enhance your natural glow.', 1, 0, '2022-02-17 11:27:11'),
+(12, 'Vegetables', 'Stay fresh all day with our effective and gentle deodorant, providing long-lasting odor protection without irritation.', 1, 0, '2024-05-20 18:55:57');
 
 -- --------------------------------------------------------
 
@@ -112,8 +107,8 @@ CREATE TABLE `clients` (
 --
 
 INSERT INTO `clients` (`id`, `firstname`, `lastname`, `gender`, `contact`, `email`, `password`, `default_delivery_address`, `status`, `delete_flag`, `date_created`) VALUES
-(2, 'Samantha Jane', 'Miller', 'Female', '09123456789', 'sam23@sample.com', '45bff2a14658fc9b21c6e5e9bf75186b', 'Sample Address', 1, 0, '2022-02-17 14:24:00'),
-(3, 'Arzel John', 'Zolina', 'Male', '09090937257', 'arzeljrz17@gmail.com', '202cb962ac59075b964b07152d234b70', 'PMCO Village', 1, 0, '2024-05-17 11:22:55');
+(2, 'Samantha Jane', 'Miller', 'Female', '09123456789', 'sam23@sample.com', '91ec1f9324753048c0096d036a694f86', 'Sample Address', 1, 0, '2022-02-17 14:24:00'),
+(3, 'Arzel John', 'Zolina', 'Male', '09090937257', 'arzeljrz17@gmail.com', '91ec1f9324753048c0096d036a694f86', 'PMCO Village', 1, 0, '2024-05-17 11:22:55');
 
 -- --------------------------------------------------------
 
@@ -139,7 +134,6 @@ INSERT INTO `inventory` (`id`, `variant`, `product_id`, `quantity`, `price`, `da
 (8, 'Silka papaya', 16, 20, 120, '2024-05-18 22:07:02', NULL),
 (9, 'Silka Green Loition', 16, 10, 119, '2024-05-18 22:39:34', NULL),
 (10, 'Matte', 17, 10, 35, '2024-05-20 19:02:17', NULL),
-(11, 'Men', 18, 5, 99, '2024-05-20 19:05:35', NULL),
 (12, 'Axe men', 19, 8, 125, '2024-05-20 19:11:51', NULL);
 
 -- --------------------------------------------------------
@@ -167,8 +161,9 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `ref_code`, `client_id`, `delivery_address`, `payment_method`, `order_type`, `amount`, `status`, `paid`, `date_created`, `date_updated`) VALUES
-(35, '20240500005', 3, 'PMCO Village', 'cod', 0, 224, 2, 1, '2024-05-20 19:16:47', '2024-05-20 19:19:17'),
-(36, '20240500006', 3, 'PMCO Village', 'Online Payment', 0, 35, 3, 1, '2024-05-20 19:18:19', '2024-05-20 19:19:04');
+(35, '20240500005', 3, 'PMCO Village', 'cod', 0, 224, 1, 1, '2024-05-20 19:16:47', '2024-09-13 11:09:10'),
+(36, '20240500006', 3, 'PMCO Village', 'Online Payment', 0, 35, 3, 1, '2024-05-20 19:18:19', '2024-05-20 19:19:04'),
+(37, '20240900001', 2, 'Sample Address', 'cod', 0, 119, 1, 0, '2024-09-13 11:08:41', '2024-09-13 11:09:30');
 
 -- --------------------------------------------------------
 
@@ -190,9 +185,9 @@ CREATE TABLE `order_list` (
 --
 
 INSERT INTO `order_list` (`id`, `order_id`, `inventory_id`, `quantity`, `price`, `total`) VALUES
-(41, 35, 11, 1, 99, 99),
 (42, 35, 12, 1, 125, 125),
-(43, 36, 10, 1, 35, 35);
+(43, 36, 10, 1, 35, 35),
+(44, 37, 9, 1, 119, 119);
 
 -- --------------------------------------------------------
 
@@ -216,10 +211,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `brand_id`, `category_id`, `name`, `specs`, `status`, `delete_flag`, `date_created`) VALUES
-(16, 21, 1, 'Silka Lotion Skin Care', '&lt;p&gt;Spf 50&lt;/p&gt;', 1, 0, '2024-05-18 22:04:19'),
-(17, 23, 13, 'Matte Lipstick', '&lt;p&gt;Avon lipstick&lt;/p&gt;', 1, 0, '2024-05-20 19:01:41'),
-(18, 22, 12, 'Nivea Men Deodorant', '&lt;h1 class=&quot;indIKd GW0XC cS4Vcb-pGL6qe-fwJd0c&quot; style=&quot;font-family: &amp;quot;Google Sans&amp;quot;, arial, sans-serif; font-size: 18px; font-weight: 400; margin: 0px; padding: 0px; color: var(--uv-styles-color-text-emphasis); line-height: 24px; flex: 1 1 auto; overflow: hidden; text-decoration: none; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;&quot;&gt;Nivea Men Protect &amp;amp; Care 48h Deodorant Anti-Perspirant Roll-On 50m&lt;/h1&gt;', 1, 0, '2024-05-20 19:05:17'),
-(19, 24, 14, 'Axe men', '&lt;h1 class=&quot;indIKd GW0XC cS4Vcb-pGL6qe-fwJd0c&quot; style=&quot;font-family: &amp;quot;Google Sans&amp;quot;, arial, sans-serif; font-size: 18px; font-weight: 400; margin: 0px; padding: 0px; color: var(--uv-styles-color-text-emphasis); line-height: 24px; flex: 1 1 auto; overflow: hidden; text-decoration: none; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;&quot;&gt;Axe Body Spray Gold Temptation 50ML&lt;/h1&gt;', 1, 0, '2024-05-20 19:11:28');
+(16, 23, 12, 'Sayote', '&lt;p&gt;Sayote Vegetable&lt;/p&gt;', 1, 0, '2024-05-18 22:04:19'),
+(17, 23, 12, 'Talong', '&lt;p&gt;Talong(Eggplant)&lt;/p&gt;', 1, 0, '2024-05-20 19:01:41'),
+(19, 23, 12, 'Squash', '&lt;h1 class=&quot;indIKd GW0XC cS4Vcb-pGL6qe-fwJd0c&quot; style=&quot;font-family: &amp;quot;Google Sans&amp;quot;, arial, sans-serif; font-size: 18px; font-weight: 400; margin: 0px; padding: 0px; color: var(--uv-styles-color-text-emphasis); line-height: 24px; flex: 1 1 auto; overflow: hidden; text-decoration: none; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;&quot;&gt;Kalabasa&lt;/h1&gt;', 1, 0, '2024-05-20 19:11:28');
 
 -- --------------------------------------------------------
 
@@ -240,7 +234,8 @@ CREATE TABLE `sales` (
 
 INSERT INTO `sales` (`id`, `order_id`, `total_amount`, `date_created`) VALUES
 (15, 35, 224, '2024-05-20 19:16:47'),
-(16, 36, 35, '2024-05-20 19:18:19');
+(16, 36, 35, '2024-05-20 19:18:19'),
+(17, 37, 119, '2024-09-13 11:08:41');
 
 -- --------------------------------------------------------
 
@@ -259,11 +254,11 @@ CREATE TABLE `system_info` (
 --
 
 INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`) VALUES
-(1, 'name', 'Cosmetics Shop'),
-(6, 'short_name', 'Cosmetics Shop'),
-(11, 'logo', 'uploads/logo-1716202203.png'),
+(1, 'name', 'Agri Farm'),
+(6, 'short_name', 'Agri Farm'),
+(11, 'logo', 'uploads/logo-1725941904.jpeg'),
 (13, 'user_avatar', 'uploads/user_avatar.jpg'),
-(14, 'cover', 'uploads/cover-1716200851.jpg');
+(14, 'cover', 'uploads/cover-1725941904.jpg');
 
 -- --------------------------------------------------------
 
@@ -289,7 +284,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`) VALUES
-(1, 'Farmer', 'Farmer', 'farmer', '97f974881b3726d9a77014b5f3b4d795', 'uploads/avatars/1.png?v=1645064505', NULL, 1, '2021-01-20 14:02:37', '2022-02-17 10:21:45');
+(1, 'Admin', 'Admin', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'uploads/avatars/1.png?v=1645064505', NULL, 1, '2021-01-20 14:02:37', '2024-09-13 11:46:25'),
+(2, 'Farmer', 'farmer', 'farmer', '97f974881b3726d9a77014b5f3b4d795', 'uploads/avatars/1.png?v=1645064505', NULL, 2, '2021-01-20 14:02:37', '2024-09-13 10:09:26');
 
 --
 -- Indexes for dumped tables
@@ -384,7 +380,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -408,13 +404,13 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `order_list`
 --
 ALTER TABLE `order_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -426,19 +422,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `system_info`
 --
 ALTER TABLE `system_info`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
