@@ -994,12 +994,12 @@ switch ($action) {
 	case 'delete_category':
 		echo $Master->delete_category();
 		break;
-	case 'save_sub_category':
+/* 	case 'save_sub_category':
 		echo $Master->save_sub_category();
 		break;
 	case 'delete_sub_category':
 		echo $Master->delete_sub_category();
-		break;
+		break; */
 	case 'save_product':
 		echo $Master->save_product();
 		break;
