@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307
--- Generation Time: Sep 14, 2024 at 03:22 AM
+-- Host: 127.0.0.1:8111
+-- Generation Time: Sep 14, 2024 at 09:55 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -113,6 +113,22 @@ INSERT INTO `clients` (`id`, `firstname`, `lastname`, `gender`, `contact`, `emai
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `inorganic_fertilizers`
+--
+
+CREATE TABLE `inorganic_fertilizers` (
+  `id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `brand` varchar(255) NOT NULL,
+  `supplier` varchar(255) NOT NULL,
+  `crops_applied` varchar(255) NOT NULL,
+  `frequency` varchar(255) NOT NULL,
+  `expiry_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `inventory`
 --
 
@@ -192,6 +208,65 @@ INSERT INTO `order_list` (`id`, `order_id`, `inventory_id`, `quantity`, `price`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `organic_fertilizers`
+--
+
+CREATE TABLE `organic_fertilizers` (
+  `id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `brand` varchar(255) NOT NULL,
+  `supplier` varchar(255) NOT NULL,
+  `crops_applied` varchar(255) NOT NULL,
+  `frequency` varchar(255) NOT NULL,
+  `expiry_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pesticides`
+--
+
+CREATE TABLE `pesticides` (
+  `id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `active_ingredient` varchar(255) NOT NULL,
+  `brand_name` varchar(255) NOT NULL,
+  `supplier` varchar(255) NOT NULL,
+  `crops_applied` varchar(255) NOT NULL,
+  `target_pest` varchar(255) NOT NULL,
+  `frequency` varchar(255) NOT NULL,
+  `expiry_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `production_harvesting`
+--
+
+CREATE TABLE `production_harvesting` (
+  `id` int(11) NOT NULL,
+  `crops` varchar(255) NOT NULL,
+  `crop_cycle` int(255) NOT NULL,
+  `date_planted` date NOT NULL,
+  `date_harvest` date NOT NULL,
+  `hectarage` varchar(255) NOT NULL,
+  `harvest_kg` varchar(255) NOT NULL,
+  `location` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `production_harvesting`
+--
+
+INSERT INTO `production_harvesting` (`id`, `crops`, `crop_cycle`, `date_planted`, `date_harvest`, `hectarage`, `harvest_kg`, `location`) VALUES
+(1, 'Sweet Pepper(Emperor F1)', 4, '2021-07-21', '2021-12-18', '2,100 sqm', '3,500 kg', 'Tunnel 6 - 10'),
+(2, 'Ampalaya(Galaxy F1)', 3, '2021-08-02', '2021-11-13', '420 sqm', '900 kg', 'Tunnel 3');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `products`
 --
 
@@ -236,6 +311,22 @@ INSERT INTO `sales` (`id`, `order_id`, `total_amount`, `date_created`) VALUES
 (15, 35, 224, '2024-05-20 19:16:47'),
 (16, 36, 35, '2024-05-20 19:18:19'),
 (17, 37, 119, '2024-09-13 11:08:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sanitizers`
+--
+
+CREATE TABLE `sanitizers` (
+  `id` int(11) NOT NULL,
+  `sanitizer_name` varchar(255) NOT NULL,
+  `active_ingredient` varchar(255) NOT NULL,
+  `brand_name` varchar(255) NOT NULL,
+  `intended_use` varchar(255) NOT NULL,
+  `frequency` varchar(255) NOT NULL,
+  `expiry_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -318,6 +409,12 @@ ALTER TABLE `clients`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `inorganic_fertilizers`
+--
+ALTER TABLE `inorganic_fertilizers`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `inventory`
 --
 ALTER TABLE `inventory`
@@ -340,6 +437,24 @@ ALTER TABLE `order_list`
   ADD KEY `order_id` (`order_id`);
 
 --
+-- Indexes for table `organic_fertilizers`
+--
+ALTER TABLE `organic_fertilizers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pesticides`
+--
+ALTER TABLE `pesticides`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `production_harvesting`
+--
+ALTER TABLE `production_harvesting`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
@@ -353,6 +468,12 @@ ALTER TABLE `products`
 ALTER TABLE `sales`
   ADD PRIMARY KEY (`id`),
   ADD KEY `order_id` (`order_id`);
+
+--
+-- Indexes for table `sanitizers`
+--
+ALTER TABLE `sanitizers`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `system_info`
@@ -395,6 +516,12 @@ ALTER TABLE `clients`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `inorganic_fertilizers`
+--
+ALTER TABLE `inorganic_fertilizers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
@@ -413,6 +540,24 @@ ALTER TABLE `order_list`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
+-- AUTO_INCREMENT for table `organic_fertilizers`
+--
+ALTER TABLE `organic_fertilizers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pesticides`
+--
+ALTER TABLE `pesticides`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `production_harvesting`
+--
+ALTER TABLE `production_harvesting`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
@@ -423,6 +568,12 @@ ALTER TABLE `products`
 --
 ALTER TABLE `sales`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `sanitizers`
+--
+ALTER TABLE `sanitizers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `system_info`
