@@ -5,7 +5,7 @@
 <?php endif; ?>
 <div class="card card-outline card-primary">
     <div class="card-header">
-        <h3 class="card-title">List of Production and Harvesting Records</h3>
+        <h3 class="card-title">List of Organic Fertilizers Records</h3>
         <div class="card-tools">
             <a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> Create New</a>
         </div>
@@ -28,13 +28,12 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Crops</th>
-                            <th>Crop Cycle</th>
-                            <th>Date Planted</th>
-                            <th>Date of Harvest</th>
-                            <th>Hectarage</th>
-                            <th>Estimated Harvest</th>
-                            <th>Location</th>
+                            <th>Type</th>
+                            <th>Brand</th>
+                            <th>Supplier</th>
+                            <th>Crops Applied</th>
+                            <th>Frequency of Application</th>
+                            <th>Expiry Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -42,20 +41,19 @@
                         <?php
                         $i = 1;
                         // Adjust query to select from production_harvesting table
-                        $qry = $conn->query("SELECT * FROM `production_harvesting` where delete_flag = 0  ORDER BY `id` DESC");
+                        $qry = $conn->query("SELECT * FROM `organic_fertilizers` where delete_flag = 0  ORDER BY `id` DESC");
                         while ($row = $qry->fetch_assoc()):
                             // Format the harvest date range if needed
-                            $harvest_date = $row['date_planted'] . ' to ' . $row['date_harvest'];
+                            /*     $harvest_date = $row['date_planted'] . ' to ' . $row['date_harvest']; */
                         ?>
                             <tr>
                                 <td class="text-center"><?php echo $i++; ?></td>
-                                <td><?php echo htmlspecialchars($row['crops']); ?></td>
-                                <td><?php echo htmlspecialchars($row['crop_cycle']); ?></td>
-                                <td><?php echo date("Y-m-d", strtotime($row['date_planted'])); ?></td>
-                                <td><?php echo htmlspecialchars($harvest_date); ?></td>
-                                <td><?php echo htmlspecialchars($row['hectarage']); ?></td>
-                                <td><?php echo htmlspecialchars($row['harvest_kg']); ?></td>
-                                <td><?php echo htmlspecialchars($row['location']); ?></td>
+                                <td><?php echo htmlspecialchars($row['type']); ?></td>
+                                <td><?php echo htmlspecialchars($row['brand']); ?></td>
+                                <td><?php echo htmlspecialchars($row['supplier']); ?></td>
+                                <td><?php echo htmlspecialchars($row['crops_applied']); ?></td>
+                                <td><?php echo htmlspecialchars($row['frequency']); ?></td>
+                                <td><?php echo date("Y-m-d", strtotime($row['expiry_date'])); ?></td>
                                 <td align="center">
                                     <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
                                         Action
@@ -81,18 +79,18 @@
 <script>
     $(document).ready(function() {
         $('.delete_data').click(function() {
-            console.log($(this).attr('data-id')); // Check if the correct ID is retrieved
+            console.log($(this).attr('data-id'));
 
-            _conf("Are you sure to delete this Production and Harvesting permanently?", "delete_production", [$(this).attr('data-id')])
+            _conf("Are you sure to delete this Organic Fertilizers Details?", "delete_organic_fertilizers", [$(this).attr('data-id')])
         })
         $('#create_new').click(function() {
-            uni_modal("<i class='fa fa-plus'></i> Add New Production", "farmer_records/manage_production.php")
+            uni_modal("<i class='fa fa-plus'></i> Add Organic Fertilizers", "farmer_records/manage_organic_fertilizers.php")
         })
         $('.view_data').click(function() {
-            uni_modal("<i class='fa fa-eye'></i> Production and Harvesting Details", "farmer_records/view_production.php?id=" + $(this).attr('data-id'))
+            uni_modal("<i class='fa fa-eye'></i> Organic Fertilizers Details", "farmer_records/view_organic_fertilizers.php?id=" + $(this).attr('data-id'))
         })
         $('.edit_data').click(function() {
-            uni_modal("<i class='fa fa-edit'></i> Update Production and Harvesting Details", "farmer_records/manage_production.php?id=" + $(this).attr('data-id'))
+            uni_modal("<i class='fa fa-edit'></i> Organic Ferilizers Details", "farmer_records/manage_organic_fertilizers.php?id=" + $(this).attr('data-id'))
         })
         $('.table').dataTable({
             columnDefs: [{
@@ -104,10 +102,10 @@
         $('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
     })
 
-    function delete_production($id) {
+    function delete_organic_fertilizers($id) {
         start_loader();
         $.ajax({
-            url: _base_url_ + "classes/Master.php?f=delete_production",
+            url: _base_url_ + "classes/Master.php?f=delete_organic_fertilizers",
             method: "POST",
             data: {
                 id: $id

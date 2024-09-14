@@ -688,6 +688,157 @@ class Master extends DBConnection
 		}
 		return json_encode($resp);
 	}
+	function delete_production()
+	{
+		extract($_POST);
+		$del = $this->conn->query("UPDATE `production_harvesting` set delete_flag = 1 where id = '{$id}'");
+		if ($del) {
+			$resp['status'] = 'success';
+			$this->settings->set_flashdata('success', " Product and Harvesting Details Successfully Deleted.");
+		} else {
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
+	function save_inorganic_fertilizers()
+	{
+		extract($_POST);
+		$data = "";
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id', 'crops_applied'))) {
+				if (!empty($data)) $data .= ",";
+				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
+			}
+		}
+
+		// Add crops_applied if it's not already included in the loop
+		if (isset($_POST['crops_applied']) && !empty($crops_applied)) {
+			if (!empty($data)) $data .= ",";
+			$data .= " `crops_applied`='" . $this->conn->real_escape_string($crops_applied) . "' ";
+		}
+
+		// Check if an entry with the same brand already exists
+		$check = $this->conn->query("SELECT * FROM `inorganic_fertilizers` WHERE `brand` = '{$brand}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
+		if ($this->capture_err()) {
+			return $this->capture_err();
+		}
+
+
+		if ($check > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Brand entry already exists.";
+			return json_encode($resp);
+			exit;
+		}
+
+		// Insert or update depending on whether an ID is provided
+		if (empty($id)) {
+			$sql = "INSERT INTO `inorganic_fertilizers` SET {$data} ";
+			$save = $this->conn->query($sql);
+		} else {
+			$sql = "UPDATE `inorganic_fertilizers` SET {$data} WHERE id = '{$id}' ";
+			$save = $this->conn->query($sql);
+		}
+
+		if ($save) {
+			$resp['status'] = 'success';
+			if (empty($id)) {
+				$this->settings->set_flashdata('success', "New Inorganic Fertilizer entry successfully saved.");
+			} else {
+				$this->settings->set_flashdata('success', "Inorganic Fertilizer entry successfully updated.");
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = $this->conn->error . "[{$sql}]";
+		}
+
+		// Return the response as JSON
+		return json_encode($resp);
+	}
+
+	function delete_inorganic_fertilizers()
+	{
+		extract($_POST);
+		$del = $this->conn->query("UPDATE `inorganic_fertilizers` set delete_flag = 1 where id = '{$id}'");
+		if ($del) {
+			$resp['status'] = 'success';
+			$this->settings->set_flashdata('success', " Product and Harvesting Details Successfully Deleted.");
+		} else {
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
+	function save_organic_fertilizers()
+	{
+		extract($_POST);
+		$data = "";
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id', 'crops_applied'))) {
+				if (!empty($data)) $data .= ",";
+				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
+			}
+		}
+
+		// Add crops_applied if it's not already included in the loop
+		if (isset($_POST['crops_applied']) && !empty($crops_applied)) {
+			if (!empty($data)) $data .= ",";
+			$data .= " `crops_applied`='" . $this->conn->real_escape_string($crops_applied) . "' ";
+		}
+
+		// Check if an entry with the same brand already exists
+		$check = $this->conn->query("SELECT * FROM `organic_fertilizers` WHERE `brand` = '{$brand}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
+		if ($this->capture_err()) {
+			return $this->capture_err();
+		}
+
+
+		if ($check > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Brand entry already exists.";
+			return json_encode($resp);
+			exit;
+		}
+
+		// Insert or update depending on whether an ID is provided
+		if (empty($id)) {
+			$sql = "INSERT INTO `organic_fertilizers` SET {$data} ";
+			$save = $this->conn->query($sql);
+		} else {
+			$sql = "UPDATE `organic_fertilizers` SET {$data} WHERE id = '{$id}' ";
+			$save = $this->conn->query($sql);
+		}
+
+		if ($save) {
+			$resp['status'] = 'success';
+			if (empty($id)) {
+				$this->settings->set_flashdata('success', "New Organic Fertilizer entry successfully saved.");
+			} else {
+				$this->settings->set_flashdata('success', "Organic Fertilizer entry successfully updated.");
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = $this->conn->error . "[{$sql}]";
+		}
+
+		// Return the response as JSON
+		return json_encode($resp);
+	}
+
+	function delete_organic_fertilizers()
+	{
+		extract($_POST);
+		$del = $this->conn->query("UPDATE `organic_fertilizers` set delete_flag = 1 where id = '{$id}'");
+		if ($del) {
+			$resp['status'] = 'success';
+			$this->settings->set_flashdata('success', " Product and Harvesting Details Successfully Deleted.");
+		} else {
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
 }
 
 $Master = new Master();
@@ -718,7 +869,6 @@ switch ($action) {
 	case 'delete_product':
 		echo $Master->delete_product();
 		break;
-
 	case 'save_inventory':
 		echo $Master->save_inventory();
 		break;
@@ -766,6 +916,21 @@ switch ($action) {
 		break;
 	case 'save_production_harvesting':
 		echo $Master->save_production_harvesting();
+		break;
+	case 'delete_production':
+		echo $Master->delete_production();
+		break;
+	case 'save_inorganic_fertilizers':
+		echo $Master->save_inorganic_fertilizers();
+		break;
+	case 'delete_inorganic_fertilizers':
+		echo $Master->delete_inorganic_fertilizers();
+		break;
+	case 'save_organic_fertilizers':
+		echo $Master->save_organic_fertilizers();
+		break;
+	case 'delete_organic_fertilizers':
+		echo $Master->delete_organic_fertilizers();
 		break;
 	default:
 		// echo $sysset->index();

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:8111
--- Generation Time: Sep 14, 2024 at 09:55 AM
+-- Generation Time: Sep 14, 2024 at 04:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -108,7 +108,8 @@ CREATE TABLE `clients` (
 
 INSERT INTO `clients` (`id`, `firstname`, `lastname`, `gender`, `contact`, `email`, `password`, `default_delivery_address`, `status`, `delete_flag`, `date_created`) VALUES
 (2, 'Samantha Jane', 'Miller', 'Female', '09123456789', 'sam23@sample.com', '91ec1f9324753048c0096d036a694f86', 'Sample Address', 1, 0, '2022-02-17 14:24:00'),
-(3, 'Arzel John', 'Zolina', 'Male', '09090937257', 'arzeljrz17@gmail.com', '91ec1f9324753048c0096d036a694f86', 'PMCO Village', 1, 0, '2024-05-17 11:22:55');
+(3, 'Arzel John', 'Zolina', 'Male', '09090937257', 'arzeljrz17@gmail.com', '91ec1f9324753048c0096d036a694f86', 'PMCO Village', 1, 0, '2024-05-17 11:22:55'),
+(4, 'Reynald', 'Agustin', 'Male', '09090937257', 'ajmixrhyme@gmail.com', '91ec1f9324753048c0096d036a694f86', 'Davao City Diversion Rd', 1, 0, '2024-09-14 15:57:32');
 
 -- --------------------------------------------------------
 
@@ -123,7 +124,8 @@ CREATE TABLE `inorganic_fertilizers` (
   `supplier` varchar(255) NOT NULL,
   `crops_applied` varchar(255) NOT NULL,
   `frequency` varchar(255) NOT NULL,
-  `expiry_date` date NOT NULL
+  `expiry_date` date NOT NULL,
+  `delete_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -141,16 +143,6 @@ CREATE TABLE `inventory` (
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `inventory`
---
-
-INSERT INTO `inventory` (`id`, `variant`, `product_id`, `quantity`, `price`, `date_created`, `date_updated`) VALUES
-(8, 'Silka papaya', 16, 20, 120, '2024-05-18 22:07:02', NULL),
-(9, 'Silka Green Loition', 16, 10, 119, '2024-05-18 22:39:34', NULL),
-(10, 'Matte', 17, 10, 35, '2024-05-20 19:02:17', NULL),
-(12, 'Axe men', 19, 8, 125, '2024-05-20 19:11:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -196,15 +188,6 @@ CREATE TABLE `order_list` (
   `total` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `order_list`
---
-
-INSERT INTO `order_list` (`id`, `order_id`, `inventory_id`, `quantity`, `price`, `total`) VALUES
-(42, 35, 12, 1, 125, 125),
-(43, 36, 10, 1, 35, 35),
-(44, 37, 9, 1, 119, 119);
-
 -- --------------------------------------------------------
 
 --
@@ -218,7 +201,8 @@ CREATE TABLE `organic_fertilizers` (
   `supplier` varchar(255) NOT NULL,
   `crops_applied` varchar(255) NOT NULL,
   `frequency` varchar(255) NOT NULL,
-  `expiry_date` date NOT NULL
+  `expiry_date` date NOT NULL,
+  `delete_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -236,7 +220,8 @@ CREATE TABLE `pesticides` (
   `crops_applied` varchar(255) NOT NULL,
   `target_pest` varchar(255) NOT NULL,
   `frequency` varchar(255) NOT NULL,
-  `expiry_date` date NOT NULL
+  `expiry_date` date NOT NULL,
+  `delete_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -248,21 +233,23 @@ CREATE TABLE `pesticides` (
 CREATE TABLE `production_harvesting` (
   `id` int(11) NOT NULL,
   `crops` varchar(255) NOT NULL,
-  `crop_cycle` int(255) NOT NULL,
+  `crop_cycle` varchar(255) NOT NULL,
   `date_planted` date NOT NULL,
   `date_harvest` date NOT NULL,
   `hectarage` varchar(255) NOT NULL,
   `harvest_kg` varchar(255) NOT NULL,
-  `location` varchar(255) NOT NULL
+  `location` varchar(255) NOT NULL,
+  `delete_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `production_harvesting`
 --
 
-INSERT INTO `production_harvesting` (`id`, `crops`, `crop_cycle`, `date_planted`, `date_harvest`, `hectarage`, `harvest_kg`, `location`) VALUES
-(1, 'Sweet Pepper(Emperor F1)', 4, '2021-07-21', '2021-12-18', '2,100 sqm', '3,500 kg', 'Tunnel 6 - 10'),
-(2, 'Ampalaya(Galaxy F1)', 3, '2021-08-02', '2021-11-13', '420 sqm', '900 kg', 'Tunnel 3');
+INSERT INTO `production_harvesting` (`id`, `crops`, `crop_cycle`, `date_planted`, `date_harvest`, `hectarage`, `harvest_kg`, `location`, `delete_flag`) VALUES
+(1, 'Sweet Pepper(Emperor F1)', '4 Months', '2021-07-21', '2021-12-18', '2,100 sqm', '3,500 kg', 'Tunnel 6 - 10', 0),
+(2, 'Ampalaya(Galaxy F1)', '3 Months', '2021-08-02', '2021-11-13', '420 sqm', '900 kg', 'Tunnel 3', 0),
+(3, 'Hot Pepper(Vulcan F1)', '4 Months', '2024-10-03', '2024-09-26', '420 sqm', '21', 'Tunnel 3', 1);
 
 -- --------------------------------------------------------
 
@@ -280,15 +267,6 @@ CREATE TABLE `products` (
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `products`
---
-
-INSERT INTO `products` (`id`, `brand_id`, `category_id`, `name`, `specs`, `status`, `delete_flag`, `date_created`) VALUES
-(16, 23, 12, 'Sayote', '&lt;p&gt;Sayote Vegetable&lt;/p&gt;', 1, 0, '2024-05-18 22:04:19'),
-(17, 23, 12, 'Talong', '&lt;p&gt;Talong(Eggplant)&lt;/p&gt;', 1, 0, '2024-05-20 19:01:41'),
-(19, 23, 12, 'Squash', '&lt;h1 class=&quot;indIKd GW0XC cS4Vcb-pGL6qe-fwJd0c&quot; style=&quot;font-family: &amp;quot;Google Sans&amp;quot;, arial, sans-serif; font-size: 18px; font-weight: 400; margin: 0px; padding: 0px; color: var(--uv-styles-color-text-emphasis); line-height: 24px; flex: 1 1 auto; overflow: hidden; text-decoration: none; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;&quot;&gt;Kalabasa&lt;/h1&gt;', 1, 0, '2024-05-20 19:11:28');
 
 -- --------------------------------------------------------
 
@@ -325,7 +303,8 @@ CREATE TABLE `sanitizers` (
   `brand_name` varchar(255) NOT NULL,
   `intended_use` varchar(255) NOT NULL,
   `frequency` varchar(255) NOT NULL,
-  `expiry_date` date NOT NULL
+  `expiry_date` date NOT NULL,
+  `delete_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -501,7 +480,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -513,7 +492,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inorganic_fertilizers`
@@ -555,7 +534,7 @@ ALTER TABLE `pesticides`
 -- AUTO_INCREMENT for table `production_harvesting`
 --
 ALTER TABLE `production_harvesting`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `products`
