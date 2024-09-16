@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:8111
--- Generation Time: Sep 14, 2024 at 04:34 PM
+-- Generation Time: Sep 16, 2024 at 08:57 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,7 +42,8 @@ CREATE TABLE `brands` (
 --
 
 INSERT INTO `brands` (`id`, `name`, `description`, `image_path`, `status`, `delete_flag`, `date_created`) VALUES
-(23, 'Vegetables', 'Avon is a well-established beauty and cosmetics brand renowned for its diverse range of products and direct-selling business model. Founded in 1886, Avon has grown into a global icon, offering a wide array of skincare, makeup, fragrance, and personal care items. Through its network of independent sales representatives, Avon provides personalized service and convenient access to its products, empowering individuals to explore beauty solutions tailored to their needs. Known for its commitment to innovation, inclusivity, and social responsibility, Avon continues to be a trusted name in the beauty industry, offering quality products at accessible prices.', 'uploads/brands/23.jpg?v=1725941647', 1, 0, '2024-05-20 18:59:03');
+(23, 'Farm Harvest Vegetables', 'Fresh harvest from the from vegtables', 'uploads/brands/23.jpg?v=1725941647', 1, 0, '2024-05-20 18:59:03'),
+(25, 'Farm Harvest Fruits', 'Fresh from the farm fruits', 'uploads/brands/25.jpg?v=1726469390', 1, 0, '2024-09-16 14:49:50');
 
 -- --------------------------------------------------------
 
@@ -79,8 +80,10 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `category`, `description`, `status`, `delete_flag`, `date_created`) VALUES
-(1, 'Fruits', 'Revitalize your skin with our nourishing skincare products, designed to hydrate, rejuvenate, and enhance your natural glow.', 1, 0, '2022-02-17 11:27:11'),
-(12, 'Vegetables', 'Stay fresh all day with our effective and gentle deodorant, providing long-lasting odor protection without irritation.', 1, 0, '2024-05-20 18:55:57');
+(1, 'Melon Fruits', 'Melons are refreshing, juicy fruits known for their high water content and sweet flavors. Popular varieties include watermelons, cantaloupes, and honeydew. ', 1, 0, '2022-02-17 11:27:11'),
+(12, 'Root Vegetables', 'Root vegetables are nutrient-dense plants that grow underground, absorbing essential minerals and vitamins from the soil.', 1, 0, '2024-05-20 18:55:57'),
+(15, 'Leafy Vegetables', 'Leafy vegetables are nutrient-rich greens that are essential to a healthy diet. They are packed with vitamins, minerals, and antioxidants, supporting overall wellness. ', 1, 0, '2024-09-16 14:43:37'),
+(16, 'Tropical Fruits', 'Tropical fruits are grown in warm, humid climates and are known for their vibrant flavors, juicy textures, and exotic appeal. Common tropical fruits include mangoes, pineapples, bananas, papayas, and coconuts. ', 1, 0, '2024-09-16 14:51:06');
 
 -- --------------------------------------------------------
 
@@ -128,6 +131,14 @@ CREATE TABLE `inorganic_fertilizers` (
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `inorganic_fertilizers`
+--
+
+INSERT INTO `inorganic_fertilizers` (`id`, `type`, `brand`, `supplier`, `crops_applied`, `frequency`, `expiry_date`, `delete_flag`) VALUES
+(1, 'Single Fertilizers-Duofos', 'Sagrez', 'D\'Farmers', 'All Crops', 'First Dose up to fruiting stage', '2024-09-21', 0),
+(2, 'Completed Fertilizers-Unik 16', 'Yara', 'D\'Farmers', 'All Crops', 'First Dose up to fruiting', '2024-09-19', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -164,15 +175,6 @@ CREATE TABLE `orders` (
   `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`id`, `ref_code`, `client_id`, `delivery_address`, `payment_method`, `order_type`, `amount`, `status`, `paid`, `date_created`, `date_updated`) VALUES
-(35, '20240500005', 3, 'PMCO Village', 'cod', 0, 224, 1, 1, '2024-05-20 19:16:47', '2024-09-13 11:09:10'),
-(36, '20240500006', 3, 'PMCO Village', 'Online Payment', 0, 35, 3, 1, '2024-05-20 19:18:19', '2024-05-20 19:19:04'),
-(37, '20240900001', 2, 'Sample Address', 'cod', 0, 119, 1, 0, '2024-09-13 11:08:41', '2024-09-13 11:09:30');
-
 -- --------------------------------------------------------
 
 --
@@ -205,6 +207,14 @@ CREATE TABLE `organic_fertilizers` (
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `organic_fertilizers`
+--
+
+INSERT INTO `organic_fertilizers` (`id`, `type`, `brand`, `supplier`, `crops_applied`, `frequency`, `expiry_date`, `delete_flag`) VALUES
+(1, 'Bio-organic ', 'Kael', 'LGU Baybay', 'All Crops', 'for soil media (Seed germination)', '2024-09-18', 0),
+(2, 'Vermicast', '-', 'Own produced', 'All Crops', 'for soil media (Seed germination)', '2024-10-05', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -223,6 +233,14 @@ CREATE TABLE `pesticides` (
   `expiry_date` date NOT NULL,
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pesticides`
+--
+
+INSERT INTO `pesticides` (`id`, `type`, `active_ingredient`, `brand_name`, `supplier`, `crops_applied`, `target_pest`, `frequency`, `expiry_date`, `delete_flag`) VALUES
+(1, 'Fungicide-Ortiva top', 'Azoxystrobin/Difenoconazde', 'Syngenta', 'D\'Farmers', 'Corn, Tomato', 'Leaf blight, Late blight', 'As the need arises', '2023-09-14', 0),
+(2, 'test data', 'test ingredient', 'test brand', 'tes supplier', 'test crops applied', 'test target pest', 'test frequency ', '2024-10-05', 0);
 
 -- --------------------------------------------------------
 
@@ -268,6 +286,16 @@ CREATE TABLE `products` (
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `brand_id`, `category_id`, `name`, `specs`, `status`, `delete_flag`, `date_created`) VALUES
+(20, 23, 12, 'Potatoes', '&lt;ul&gt;&lt;li&gt;&lt;li&gt;&lt;strong&gt;Sizes&lt;/strong&gt;: Small (2-3&quot;), Medium (3-4&quot;), Large (4-5&quot;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Color&lt;/strong&gt;: Skin: Brown, Red, Yellow, Purple | Flesh: White, Yellow, Orange&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Texture&lt;/strong&gt;: Starchy (fluffy) or Waxy (firm)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Nutritional Info (per 100g)&lt;/strong&gt;:&lt;ul&gt;&lt;li&gt;Calories: 77 kcal&lt;/li&gt;&lt;li&gt;Carbs: 17g&lt;/li&gt;&lt;li&gt;Protein: 2g&lt;/li&gt;&lt;li&gt;Vitamin C: 19.7mg&lt;/li&gt;&lt;li&gt;Potassium: 425mg&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Shelf Life&lt;/strong&gt;: 1-2 months in a cool, dark place.&lt;/li&gt;&lt;/li&gt;&lt;/ul&gt;', 1, 0, '2024-09-16 14:41:50'),
+(21, 23, 15, 'Celery', '&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;**Celery Specs:**&lt;/li&gt;&lt;li&gt; **Type**: Leafy, stalk vegetable&lt;/li&gt;&lt;li&gt;**Color**: Light green stems with darker green leaves&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Texture**: Crisp and crunchy&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Flavor**: Mild, slightly peppery with a refreshing taste&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Nutritional Info (per 100g)**:&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Common Uses**: Raw in salads, snacks, soups, stews, and stir-fries&lt;/li&gt;&lt;li&gt;**Storage**: Refrigerate in a sealed container, lasts up to 1-2 weeks&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Health Benefits**: High in fiber, supports digestion, low-calorie, good for hydration due to high water content.&lt;/li&gt;&lt;li&gt;Calories: 16 kcal&amp;nbsp; &amp;nbsp; - Carbs: 3g&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp; - Protein: 0.7g&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp; - Fiber: 1.6g&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp; - Vitamin C: 3.1mg&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp; - Potassium: 260mg&lt;/li&gt;&lt;/ul&gt;', 1, 0, '2024-09-16 14:47:10'),
+(22, 25, 1, 'Watermelon', '&lt;li&gt;&lt;strong&gt;Type&lt;/strong&gt;: Watermelon&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Color&lt;/strong&gt;: Green rind with a pink to red interior, sometimes yellow or orange&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Texture&lt;/strong&gt;: Crisp and juicy&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Flavor&lt;/strong&gt;: Sweet and refreshing&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Nutritional Info (per 100g)&lt;/strong&gt;:&lt;ul&gt;&lt;li&gt;Calories: 30 kcal&lt;/li&gt;&lt;li&gt;Carbs: 8g&lt;/li&gt;&lt;li&gt;Protein: 0.6g&lt;/li&gt;&lt;li&gt;Fiber: 0.4g&lt;/li&gt;&lt;li&gt;Vitamin C: 8.1mg&lt;/li&gt;&lt;li&gt;Potassium: 112mg&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Common Uses&lt;/strong&gt;: Fresh slices, fruit salads, smoothies, juices, and sorbets&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Storage&lt;/strong&gt;: Refrigerate cut watermelon, lasts up to 1 week; whole watermelon can be stored at room temperature or in the fridge for longer freshness&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Health Benefits&lt;/strong&gt;: Hydrating due to high water content (about 92%), contains antioxidants like lycopene, supports heart health, and provides vitamins and minerals.&lt;/li&gt;', 1, 0, '2024-09-16 14:53:52'),
+(23, 25, 16, 'Pineapple', '&lt;p&gt;&lt;strong&gt;Pineapple Specs:&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Type&lt;/strong&gt;: Tropical Fruit&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Color&lt;/strong&gt;: Brownish-green rind with yellow flesh&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Texture&lt;/strong&gt;: Juicy and fibrous&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Flavor&lt;/strong&gt;: Sweet and tangy&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Nutritional Info (per 100g)&lt;/strong&gt;:&lt;ul&gt;&lt;li&gt;Calories: 50 kcal&lt;/li&gt;&lt;li&gt;Carbs: 13g&lt;/li&gt;&lt;li&gt;Protein: 0.5g&lt;/li&gt;&lt;li&gt;Fiber: 1.4g&lt;/li&gt;&lt;li&gt;Vitamin C: 47.8mg&lt;/li&gt;&lt;li&gt;Potassium: 109mg&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Common Uses&lt;/strong&gt;: Fresh slices, fruit salads, smoothies, juices, cooking, and grilling&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Storage&lt;/strong&gt;: Refrigerate cut pineapple, lasts up to 5-7 days; whole pineapple can be stored at room temperature until ripe, then refrigerate for longer freshness&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Health Benefits&lt;/strong&gt;: Rich in vitamin C and bromelain, which aids digestion and has anti-inflammatory properties, supports immune function, and provides hydration.&lt;/li&gt;&lt;/ul&gt;', 1, 0, '2024-09-16 14:55:08');
+
 -- --------------------------------------------------------
 
 --
@@ -280,15 +308,6 @@ CREATE TABLE `sales` (
   `total_amount` double NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `sales`
---
-
-INSERT INTO `sales` (`id`, `order_id`, `total_amount`, `date_created`) VALUES
-(15, 35, 224, '2024-05-20 19:16:47'),
-(16, 36, 35, '2024-05-20 19:18:19'),
-(17, 37, 119, '2024-09-13 11:08:41');
 
 -- --------------------------------------------------------
 
@@ -306,6 +325,14 @@ CREATE TABLE `sanitizers` (
   `expiry_date` date NOT NULL,
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sanitizers`
+--
+
+INSERT INTO `sanitizers` (`id`, `sanitizer_name`, `active_ingredient`, `brand_name`, `intended_use`, `frequency`, `expiry_date`, `delete_flag`) VALUES
+(4, 'Power Detergent', '-', 'Ariel', 'Cleaning', 'As the need arises', '2024-09-24', 0),
+(5, 'Bleach', 'Chloring', 'Zonrox', 'Disinfectant', 'As the need arises', '2024-09-19', 0);
 
 -- --------------------------------------------------------
 
@@ -474,7 +501,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -486,7 +513,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `clients`
@@ -498,7 +525,7 @@ ALTER TABLE `clients`
 -- AUTO_INCREMENT for table `inorganic_fertilizers`
 --
 ALTER TABLE `inorganic_fertilizers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `inventory`
@@ -522,13 +549,13 @@ ALTER TABLE `order_list`
 -- AUTO_INCREMENT for table `organic_fertilizers`
 --
 ALTER TABLE `organic_fertilizers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `pesticides`
 --
 ALTER TABLE `pesticides`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `production_harvesting`
@@ -540,7 +567,7 @@ ALTER TABLE `production_harvesting`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `sales`
@@ -552,7 +579,7 @@ ALTER TABLE `sales`
 -- AUTO_INCREMENT for table `sanitizers`
 --
 ALTER TABLE `sanitizers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `system_info`

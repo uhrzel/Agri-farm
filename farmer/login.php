@@ -5,7 +5,15 @@
 
 <body class="hold-transition login-page">
   <script>
-    start_loader()
+    function start_loader() {
+      // Your loader start code here
+    }
+
+    function end_loader() {
+      // Your loader end code here
+    }
+
+    start_loader();
   </script>
   <style>
     body {
@@ -47,7 +55,7 @@
           </div>
           <div class="row">
             <div class="col-8">
-              <a href="<?php echo base_url ?>">Go to Website</a>
+              <a href="#" id="signup-link">Sign Up</a>
             </div>
             <!-- /.col -->
             <div class="col-4">
@@ -69,17 +77,94 @@
   </div>
   <!-- /.login-box -->
 
+  <!-- Sign Up Modal -->
+  <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Sign Up Form or Content Here -->
+          <form id="signup-frm" action="" method="post">
+            <div class="form-group">
+              <label for="farmer-firstname">Farmer Firstname</label>
+              <input type="text" class="form-control" id="farmer-firstname" name="firstname" placeholder="Enter your firstname">
+            </div>
+            <div class="form-group">
+              <label for="farmer-lastname">Farmer Lastname</label>
+              <input type="text" class="form-control" id="farmer-lastname" name="lastname" placeholder="Enter your lastname">
+            </div>
+            <div class="form-group">
+              <label for="farmer-username">Farmer Username</label>
+              <input type="text" class="form-control" id="farmer-username" name="username" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+              <label for="farmer-password">Farmer Password</label>
+              <input type="password" class="form-control" id="farmer-password" name="password" placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- jQuery -->
-  <script src="plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap 4 -->
-  <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- AdminLTE App -->
-  <script src="dist/js/adminlte.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
   <script>
     $(document).ready(function() {
       end_loader();
-    })
+
+      // jQuery for showing the modal
+      $('#signup-link').on('click', function(e) {
+        e.preventDefault(); // Prevent default link behavior
+        $('#signupModal').modal('show'); // Show the modal
+      });
+      $('#signup-frm').submit(function(e) {
+        e.preventDefault();
+        start_loader()
+        if ($('.err-msg').length > 0)
+          $('.err-msg').remove();
+        $.ajax({
+          url: _base_url_ + "classes/Master.php?f=farmer_register",
+          method: "POST",
+          data: $(this).serialize(),
+          dataType: "json",
+          error: err => {
+            console.log(err)
+            alert_toast("an error occured", 'error')
+            end_loader()
+          },
+          success: function(resp) {
+            if (typeof resp == 'object' && resp.status == 'success') {
+              location.reload()
+            } else if (resp.status == 'failed' && !!resp.msg) {
+              var _err_el = $('<div>')
+              _err_el.addClass("alert alert-danger err-msg").text(resp.msg)
+              $('[name="password"]').after(_err_el)
+              end_loader()
+            } else {
+              console.log(resp)
+              alert_toast("an error occured", 'error')
+              end_loader()
+            }
+          }
+        })
+      })
+    });
   </script>
 </body>
 
