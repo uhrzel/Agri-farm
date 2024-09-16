@@ -1,10 +1,19 @@
 <?php
+/* session_start(); */
+if (!isset($_SESSION['userdata']['id'])) {
+    die("You must be logged in to perform this action.");
+}
+$current_user_id = $_SESSION['userdata']['id'];
+
+// Fetch existing product data if updating
 if (isset($_GET['id']) && $_GET['id'] > 0) {
-    $qry = $conn->query("SELECT * from `products` where id = '{$_GET['id']}' ");
+    $qry = $conn->query("SELECT * FROM `products` WHERE id = '{$_GET['id']}' AND user_id = '$current_user_id'");
     if ($qry->num_rows > 0) {
         foreach ($qry->fetch_assoc() as $k => $v) {
             $$k = stripslashes($v);
         }
+    } else {
+        die("Product not found or access denied.");
     }
 }
 ?>
@@ -15,12 +24,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="card-body">
         <form action="" id="product-form">
             <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
+            <input type="hidden" name="user_id" value="<?php echo $current_user_id ?>">
             <div class="form-group">
                 <label for="brand_id" class="control-label">Brand</label>
                 <select name="brand_id" id="brand_id" class="custom-select select2" required>
                     <option value=""></option>
                     <?php
-                    $qry = $conn->query("SELECT * FROM `brands` where delete_flag = 0 " . (isset($brand_id) ? " or id = '{$brand_id}' " : "") . " order by `name` asc");
+                    $qry = $conn->query("SELECT * FROM `brands` WHERE delete_flag = 0 " . (isset($brand_id) ? " OR id = '{$brand_id}' " : "") . " ORDER BY `name` ASC");
                     while ($row = $qry->fetch_assoc()) :
                     ?>
                         <option value="<?php echo $row['id'] ?>" <?php echo isset($brand_id) && $brand_id == $row['id'] ? 'selected' : '' ?>><?php echo $row['name'] ?></option>
@@ -32,7 +42,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <select name="category_id" id="category_id" class="custom-select select2" required>
                     <option value=""></option>
                     <?php
-                    $qry = $conn->query("SELECT * FROM `categories` where delete_flag = 0 " . (isset($category_id) ? " or id = '{$category_id}' " : "") . " order by category asc");
+                    $qry = $conn->query("SELECT * FROM `categories` WHERE delete_flag = 0 " . (isset($category_id) ? " OR id = '{$category_id}' " : "") . " ORDER BY category ASC");
                     while ($row = $qry->fetch_assoc()) :
                     ?>
                         <option value="<?php echo $row['id'] ?>" <?php echo isset($category_id) && $category_id == $row['id'] ? 'selected' : '' ?>><?php echo $row['category'] ?></option>
@@ -67,13 +77,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 if (is_dir(base_app . $upload_path)) :
             ?>
                     <?php
-
                     $file = scandir(base_app . $upload_path);
                     foreach ($file as $img) :
                         if (in_array($img, array('.', '..')))
                             continue;
-
-
                     ?>
                         <div class="d-flex w-100 align-items-center img-item">
                             <span><img src="<?php echo base_url . $upload_path . '/' . $img ?>" width="150px" height="100px" style="object-fit:cover;" class="img-thumbnail" alt=""></span>
@@ -82,7 +89,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     <?php endforeach; ?>
                 <?php endif; ?>
             <?php endif; ?>
-
         </form>
     </div>
     <div class="card-footer">
@@ -90,6 +96,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <a class="btn btn-flat btn-default" href="?page=product">Cancel</a>
     </div>
 </div>
+
+
 <script>
     function displayImg(input, _this) {
         console.log(input.files)

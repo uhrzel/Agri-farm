@@ -63,7 +63,7 @@ class Login extends DBConnection
 			if ($user['type'] == 2) { // Farmer type
 				foreach ($user as $k => $v) {
 					if ($k != 'password') {
-						$this->settings->set_userdata($k, $v);
+						$this->settings->set_userdata($k, $v); //farmer id
 					}
 				}
 				$this->settings->set_userdata('login_type', 2);

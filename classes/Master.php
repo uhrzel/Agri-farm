@@ -168,39 +168,63 @@ class Master extends DBConnection
 	}
 	function save_product()
 	{
+		// Check if user is logged in
+		if (!isset($_SESSION['userdata']['id'])) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "User not logged in.";
+			return json_encode($resp);
+			exit;
+		}
+
+		// Get the logged-in user ID
+		$user_id = $_SESSION['userdata']['id'];
+
+		// Sanitize input
 		$_POST['specs'] = htmlentities($_POST['specs']);
 		foreach ($_POST as $k => $v) {
 			$_POST[$k] = addslashes($v);
 		}
 		extract($_POST);
 		$data = "";
+
+		// Add product fields to query
 		foreach ($_POST as $k => $v) {
-			if (!in_array($k, array('id'))) {
+			if (!in_array($k, array('id', 'user_id'))) {
 				if (!empty($data)) $data .= ",";
 				$v = addslashes($v);
 				$data .= " `{$k}`='{$this->conn->real_escape_string($v)}' ";
 			}
 		}
-		$check = $this->conn->query("SELECT * FROM `products` where `name` = '{$name}' " . (!empty($id) ? " and id != {$id} " : "") . " ")->num_rows;
-		if ($this->capture_err())
-			return $this->capture_err();
+
+		// Check if product already exists
+		$check = $this->conn->query("SELECT * FROM `products` WHERE `name` = '{$name}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
+		if ($this->capture_err()) return $this->capture_err();
 		if ($check > 0) {
 			$resp['status'] = 'failed';
-			$resp['msg'] = "Product already exist.";
+			$resp['msg'] = "Product already exists.";
 			return json_encode($resp);
 			exit;
 		}
+
+		// If adding a new product, include user_id
 		if (empty($id)) {
-			$sql = "INSERT INTO `products` set {$data} ";
+			$data .= ", `user_id` = '{$user_id}'"; // Add user_id to the insert data
+			$sql = "INSERT INTO `products` SET {$data}";
 		} else {
-			$sql = "UPDATE `products` set {$data} where id = '{$id}' ";
+			// Update query - ensure user_id is not tampered with
+			$sql = "UPDATE `products` SET {$data} WHERE id = '{$id}' AND user_id = '{$user_id}'";
 		}
+
+		// Execute the query
 		$save = $this->conn->query($sql);
 		if ($save) {
 			$pid = empty($id) ? $this->conn->insert_id : $id;
 			$upload_path = "uploads/product_" . $pid;
-			if (!is_dir(base_app . $upload_path))
+			if (!is_dir(base_app . $upload_path)) {
 				mkdir(base_app . $upload_path);
+			}
+
+			// Handle file uploads
 			if (isset($_FILES['img']) && count($_FILES['img']['tmp_name']) > 0) {
 				$err = "";
 				foreach ($_FILES['img']['tmp_name'] as $k => $v) {
@@ -211,11 +235,9 @@ class Master extends DBConnection
 							break;
 						}
 
-						// Generate unique filename
+						// Generate unique filename and move file
 						$filename = uniqid() . '_' . $_FILES['img']['name'][$k];
 						$spath = base_app . $upload_path . '/' . $filename;
-
-						// Move uploaded file to destination
 						if (!move_uploaded_file($_FILES['img']['tmp_name'][$k], $spath)) {
 							$err = "Failed to move uploaded file";
 							break;
@@ -228,6 +250,8 @@ class Master extends DBConnection
 					$resp['id'] = $pid;
 				}
 			}
+
+			// Success response
 			if (!isset($resp)) {
 				$resp['status'] = 'success';
 				if (empty($id))
@@ -239,8 +263,12 @@ class Master extends DBConnection
 			$resp['status'] = 'failed';
 			$resp['err'] = $this->conn->error . "[{$sql}]";
 		}
+
 		return json_encode($resp);
 	}
+
+
+
 
 	function delete_product()
 	{
@@ -274,41 +302,75 @@ class Master extends DBConnection
 	function save_inventory()
 	{
 		extract($_POST);
-		$data = "";
+
+		// Initialize data array
+		$data = [];
+
+		// Loop through POST data to build the data array
 		foreach ($_POST as $k => $v) {
+			// Skip columns that should not be included
 			if (!in_array($k, array('id', 'description'))) {
-				if (!empty($data)) $data .= ",";
-				$data .= " `{$k}`='{$v}' ";
+				// Skip user_id_inventory if already set
+				if ($k == 'user_id_inventory') {
+					continue;
+				}
+				$data[] = "`{$k}` = '{$v}'";
 			}
 		}
-		$check = $this->conn->query("SELECT * FROM `inventory` where `product_id` = '{$product_id}' and variant = '{$variant}' " . (!empty($id) ? " and id != {$id} " : "") . " ")->num_rows;
-		if ($this->capture_err())
+
+		// Ensure user_id_inventory is included only once
+		if (isset($user_id_inventory)) {
+			$data[] = "`user_id_inventory` = '{$user_id_inventory}'";
+		}
+
+		// Convert array to string for SQL
+		$dataString = implode(", ", $data);
+
+		// Check for duplicate inventory
+		$checkQuery = "SELECT * FROM `inventory` WHERE `product_id` = '{$product_id}' AND variant = '{$variant}'";
+		if (!empty($id)) {
+			$checkQuery .= " AND id != '{$id}'";
+		}
+		$check = $this->conn->query($checkQuery)->num_rows;
+
+		if ($this->capture_err()) {
 			return $this->capture_err();
+		}
+
 		if ($check > 0) {
 			$resp['status'] = 'failed';
-			$resp['msg'] = "Inventory already exist.";
+			$resp['msg'] = "Inventory already exists.";
 			return json_encode($resp);
 			exit;
 		}
+
+		// Insert or Update SQL query
 		if (empty($id)) {
-			$sql = "INSERT INTO `inventory` set {$data} ";
-			$save = $this->conn->query($sql);
+			$sql = "INSERT INTO `inventory` SET {$dataString}";
 		} else {
-			$sql = "UPDATE `inventory` set {$data} where id = '{$id}' ";
-			$save = $this->conn->query($sql);
+			$sql = "UPDATE `inventory` SET {$dataString} WHERE id = '{$id}'";
 		}
+
+		// Execute query
+		$save = $this->conn->query($sql);
+
+		// Handle response
 		if ($save) {
 			$resp['status'] = 'success';
-			if (empty($id))
+			if (empty($id)) {
 				$this->settings->set_flashdata('success', "New Inventory successfully saved.");
-			else
+			} else {
 				$this->settings->set_flashdata('success', "Inventory successfully updated.");
+			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['err'] = $this->conn->error . "[{$sql}]";
 		}
+
 		return json_encode($resp);
 	}
+
+
 	function delete_inventory()
 	{
 		extract($_POST);
