@@ -26,8 +26,21 @@ class Master extends DBConnection
 	}
 	function save_brand()
 	{
+		// Check if user is logged in
+		if (!isset($_SESSION['userdata']['id'])) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "User not logged in.";
+			return json_encode($resp);
+			exit;
+		}
+
+		// Get the logged-in user ID
+		$user_id = $_SESSION['userdata']['id'];
+
 		extract($_POST);
 		$data = "";
+
+		// Add brand fields to query
 		foreach ($_POST as $k => $v) {
 			if (!in_array($k, array('id'))) {
 				if (!empty($data)) $data .= ",";
@@ -36,7 +49,7 @@ class Master extends DBConnection
 			}
 		}
 
-		// Check for existing brand name
+		// Check if brand name already exists
 		$check = $this->conn->query("SELECT * FROM `brands` WHERE `name` = '{$name}' " . (!empty($id) ? " AND id != {$id}" : ""))->num_rows;
 		if ($this->capture_err())
 			return $this->capture_err();
@@ -46,14 +59,16 @@ class Master extends DBConnection
 			return json_encode($resp);
 		}
 
-		// Prepare SQL statement
+		// Include user_id_brand if inserting a new brand
 		if (empty($id)) {
+			$data .= ", `user_id_brand` = '{$user_id}'";
 			$sql = "INSERT INTO `brands` SET {$data}";
 		} else {
-			$sql = "UPDATE `brands` SET {$data} WHERE id = '{$id}'";
+			// Update query
+			$sql = "UPDATE `brands` SET {$data} WHERE id = '{$id}' AND user_id_brand = '{$user_id}'";
 		}
 
-		// Execute SQL statement
+		// Execute SQL query
 		$save = $this->conn->query($sql);
 		if (!$save) {
 			$resp['status'] = 'failed';
@@ -80,7 +95,6 @@ class Master extends DBConnection
 
 			// Move uploaded file to destination
 			if (move_uploaded_file($_FILES['img']['tmp_name'], $fname)) {
-				// Append timestamp to image path
 				$timestamp = time();
 				$image_path = "uploads/brands/{$bid}.{$ext}?v={$timestamp}";
 				$qry = $this->conn->query("UPDATE brands SET `image_path` = '{$image_path}' WHERE id = '{$bid}'");
@@ -98,6 +112,8 @@ class Master extends DBConnection
 		return json_encode($resp);
 	}
 
+
+
 	function delete_brand()
 	{
 		extract($_POST);
@@ -113,34 +129,56 @@ class Master extends DBConnection
 	}
 	function save_category()
 	{
+		// Check if user is logged in
+		if (!isset($_SESSION['userdata']['id'])) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "User not logged in.";
+			return json_encode($resp);
+			exit;
+		}
+
+		// Get the logged-in user ID
+		$user_id = $_SESSION['userdata']['id'];
+
 		extract($_POST);
 		$data = "";
+
+		// Add category fields to the query
 		foreach ($_POST as $k => $v) {
 			if (!in_array($k, array('id', 'description'))) {
 				if (!empty($data)) $data .= ",";
 				$data .= " `{$k}`='{$v}' ";
 			}
 		}
+
+		// Handle description field separately
 		if (isset($_POST['description'])) {
 			if (!empty($data)) $data .= ",";
 			$data .= " `description`='" . addslashes(htmlentities($description)) . "' ";
 		}
-		$check = $this->conn->query("SELECT * FROM `categories` where `category` = '{$category}' " . (!empty($id) ? " and id != {$id} " : "") . " ")->num_rows;
+
+		// Check if category already exists
+		$check = $this->conn->query("SELECT * FROM `categories` WHERE `category` = '{$category}' " . (!empty($id) ? " AND id != {$id}" : ""))->num_rows;
 		if ($this->capture_err())
 			return $this->capture_err();
 		if ($check > 0) {
 			$resp['status'] = 'failed';
-			$resp['msg'] = "Category already exist.";
+			$resp['msg'] = "Category already exists.";
 			return json_encode($resp);
 			exit;
 		}
+
+		// If inserting a new category, include user_id
 		if (empty($id)) {
-			$sql = "INSERT INTO `categories` set {$data} ";
-			$save = $this->conn->query($sql);
+			$data .= ", `user_id_categories` = '{$user_id}'";  // Include user_id in the insert
+			$sql = "INSERT INTO `categories` SET {$data}";
 		} else {
-			$sql = "UPDATE `categories` set {$data} where id = '{$id}' ";
-			$save = $this->conn->query($sql);
+			// Update category
+			$sql = "UPDATE `categories` SET {$data} WHERE id = '{$id}' AND user_id_categories = '{$user_id}'"; // Ensure the category belongs to the user
 		}
+
+		// Execute SQL query
+		$save = $this->conn->query($sql);
 		if ($save) {
 			$resp['status'] = 'success';
 			if (empty($id))
@@ -151,8 +189,10 @@ class Master extends DBConnection
 			$resp['status'] = 'failed';
 			$resp['err'] = $this->conn->error . "[{$sql}]";
 		}
+
 		return json_encode($resp);
 	}
+
 	function delete_category()
 	{
 		extract($_POST);
@@ -317,6 +357,8 @@ class Master extends DBConnection
 				$data[] = "`{$k}` = '{$v}'";
 			}
 		}
+
+
 
 		// Ensure user_id_inventory is included only once
 		if (isset($user_id_inventory)) {
