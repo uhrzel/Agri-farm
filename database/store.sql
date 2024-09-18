@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:8111
--- Generation Time: Sep 16, 2024 at 08:57 AM
+-- Generation Time: Sep 18, 2024 at 09:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `brands` (
   `id` int(30) NOT NULL,
+  `user_id_brand` int(11) NOT NULL,
   `name` varchar(250) NOT NULL,
   `description` text DEFAULT NULL,
   `image_path` text DEFAULT NULL,
@@ -41,9 +42,12 @@ CREATE TABLE `brands` (
 -- Dumping data for table `brands`
 --
 
-INSERT INTO `brands` (`id`, `name`, `description`, `image_path`, `status`, `delete_flag`, `date_created`) VALUES
-(23, 'Farm Harvest Vegetables', 'Fresh harvest from the from vegtables', 'uploads/brands/23.jpg?v=1725941647', 1, 0, '2024-05-20 18:59:03'),
-(25, 'Farm Harvest Fruits', 'Fresh from the farm fruits', 'uploads/brands/25.jpg?v=1726469390', 1, 0, '2024-09-16 14:49:50');
+INSERT INTO `brands` (`id`, `user_id_brand`, `name`, `description`, `image_path`, `status`, `delete_flag`, `date_created`) VALUES
+(23, 2, 'Farm Harvest Vegetables', 'Fresh harvest from the from vegtables', 'uploads/brands/23.jpg?v=1725941647', 1, 1, '2024-05-20 18:59:03'),
+(25, 3, 'Farm Harvest Fruits', 'Fresh from the farm fruits', 'uploads/brands/25.jpg?v=1726469390', 1, 1, '2024-09-16 14:49:50'),
+(28, 2, 'newdata', 'description', 'uploads/brands/28.PNG?v=1726637500', 1, 1, '2024-09-18 13:31:40'),
+(29, 2, 'vegetables', 'vegetables description', 'uploads/brands/29.jpg?v=1726638389', 1, 0, '2024-09-18 13:46:29'),
+(30, 3, 'fruits', 'fruits description', 'uploads/brands/30.jpeg?v=1726639663', 1, 0, '2024-09-18 14:07:43');
 
 -- --------------------------------------------------------
 
@@ -68,6 +72,7 @@ CREATE TABLE `cart` (
 
 CREATE TABLE `categories` (
   `id` int(30) NOT NULL,
+  `user_id_categories` int(11) NOT NULL,
   `category` varchar(250) NOT NULL,
   `description` text DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
@@ -79,11 +84,15 @@ CREATE TABLE `categories` (
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`id`, `category`, `description`, `status`, `delete_flag`, `date_created`) VALUES
-(1, 'Melon Fruits', 'Melons are refreshing, juicy fruits known for their high water content and sweet flavors. Popular varieties include watermelons, cantaloupes, and honeydew. ', 1, 0, '2022-02-17 11:27:11'),
-(12, 'Root Vegetables', 'Root vegetables are nutrient-dense plants that grow underground, absorbing essential minerals and vitamins from the soil.', 1, 0, '2024-05-20 18:55:57'),
-(15, 'Leafy Vegetables', 'Leafy vegetables are nutrient-rich greens that are essential to a healthy diet. They are packed with vitamins, minerals, and antioxidants, supporting overall wellness. ', 1, 0, '2024-09-16 14:43:37'),
-(16, 'Tropical Fruits', 'Tropical fruits are grown in warm, humid climates and are known for their vibrant flavors, juicy textures, and exotic appeal. Common tropical fruits include mangoes, pineapples, bananas, papayas, and coconuts. ', 1, 0, '2024-09-16 14:51:06');
+INSERT INTO `categories` (`id`, `user_id_categories`, `category`, `description`, `status`, `delete_flag`, `date_created`) VALUES
+(1, 2, 'Melon Fruits', 'Melons are refreshing, juicy fruits known for their high water content and sweet flavors. Popular varieties include watermelons, cantaloupes, and honeydew. ', 1, 1, '2022-02-17 11:27:11'),
+(12, 2, 'Root Vegetables', 'Root vegetables are nutrient-dense plants that grow underground, absorbing essential minerals and vitamins from the soil.', 1, 1, '2024-05-20 18:55:57'),
+(15, 2, 'Leafy Vegetables', 'Leafy vegetables are nutrient-rich greens that are essential to a healthy diet. They are packed with vitamins, minerals, and antioxidants, supporting overall wellness. ', 1, 1, '2024-09-16 14:43:37'),
+(16, 2, 'Tropical Fruits', 'Tropical fruits are grown in warm, humid climates and are known for their vibrant flavors, juicy textures, and exotic appeal. Common tropical fruits include mangoes, pineapples, bananas, papayas, and coconuts. ', 1, 1, '2024-09-16 14:51:06'),
+(17, 3, 'test vegetabels', 'test description', 1, 1, '2024-09-18 13:37:35'),
+(18, 3, 'test vegetable', '', 1, 1, '2024-09-18 13:38:32'),
+(19, 2, 'Root Vegetable', 'root vegetables description', 1, 0, '2024-09-18 13:47:31'),
+(20, 3, 'Melon Fruit', 'melon description', 1, 0, '2024-09-18 14:08:18');
 
 -- --------------------------------------------------------
 
@@ -147,6 +156,7 @@ INSERT INTO `inorganic_fertilizers` (`id`, `type`, `brand`, `supplier`, `crops_a
 
 CREATE TABLE `inventory` (
   `id` int(30) NOT NULL,
+  `user_id_inventory` int(11) NOT NULL,
   `variant` text NOT NULL,
   `product_id` int(30) NOT NULL,
   `quantity` double NOT NULL,
@@ -154,6 +164,14 @@ CREATE TABLE `inventory` (
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inventory`
+--
+
+INSERT INTO `inventory` (`id`, `user_id_inventory`, `variant`, `product_id`, `quantity`, `price`, `date_created`, `date_updated`) VALUES
+(20, 3, 'class a', 35, 10, 50, '2024-09-18 14:09:35', NULL),
+(21, 2, 'class a', 34, 10, 10, '2024-09-18 14:10:21', NULL);
 
 -- --------------------------------------------------------
 
@@ -175,6 +193,14 @@ CREATE TABLE `orders` (
   `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `ref_code`, `client_id`, `delivery_address`, `payment_method`, `order_type`, `amount`, `status`, `paid`, `date_created`, `date_updated`) VALUES
+(38, '20240900001', 2, 'Sample Address', 'cod', 0, 10, 3, 1, '2024-09-18 14:23:12', '2024-09-18 14:58:24'),
+(43, '20240900002', 3, 'PMCO Village', 'cod', 0, 100, 0, 0, '2024-09-18 15:03:57', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -189,6 +215,14 @@ CREATE TABLE `order_list` (
   `price` double NOT NULL,
   `total` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_list`
+--
+
+INSERT INTO `order_list` (`id`, `order_id`, `inventory_id`, `quantity`, `price`, `total`) VALUES
+(45, 38, 21, 1, 10, 10),
+(46, 43, 20, 2, 50, 100);
 
 -- --------------------------------------------------------
 
@@ -283,18 +317,17 @@ CREATE TABLE `products` (
   `specs` text NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp()
+  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
+  `user_id` int(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `brand_id`, `category_id`, `name`, `specs`, `status`, `delete_flag`, `date_created`) VALUES
-(20, 23, 12, 'Potatoes', '&lt;ul&gt;&lt;li&gt;&lt;li&gt;&lt;strong&gt;Sizes&lt;/strong&gt;: Small (2-3&quot;), Medium (3-4&quot;), Large (4-5&quot;)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Color&lt;/strong&gt;: Skin: Brown, Red, Yellow, Purple | Flesh: White, Yellow, Orange&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Texture&lt;/strong&gt;: Starchy (fluffy) or Waxy (firm)&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Nutritional Info (per 100g)&lt;/strong&gt;:&lt;ul&gt;&lt;li&gt;Calories: 77 kcal&lt;/li&gt;&lt;li&gt;Carbs: 17g&lt;/li&gt;&lt;li&gt;Protein: 2g&lt;/li&gt;&lt;li&gt;Vitamin C: 19.7mg&lt;/li&gt;&lt;li&gt;Potassium: 425mg&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Shelf Life&lt;/strong&gt;: 1-2 months in a cool, dark place.&lt;/li&gt;&lt;/li&gt;&lt;/ul&gt;', 1, 0, '2024-09-16 14:41:50'),
-(21, 23, 15, 'Celery', '&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;**Celery Specs:**&lt;/li&gt;&lt;li&gt; **Type**: Leafy, stalk vegetable&lt;/li&gt;&lt;li&gt;**Color**: Light green stems with darker green leaves&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Texture**: Crisp and crunchy&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Flavor**: Mild, slightly peppery with a refreshing taste&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Nutritional Info (per 100g)**:&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Common Uses**: Raw in salads, snacks, soups, stews, and stir-fries&lt;/li&gt;&lt;li&gt;**Storage**: Refrigerate in a sealed container, lasts up to 1-2 weeks&lt;/li&gt;&lt;li&gt;&amp;nbsp;**Health Benefits**: High in fiber, supports digestion, low-calorie, good for hydration due to high water content.&lt;/li&gt;&lt;li&gt;Calories: 16 kcal&amp;nbsp; &amp;nbsp; - Carbs: 3g&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp; - Protein: 0.7g&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp; - Fiber: 1.6g&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp; - Vitamin C: 3.1mg&amp;nbsp;&amp;nbsp;&lt;/li&gt;&lt;li&gt;&amp;nbsp; - Potassium: 260mg&lt;/li&gt;&lt;/ul&gt;', 1, 0, '2024-09-16 14:47:10'),
-(22, 25, 1, 'Watermelon', '&lt;li&gt;&lt;strong&gt;Type&lt;/strong&gt;: Watermelon&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Color&lt;/strong&gt;: Green rind with a pink to red interior, sometimes yellow or orange&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Texture&lt;/strong&gt;: Crisp and juicy&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Flavor&lt;/strong&gt;: Sweet and refreshing&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Nutritional Info (per 100g)&lt;/strong&gt;:&lt;ul&gt;&lt;li&gt;Calories: 30 kcal&lt;/li&gt;&lt;li&gt;Carbs: 8g&lt;/li&gt;&lt;li&gt;Protein: 0.6g&lt;/li&gt;&lt;li&gt;Fiber: 0.4g&lt;/li&gt;&lt;li&gt;Vitamin C: 8.1mg&lt;/li&gt;&lt;li&gt;Potassium: 112mg&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Common Uses&lt;/strong&gt;: Fresh slices, fruit salads, smoothies, juices, and sorbets&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Storage&lt;/strong&gt;: Refrigerate cut watermelon, lasts up to 1 week; whole watermelon can be stored at room temperature or in the fridge for longer freshness&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Health Benefits&lt;/strong&gt;: Hydrating due to high water content (about 92%), contains antioxidants like lycopene, supports heart health, and provides vitamins and minerals.&lt;/li&gt;', 1, 0, '2024-09-16 14:53:52'),
-(23, 25, 16, 'Pineapple', '&lt;p&gt;&lt;strong&gt;Pineapple Specs:&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Type&lt;/strong&gt;: Tropical Fruit&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Color&lt;/strong&gt;: Brownish-green rind with yellow flesh&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Texture&lt;/strong&gt;: Juicy and fibrous&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Flavor&lt;/strong&gt;: Sweet and tangy&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Nutritional Info (per 100g)&lt;/strong&gt;:&lt;ul&gt;&lt;li&gt;Calories: 50 kcal&lt;/li&gt;&lt;li&gt;Carbs: 13g&lt;/li&gt;&lt;li&gt;Protein: 0.5g&lt;/li&gt;&lt;li&gt;Fiber: 1.4g&lt;/li&gt;&lt;li&gt;Vitamin C: 47.8mg&lt;/li&gt;&lt;li&gt;Potassium: 109mg&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Common Uses&lt;/strong&gt;: Fresh slices, fruit salads, smoothies, juices, cooking, and grilling&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Storage&lt;/strong&gt;: Refrigerate cut pineapple, lasts up to 5-7 days; whole pineapple can be stored at room temperature until ripe, then refrigerate for longer freshness&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Health Benefits&lt;/strong&gt;: Rich in vitamin C and bromelain, which aids digestion and has anti-inflammatory properties, supports immune function, and provides hydration.&lt;/li&gt;&lt;/ul&gt;', 1, 0, '2024-09-16 14:55:08');
+INSERT INTO `products` (`id`, `brand_id`, `category_id`, `name`, `specs`, `status`, `delete_flag`, `date_created`, `user_id`) VALUES
+(34, 29, 19, 'Potatoe', '', 1, 0, '2024-09-18 14:06:11', 2),
+(35, 30, 20, 'Watermelon', '&lt;p&gt;melon fruit&lt;/p&gt;', 1, 0, '2024-09-18 14:09:14', 3);
 
 -- --------------------------------------------------------
 
@@ -305,9 +338,18 @@ INSERT INTO `products` (`id`, `brand_id`, `category_id`, `name`, `specs`, `statu
 CREATE TABLE `sales` (
   `id` int(30) NOT NULL,
   `order_id` int(30) NOT NULL,
+  `client_id` int(11) NOT NULL,
   `total_amount` double NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sales`
+--
+
+INSERT INTO `sales` (`id`, `order_id`, `client_id`, `total_amount`, `date_created`) VALUES
+(18, 38, 2, 10, '2024-09-18 14:23:12'),
+(19, 43, 3, 100, '2024-09-18 15:03:57');
 
 -- --------------------------------------------------------
 
@@ -364,7 +406,7 @@ INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`) VALUES
 --
 
 CREATE TABLE `users` (
-  `id` int(50) NOT NULL,
+  `id` int(11) NOT NULL,
   `firstname` varchar(250) NOT NULL,
   `lastname` varchar(250) NOT NULL,
   `username` text NOT NULL,
@@ -381,8 +423,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`) VALUES
-(1, 'Admin', 'Admin', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'uploads/avatars/1.png?v=1645064505', NULL, 1, '2021-01-20 14:02:37', '2024-09-13 11:46:25'),
-(2, 'Farmer', 'farmer', 'farmer', '97f974881b3726d9a77014b5f3b4d795', 'uploads/avatars/1.png?v=1645064505', NULL, 2, '2021-01-20 14:02:37', '2024-09-13 10:09:26');
+(1, 'Admin', 'Admin1', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'uploads/avatars/1.png?v=1645064505', NULL, 1, '2021-01-20 14:02:37', '2024-09-16 16:12:48'),
+(2, 'Farmer', 'farmer', 'farmer', '97f974881b3726d9a77014b5f3b4d795', 'uploads/avatars/2.png?v=1726475276', NULL, 2, '2021-01-20 14:02:37', '2024-09-16 17:29:39'),
+(3, 'arzel', 'zolina', 'farmer 2', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/3.png?v=1726475208', NULL, 2, '2024-09-16 16:26:29', '2024-09-16 16:27:35');
 
 --
 -- Indexes for dumped tables
@@ -392,7 +435,8 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `ava
 -- Indexes for table `brands`
 --
 ALTER TABLE `brands`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id_brand` (`user_id_brand`);
 
 --
 -- Indexes for table `cart`
@@ -406,7 +450,8 @@ ALTER TABLE `cart`
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id_categories` (`user_id_categories`);
 
 --
 -- Indexes for table `clients`
@@ -425,7 +470,8 @@ ALTER TABLE `inorganic_fertilizers`
 --
 ALTER TABLE `inventory`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `product_id` (`product_id`);
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `user_id_inventory` (`user_id_inventory`);
 
 --
 -- Indexes for table `orders`
@@ -466,14 +512,16 @@ ALTER TABLE `production_harvesting`
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
   ADD KEY `brand_id` (`brand_id`,`category_id`),
-  ADD KEY `category_id` (`category_id`);
+  ADD KEY `category_id` (`category_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `sales`
 --
 ALTER TABLE `sales`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `order_id` (`order_id`);
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `client_id` (`client_id`);
 
 --
 -- Indexes for table `sanitizers`
@@ -501,19 +549,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `clients`
@@ -531,19 +579,19 @@ ALTER TABLE `inorganic_fertilizers`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `order_list`
 --
 ALTER TABLE `order_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `organic_fertilizers`
@@ -567,13 +615,13 @@ ALTER TABLE `production_harvesting`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `sanitizers`
@@ -588,8 +636,20 @@ ALTER TABLE `system_info`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `brands`
+--
+ALTER TABLE `brands`
+  ADD CONSTRAINT `user_id_brand` FOREIGN KEY (`user_id_brand`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `cart`
@@ -599,10 +659,16 @@ ALTER TABLE `cart`
   ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `categories`
+--
+ALTER TABLE `categories`
+  ADD CONSTRAINT `user_id_categories` FOREIGN KEY (`user_id_categories`) REFERENCES `users` (`id`);
+
+--
 -- Constraints for table `inventory`
 --
 ALTER TABLE `inventory`
-  ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `user_id_inventory` FOREIGN KEY (`user_id_inventory`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `orders`
@@ -622,12 +688,14 @@ ALTER TABLE `order_list`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `sales`
 --
 ALTER TABLE `sales`
+  ADD CONSTRAINT `client_id` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`),
   ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
 COMMIT;
 

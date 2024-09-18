@@ -30,7 +30,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <select name="brand_id" id="brand_id" class="custom-select select2" required>
                     <option value=""></option>
                     <?php
-                    $qry = $conn->query("SELECT * FROM `brands` WHERE delete_flag = 0 " . (isset($brand_id) ? " OR id = '{$brand_id}' " : "") . " ORDER BY `name` ASC");
+                    $qry = $conn->query("SELECT * FROM `brands` WHERE user_id_brand = '$current_user_id' AND delete_flag = 0 " . (isset($brand_id) ? " OR id = '{$brand_id}' " : "") . " ORDER BY `name` ASC");
                     while ($row = $qry->fetch_assoc()) :
                     ?>
                         <option value="<?php echo $row['id'] ?>" <?php echo isset($brand_id) && $brand_id == $row['id'] ? 'selected' : '' ?>><?php echo $row['name'] ?></option>
@@ -42,7 +42,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <select name="category_id" id="category_id" class="custom-select select2" required>
                     <option value=""></option>
                     <?php
-                    $qry = $conn->query("SELECT * FROM `categories` WHERE delete_flag = 0 " . (isset($category_id) ? " OR id = '{$category_id}' " : "") . " ORDER BY category ASC");
+                    $qry = $conn->query("SELECT * FROM `categories` WHERE user_id_categories = '$current_user_id' AND delete_flag = 0 " . (isset($category_id) ? " OR id = '{$category_id}' " : "") . " ORDER BY category ASC");
                     while ($row = $qry->fetch_assoc()) :
                     ?>
                         <option value="<?php echo $row['id'] ?>" <?php echo isset($category_id) && $category_id == $row['id'] ? 'selected' : '' ?>><?php echo $row['category'] ?></option>

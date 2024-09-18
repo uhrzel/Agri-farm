@@ -55,14 +55,14 @@
                   </p>
                 </a>
               </li>
-              <li class="nav-item dropdown">
+              <!--  <li class="nav-item dropdown">
                 <a href="<?php echo base_url ?>farmer/?page=clients" class="nav-link nav-clients">
                   <i class="nav-icon fas fa-users"></i>
                   <p>
                     Client List
                   </p>
                 </a>
-              </li>
+              </li> -->
               <li class="nav-item dropdown">
                 <a href="<?php echo base_url ?>farmer/?page=sales" class="nav-link nav-sales">
                   <i class="nav-icon fas fa-file"></i>
