@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:8111
--- Generation Time: Sep 18, 2024 at 09:10 AM
+-- Generation Time: Sep 19, 2024 at 08:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,6 +64,14 @@ CREATE TABLE `cart` (
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`id`, `client_id`, `inventory_id`, `price`, `quantity`, `date_created`) VALUES
+(58, 5, 21, 10, 2, '2024-09-20 01:39:51'),
+(60, 3, 22, 20, 1, '2024-09-20 01:59:44');
+
 -- --------------------------------------------------------
 
 --
@@ -121,7 +129,8 @@ CREATE TABLE `clients` (
 INSERT INTO `clients` (`id`, `firstname`, `lastname`, `gender`, `contact`, `email`, `password`, `default_delivery_address`, `status`, `delete_flag`, `date_created`) VALUES
 (2, 'Samantha Jane', 'Miller', 'Female', '09123456789', 'sam23@sample.com', '91ec1f9324753048c0096d036a694f86', 'Sample Address', 1, 0, '2022-02-17 14:24:00'),
 (3, 'Arzel John', 'Zolina', 'Male', '09090937257', 'arzeljrz17@gmail.com', '91ec1f9324753048c0096d036a694f86', 'PMCO Village', 1, 0, '2024-05-17 11:22:55'),
-(4, 'Reynald', 'Agustin', 'Male', '09090937257', 'ajmixrhyme@gmail.com', '91ec1f9324753048c0096d036a694f86', 'Davao City Diversion Rd', 1, 0, '2024-09-14 15:57:32');
+(4, 'Reynald', 'Agustin', 'Male', '09090937257', 'ajmixrhyme@gmail.com', '91ec1f9324753048c0096d036a694f86', 'Davao City Diversion Rd', 1, 0, '2024-09-14 15:57:32'),
+(5, 'test', 'test', 'Male', '09154138624', 'test@gmail.com', '202cb962ac59075b964b07152d234b70', 'sekret', 1, 0, '2024-09-18 15:54:44');
 
 -- --------------------------------------------------------
 
@@ -171,7 +180,8 @@ CREATE TABLE `inventory` (
 
 INSERT INTO `inventory` (`id`, `user_id_inventory`, `variant`, `product_id`, `quantity`, `price`, `date_created`, `date_updated`) VALUES
 (20, 3, 'class a', 35, 10, 50, '2024-09-18 14:09:35', NULL),
-(21, 2, 'class a', 34, 10, 10, '2024-09-18 14:10:21', NULL);
+(21, 2, 'class a', 34, 10, 10, '2024-09-18 14:10:21', NULL),
+(22, 3, 'native', 36, 5, 20, '2024-09-20 01:50:42', NULL);
 
 -- --------------------------------------------------------
 
@@ -181,25 +191,28 @@ INSERT INTO `inventory` (`id`, `user_id_inventory`, `variant`, `product_id`, `qu
 
 CREATE TABLE `orders` (
   `id` int(30) NOT NULL,
+  `product_id` int(30) NOT NULL,
   `ref_code` varchar(100) NOT NULL,
   `client_id` int(30) NOT NULL,
   `delivery_address` text NOT NULL,
   `payment_method` varchar(100) NOT NULL,
   `order_type` tinyint(1) NOT NULL COMMENT '1= pickup,2= deliver',
   `amount` double NOT NULL,
-  `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '0 = pending,\r\n1= Packed,\r\n2 = Out for Delivery,\r\n3=Delivered,\r\n4=cancelled',
-  `paid` tinyint(1) NOT NULL DEFAULT 0,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp()
+  `status` tinyint(2) NOT NULL COMMENT '0 = pending,\\r\\n1= Packed,\\r\\n2 = Out for Delivery,\\r\\n3=Delivered,\\r\\n4=cancelled',
+  `paid` tinyint(1) NOT NULL,
+  `date_created` datetime NOT NULL,
+  `date_updated` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `ref_code`, `client_id`, `delivery_address`, `payment_method`, `order_type`, `amount`, `status`, `paid`, `date_created`, `date_updated`) VALUES
-(38, '20240900001', 2, 'Sample Address', 'cod', 0, 10, 3, 1, '2024-09-18 14:23:12', '2024-09-18 14:58:24'),
-(43, '20240900002', 3, 'PMCO Village', 'cod', 0, 100, 0, 0, '2024-09-18 15:03:57', NULL);
+INSERT INTO `orders` (`id`, `product_id`, `ref_code`, `client_id`, `delivery_address`, `payment_method`, `order_type`, `amount`, `status`, `paid`, `date_created`, `date_updated`) VALUES
+(60, 34, '20240900001', 4, 'Davao City Diversion Rd', 'Online Payment', 0, 10, 0, 1, '2024-09-18 16:14:17', '2024-09-20 00:39:55'),
+(61, 35, '20240900002', 2, 'Sample Address', 'cod', 0, 50, 3, 0, '2024-09-18 16:24:42', '2024-09-20 00:39:59'),
+(63, 35, '20240900004', 2, 'Sample Address', 'cod', 0, 50, 0, 0, '2024-09-18 16:25:19', '2024-09-20 00:40:03'),
+(64, 35, '20240900005', 5, 'sekret', 'cod', 0, 50, 3, 1, '2024-09-20 00:43:19', '2024-09-20 00:45:07');
 
 -- --------------------------------------------------------
 
@@ -221,8 +234,10 @@ CREATE TABLE `order_list` (
 --
 
 INSERT INTO `order_list` (`id`, `order_id`, `inventory_id`, `quantity`, `price`, `total`) VALUES
-(45, 38, 21, 1, 10, 10),
-(46, 43, 20, 2, 50, 100);
+(59, 60, 21, 1, 10, 10),
+(60, 61, 20, 1, 50, 50),
+(61, 63, 20, 1, 50, 50),
+(62, 64, 20, 1, 50, 50);
 
 -- --------------------------------------------------------
 
@@ -327,7 +342,8 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `brand_id`, `category_id`, `name`, `specs`, `status`, `delete_flag`, `date_created`, `user_id`) VALUES
 (34, 29, 19, 'Potatoe', '', 1, 0, '2024-09-18 14:06:11', 2),
-(35, 30, 20, 'Watermelon', '&lt;p&gt;melon fruit&lt;/p&gt;', 1, 0, '2024-09-18 14:09:14', 3);
+(35, 30, 20, 'Watermelon', '&lt;p&gt;melon fruit&lt;/p&gt;', 1, 0, '2024-09-18 14:09:14', 3),
+(36, 30, 20, 'passion fruit', '', 1, 0, '2024-09-20 01:49:37', 3);
 
 -- --------------------------------------------------------
 
@@ -338,7 +354,7 @@ INSERT INTO `products` (`id`, `brand_id`, `category_id`, `name`, `specs`, `statu
 CREATE TABLE `sales` (
   `id` int(30) NOT NULL,
   `order_id` int(30) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `clients_id` int(11) NOT NULL,
   `total_amount` double NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -347,9 +363,10 @@ CREATE TABLE `sales` (
 -- Dumping data for table `sales`
 --
 
-INSERT INTO `sales` (`id`, `order_id`, `client_id`, `total_amount`, `date_created`) VALUES
-(18, 38, 2, 10, '2024-09-18 14:23:12'),
-(19, 43, 3, 100, '2024-09-18 15:03:57');
+INSERT INTO `sales` (`id`, `order_id`, `clients_id`, `total_amount`, `date_created`) VALUES
+(32, 60, 2, 10, '2024-09-18 16:14:17'),
+(34, 63, 0, 50, '2024-09-18 16:25:19'),
+(35, 64, 0, 50, '2024-09-20 00:43:19');
 
 -- --------------------------------------------------------
 
@@ -478,7 +495,8 @@ ALTER TABLE `inventory`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `client_id` (`client_id`);
+  ADD KEY `client_id` (`client_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `order_list`
@@ -521,7 +539,7 @@ ALTER TABLE `products`
 ALTER TABLE `sales`
   ADD PRIMARY KEY (`id`),
   ADD KEY `order_id` (`order_id`),
-  ADD KEY `client_id` (`client_id`);
+  ADD KEY `client_id` (`clients_id`);
 
 --
 -- Indexes for table `sanitizers`
@@ -555,7 +573,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -567,7 +585,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `inorganic_fertilizers`
@@ -579,19 +597,19 @@ ALTER TABLE `inorganic_fertilizers`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `order_list`
 --
 ALTER TABLE `order_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `organic_fertilizers`
@@ -615,13 +633,13 @@ ALTER TABLE `production_harvesting`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `sanitizers`
@@ -674,7 +692,8 @@ ALTER TABLE `inventory`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `order_list`
@@ -695,7 +714,6 @@ ALTER TABLE `products`
 -- Constraints for table `sales`
 --
 ALTER TABLE `sales`
-  ADD CONSTRAINT `client_id` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`),
   ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
 COMMIT;
 
