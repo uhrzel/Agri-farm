@@ -11,6 +11,7 @@ $user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : nu
 $date_start = isset($_GET['date_start']) ? $_GET['date_start'] : date("Y-m-d", strtotime(date("Y-m-d") . " -7 days"));
 $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date("Y-m-d");
 ?>
+
 <div class="card card-primary card-outline">
     <div class="card-header">
         <h5 class="card-title">Sales Report</h5>
@@ -20,11 +21,11 @@ $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date("Y-m-d");
             <div class="row align-items-end">
                 <div class="form-group col-md-3">
                     <label for="date_start">Date Start</label>
-                    <input type="date" class="form-control form-control-sm" name="date_start" value="<?php echo date("Y-m-d", strtotime($date_start)) ?>">
+                    <input type="date" class="form-control form-control-sm" name="date_start" value="<?php echo date("Y-m-d", strtotime($date_start)); ?>">
                 </div>
                 <div class="form-group col-md-3">
                     <label for="date_end">Date End</label>
-                    <input type="date" class="form-control form-control-sm" name="date_end" value="<?php echo date("Y-m-d", strtotime($date_end)) ?>">
+                    <input type="date" class="form-control form-control-sm" name="date_end" value="<?php echo date("Y-m-d", strtotime($date_end)); ?>">
                 </div>
                 <div class="form-group col-md-1">
                     <button class="btn btn-flat btn-block btn-primary btn-sm"><i class="fa fa-filter"></i> Filter</button>
@@ -35,33 +36,9 @@ $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date("Y-m-d");
             </div>
         </form>
         <hr>
+
         <div id="printable">
-            <div class="row row-cols-2 justify-content-center align-items-center" id="print_header" style="display:none">
-                <div class="col-1">
-                    <img src="<?php echo validate_image($_settings->info('logo')) ?>" alt="<?php echo $_settings->info('short_name') ?>" width="75px" height="75px">
-                </div>
-                <div class="col-7">
-                    <h4 class="text-center m-0"><?php echo $_settings->info('name') ?></h4>
-                    <h3 class="text-center m-0"><b>Sales Report</b></h3>
-                    <?php if ($date_start != $date_end): ?>
-                        <p class="text-center m-0">Date Between <?php echo date("M d,Y", strtotime($date_start)) ?> and <?php echo date("M d,Y", strtotime($date_end)) ?></p>
-                    <?php else: ?>
-                        <p class="text-center m-0">As of <?php echo date("M d,Y", strtotime($date_start)) ?></p>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <hr>
             <table class="table table-bordered">
-                <colgroup>
-                    <col width="5%">
-                    <col width="15%">
-                    <col width="20%">
-                    <col width="20%">
-                    <col width="10%">
-                    <col width="10%">
-                    <col width="10%">
-                    <col width="10%">
-                </colgroup>
                 <thead>
                     <tr>
                         <th>#</th>
@@ -78,45 +55,41 @@ $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date("Y-m-d");
                     <?php
                     $i = 1;
                     $gtotal = 0;
-                    $qry = $conn->query("
-                        SELECT * FROM `sales`
-                        WHERE date(date_created) BETWEEN '{$date_start}' AND '{$date_end}'
-                        AND client_id = '{$user_id}' -- Filter by client_id
-                        ORDER BY UNIX_TIMESTAMP(date_created) DESC
-                    ");
+
+                    // Adjusted SQL query to join relevant tables
+                    $qry = $conn->query("SELECT ol.*, p.name, b.name as bname, 
+                        concat(c.firstname, ' ', c.lastname) as client_name, 
+                        c.email, o.date_created, o.payment_method 
+                        FROM sales s 
+                        INNER JOIN order_list ol ON s.order_id = ol.order_id 
+                        INNER JOIN orders o ON o.id = ol.order_id 
+                        INNER JOIN inventory i ON ol.inventory_id = i.id 
+                        INNER JOIN products p ON p.id = i.product_id 
+                        INNER JOIN clients c ON c.id = o.client_id 
+                        INNER JOIN brands b ON p.brand_id = b.id 
+                        WHERE p.user_id = '{$user_id}' 
+                        AND date(o.date_created) BETWEEN '{$date_start}' AND '{$date_end}' 
+                        ORDER BY unix_timestamp(o.date_created) DESC");
+
                     while ($row = $qry->fetch_assoc()):
-                        $olist = $conn->query("
-                            SELECT ol.*, p.name, b.name AS bname, CONCAT(c.firstname, ' ', c.lastname) AS name, c.email, o.date_created, cc.category, i.variant, o.payment_method
-                            FROM order_list ol
-                            INNER JOIN orders o ON o.id = ol.order_id
-                            INNER JOIN inventory i ON ol.inventory_id = i.id
-                            INNER JOIN products p ON p.id = i.product_id
-                            INNER JOIN clients c ON c.id = o.client_id
-                            INNER JOIN brands b ON p.brand_id = b.id
-                            INNER JOIN categories cc ON p.category_id = cc.id
-                            WHERE ol.order_id = '{$row['order_id']}'
-                        ");
-                        while ($roww = $olist->fetch_assoc()):
-                            $gtotal += $roww['quantity'] * $roww['price'];
+                        $gtotal += $row['quantity'] * $row['price'];
                     ?>
-                            <tr>
-                                <td class="text-center"><?php echo $i++ ?></td>
-                                <td><?php echo $row['date_created'] ?></td>
-                                <td>
-                                    <p class="m-0"><?php echo $roww['name'] . " - " . $roww['variant'] ?></p>
-                                    <p class="m-0"><small>Brand: <?php echo $roww['bname'] ?></small></p>
-                                    <p class="m-0"><small>Category: <?php echo $roww['category'] ?></small></p>
-                                </td>
-                                <td>
-                                    <p class="m-0"><?php echo $roww['name'] ?></p>
-                                    <p class="m-0"><small>Email: <?php echo $roww['email'] ?></small></p>
-                                </td>
-                                <td class=""><?php echo strtoupper($roww['payment_method']) ?></td>
-                                <td class="text-center"><?php echo format_num($roww['price']) ?></td>
-                                <td class="text-center"><?php echo format_num($roww['quantity']) ?></td>
-                                <td class="text-right"><?php echo format_num($roww['quantity'] * $roww['price']) ?></td>
-                            </tr>
-                        <?php endwhile; ?>
+                        <tr>
+                            <td class="text-center"><?php echo $i++; ?></td>
+                            <td><?php echo $row['date_created']; ?></td>
+                            <td>
+                                <p class="m-0"><?php echo $row['name']; ?></p>
+                                <p class="m-0"><small>Brand: <?php echo $row['bname']; ?></small></p>
+                            </td>
+                            <td>
+                                <p class="m-0"><?php echo $row['client_name']; ?></p>
+                                <p class="m-0"><small>Email: <?php echo $row['email']; ?></small></p>
+                            </td>
+                            <td><?php echo strtoupper($row['payment_method']); ?></td>
+                            <td class="text-center"><?php echo format_num($row['price']); ?></td>
+                            <td class="text-center"><?php echo format_num($row['quantity']); ?></td>
+                            <td class="text-right"><?php echo format_num($row['quantity'] * $row['price']); ?></td>
+                        </tr>
                     <?php endwhile; ?>
                     <?php if ($qry->num_rows <= 0): ?>
                         <tr>
@@ -126,14 +99,15 @@ $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date("Y-m-d");
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="7" class="font-weight-bold text-center">TOTAL SALES</th>
-                        <th class="text-right font-weight-bold"><?= format_num($gtotal) ?></th>
+                        <th colspan="7" class="text-center">TOTAL SALES</th>
+                        <th class="text-right"><?= format_num($gtotal); ?></th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
 </div>
+
 <noscript>
     <style>
         .m-0 {
@@ -150,7 +124,7 @@ $date_end = isset($_GET['date_end']) ? $_GET['date_end'] : date("Y-m-d");
 
         .table {
             border-collapse: collapse;
-            width: 100%;
+            width: 100%
         }
 
         .table tr,
