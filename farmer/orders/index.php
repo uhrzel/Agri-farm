@@ -1,7 +1,5 @@
 <?php
-
-
-// Retrieve client_id from session
+// Retrieve user_id from session
 $user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
 
 if ($_settings->chk_flashdata('success')): ?>
@@ -17,84 +15,98 @@ if ($_settings->chk_flashdata('success')): ?>
 <div class="card card-outline card-primary">
 	<div class="card-header">
 		<h3 class="card-title">List of Orders</h3>
-		<!-- <div class="card-tools">
-			<a href="?page=order/manage_order" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span>  Create New</a>
-		</div> -->
 	</div>
 	<div class="card-body">
 		<div class="container-fluid">
-			<div class="container-fluid">
-				<table class="table table-bordered table-stripped">
-					<colgroup>
-						<col width="5%">
-						<col width="15%">
-						<col width="25%">
-						<col width="20%">
-						<col width="10%">
-						<col width="10%">
-						<col width="15%">
-					</colgroup>
-					<thead>
+			<table class="table table-bordered table-stripped">
+				<colgroup>
+					<col width="5%">
+					<col width="15%">
+					<col width="25%">
+					<col width="20%">
+					<col width="10%">
+					<col width="10%">
+					<col width="15%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Date Order</th>
+						<th>Client</th>
+						<th>Total Amount</th>
+						<th>Paid</th>
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					$i = 1;
+					$qry = $conn->query("
+                        SELECT 
+                            o.id as order_id,
+                            o.date_created,
+                            CONCAT(c.firstname, ' ', c.lastname) as client_name,
+                            o.amount,
+                            o.paid,
+                            o.status,
+                            p.user_id
+                        FROM 
+                            orders o
+                        INNER JOIN 
+                            clients c ON c.id = o.client_id
+                        INNER JOIN 
+                            products p ON p.id = o.product_id
+                        WHERE 
+                            p.user_id = $user_id
+                        ORDER BY 
+                            UNIX_TIMESTAMP(o.date_created) DESC
+                    ");
+					while ($row = $qry->fetch_assoc()):
+					?>
 						<tr>
-							<th>#</th>
-							<th>Date Order</th>
-							<th>Client</th>
-							<th>Total Amount</th>
-							<th>Paid</th>
-							<th>Status</th>
-							<th>Action</th>
+							<td class="text-center"><?php echo $i++; ?></td>
+							<td><?php echo date("Y-m-d H:i", strtotime($row['date_created'])) ?></td>
+							<td><?php echo $row['client_name'] ?></td>
+							<td class="text-right"><?php echo number_format($row['amount']) ?></td>
+							<td class="text-center">
+								<?php if ($row['paid'] == 0): ?>
+									<span class="badge badge-light border px-2 rounded-pill">No</span>
+								<?php else: ?>
+									<span class="badge badge-success px-2 rounded-pill">Yes</span>
+								<?php endif; ?>
+							</td>
+							<td class="text-center">
+								<?php if ($row['status'] == 0): ?>
+									<span class="badge badge-light border px-3 rounded-pill">Pending</span>
+								<?php elseif ($row['status'] == 1): ?>
+									<span class="badge badge-primary px-3 rounded-pill">Packed</span>
+								<?php elseif ($row['status'] == 2): ?>
+									<span class="badge badge-warning px-3 rounded-pill">Out for Delivery</span>
+								<?php elseif ($row['status'] == 3): ?>
+									<span class="badge badge-success px-3 rounded-pill">Delivered</span>
+								<?php else: ?>
+									<span class="badge badge-danger px-3 rounded-pill">Cancelled</span>
+								<?php endif; ?>
+							</td>
+							<td align="center">
+								<button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+									Action
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu" role="menu">
+									<a class="dropdown-item" href="?page=orders/view_order&id=<?php echo $row['order_id'] ?>">View Order</a>
+									<?php if ($row['paid'] == 0 && $row['status'] != 4): ?>
+										<a class="dropdown-item pay_order" href="javascript:void(0)" data-id="<?php echo $row['order_id'] ?>">Mark as Paid</a>
+									<?php endif; ?>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['order_id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+								</div>
+							</td>
 						</tr>
-					</thead>
-					<tbody>
-						<?php
-						$i = 1;
-						$qry = $conn->query("SELECT o.*,concat(c.firstname,' ',c.lastname) as client from `orders` o inner join clients c on c.id = o.client_id WHERE o.client_id = $user_id order by unix_timestamp(o.date_created) desc ");
-						while ($row = $qry->fetch_assoc()):
-						?>
-							<tr>
-								<td class="text-center"><?php echo $i++; ?></td>
-								<td><?php echo date("Y-m-d H:i", strtotime($row['date_created'])) ?></td>
-								<td><?php echo $row['client'] ?></td>
-								<td class="text-right"><?php echo number_format($row['amount']) ?></td>
-								<td class="text-center">
-									<?php if ($row['paid'] == 0): ?>
-										<span class="badge badge-light border px-2 rounded-pill">No</span>
-									<?php else: ?>
-										<span class="badge badge-success px-2 rounded-pill">Yes</span>
-									<?php endif; ?>
-								</td>
-								<td class="text-center">
-									<?php if ($row['status'] == 0): ?>
-										<span class="badge badge-light border px-3 rounded-pill">Pending</span>
-									<?php elseif ($row['status'] == 1): ?>
-										<span class="badge badge-primary px-3 rounded-pill">Packed</span>
-									<?php elseif ($row['status'] == 2): ?>
-										<span class="badge badge-warning px-3 rounded-pill">Out for Delivery</span>
-									<?php elseif ($row['status'] == 3): ?>
-										<span class="badge badge-success px-3 rounded-pill">Delivered</span>
-									<?php else: ?>
-										<span class="badge badge-danger px-3 rounded-pill">Cancelled</span>
-									<?php endif; ?>
-								</td>
-								<td align="center">
-									<button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-										Action
-										<span class="sr-only">Toggle Dropdown</span>
-									</button>
-									<div class="dropdown-menu" role="menu">
-										<a class="dropdown-item" href="?page=orders/view_order&id=<?php echo $row['id'] ?>">View Order</a>
-										<?php if ($row['paid'] == 0 && $row['status'] != 4): ?>
-											<a class="dropdown-item pay_order" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Mark as Paid</a>
-										<?php endif; ?>
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
-									</div>
-								</td>
-							</tr>
-						<?php endwhile; ?>
-					</tbody>
-				</table>
-			</div>
+					<?php endwhile; ?>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>
