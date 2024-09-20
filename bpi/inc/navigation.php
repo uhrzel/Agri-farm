@@ -26,52 +26,47 @@
               <li class="nav-item dropdown">
                 <a href="./" class="nav-link nav-home">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
-                  <p>
-                    Dashboard
-                  </p>
+                  <p>Dashboard</p>
                 </a>
               </li>
               <li class="nav-item dropdown">
-                <a href="<?php echo base_url ?>bpi/?page=product" class="nav-link nav-product">
-                  <i class="nav-icon fas fa-table"></i>
-                  <p>
-                    User List
-                  </p>
+                <a href="<?php echo base_url ?>bpi/?page=farmer" class="nav-link nav-farmer">
+                  <i class="nav-icon fas fa-user-friends"></i>
+                  <p>Farmer List</p>
                 </a>
               </li>
-              <!--  <li class="nav-item dropdown">
-                <a href="<?php echo base_url ?>farmer/?page=inventory" class="nav-link nav-inventory">
-                  <i class="nav-icon fas fa-clipboard-list"></i>
-                  <p>
-                    Inventory List
-                  </p>
+              <li class="nav-header">Agricultural Products</li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>bpi/?page=production" class="nav-link nav-production">
+                  <i class="nav-icon fas fa-tractor"></i>
+                  <p>Production Harvesting</p>
                 </a>
               </li>
               <li class="nav-item dropdown">
-                <a href="<?php echo base_url ?>farmer/?page=orders" class="nav-link nav-orders">
-                  <i class="nav-icon fas fa-list"></i>
-                  <p>
-                    Order List
-                  </p>
+                <a href="<?php echo base_url ?>bpi/?page=inorganic" class="nav-link nav-inorganic">
+                  <i class="nav-icon fas fa-leaf"></i>
+                  <p>Inorganic Fertilizers</p>
                 </a>
-              </li> -->
-              <!--  <li class="nav-item dropdown">
-                <a href="<?php echo base_url ?>farmer/?page=clients" class="nav-link nav-clients">
-                  <i class="nav-icon fas fa-users"></i>
-                  <p>
-                    Client List
-                  </p>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>bpi/?page=organic" class="nav-link nav-organic">
+                  <i class="nav-icon fas fa-seedling"></i>
+                  <p>Organic Fertilizers</p>
                 </a>
-              </li> -->
+              </li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>bpi/?page=pesticides" class="nav-link nav-pesticides">
+                  <i class="nav-icon fas fa-bug"></i>
+                  <p>Pesticides</p>
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>bpi/?page=sanitizers" class="nav-link nav-sanitizers">
+                  <i class="nav-icon fas fa-spray-can"></i>
+                  <p>Sanitizers</p>
+                </a>
+              </li>
 
-              <!--  <li class="nav-item dropdown">
-                <a href="<?php echo base_url ?>farmer/?page=system_info" class="nav-link nav-system_info">
-                  <i class="nav-icon fas fa-cogs"></i>
-                  <p>
-                    Settings
-                  </p>
-                </a>
-              </li> -->
             </ul>
           </nav>
           <!-- /.sidebar-menu -->
