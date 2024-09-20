@@ -41,8 +41,11 @@
                     <tbody>
                         <?php
                         $i = 1;
+
+                        $user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
+
                         // Adjust query to select from production_harvesting table
-                        $qry = $conn->query("SELECT * FROM `production_harvesting` where delete_flag = 0  ORDER BY `id` DESC");
+                        $qry = $conn->query("SELECT * FROM `production_harvesting` WHERE `user_id` = {$user_id} AND `delete_flag` = 0 ORDER BY `id` DESC");
                         while ($row = $qry->fetch_assoc()):
                             // Format the harvest date range if needed
                             $harvest_date = $row['date_planted'] . ' to ' . $row['date_harvest'];

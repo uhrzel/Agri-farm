@@ -764,15 +764,26 @@ class Master extends DBConnection
 			if (!empty($data)) $data .= ",";
 			$data .= " `crops`='" . addslashes(htmlentities($crops)) . "' ";
 		}
+
+		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
+
+
+		// Add the user_id to the data for insertion
+		if (empty($id)) {
+			$data .= ", `user_id` = '{$user_id}' "; // Add user_id for new entries
+		}
+
 		$check = $this->conn->query("SELECT * FROM `production_harvesting` WHERE `crops` = '{$crops}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
-		if ($this->capture_err())
-			return $this->capture_err();
+
+		if ($this->capture_err()) return $this->capture_err();
+
 		if ($check > 0) {
 			$resp['status'] = 'failed';
 			$resp['msg'] = "Crops entry already exists.";
 			return json_encode($resp);
 			exit;
 		}
+
 		if (empty($id)) {
 			$sql = "INSERT INTO `production_harvesting` SET {$data} ";
 			$save = $this->conn->query($sql);
@@ -780,6 +791,7 @@ class Master extends DBConnection
 			$sql = "UPDATE `production_harvesting` SET {$data} WHERE id = '{$id}' ";
 			$save = $this->conn->query($sql);
 		}
+
 		if ($save) {
 			$resp['status'] = 'success';
 			if (empty($id))
@@ -790,8 +802,10 @@ class Master extends DBConnection
 			$resp['status'] = 'failed';
 			$resp['err'] = $this->conn->error . "[{$sql}]";
 		}
+
 		return json_encode($resp);
 	}
+
 	function delete_production()
 	{
 		extract($_POST);
@@ -820,6 +834,14 @@ class Master extends DBConnection
 		if (isset($_POST['crops_applied']) && !empty($crops_applied)) {
 			if (!empty($data)) $data .= ",";
 			$data .= " `crops_applied`='" . $this->conn->real_escape_string($crops_applied) . "' ";
+		}
+
+		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
+
+
+		// Add the user_id to the data for insertion
+		if (empty($id)) {
+			$data .= ", `user_id` = '{$user_id}' "; // Add user_id for new entries
 		}
 
 		// Check if an entry with the same brand already exists
@@ -891,6 +913,14 @@ class Master extends DBConnection
 			$data .= " `crops_applied`='" . $this->conn->real_escape_string($crops_applied) . "' ";
 		}
 
+		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
+
+
+		// Add the user_id to the data for insertion
+		if (empty($id)) {
+			$data .= ", `user_id` = '{$user_id}' "; // Add user_id for new entries
+		}
+
 		// Check if an entry with the same brand already exists
 		$check = $this->conn->query("SELECT * FROM `organic_fertilizers` WHERE `brand` = '{$brand}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
 		if ($this->capture_err()) {
@@ -957,6 +987,14 @@ class Master extends DBConnection
 		if (isset($_POST['brand_name']) && !empty($crops_applied)) {
 			if (!empty($data)) $data .= ",";
 			$data .= " `brand_name`='" . $this->conn->real_escape_string($brand_name) . "' ";
+
+			$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
+
+
+			// Add the user_id to the data for insertion
+			if (empty($id)) {
+				$data .= ", `user_id` = '{$user_id}' "; // Add user_id for new entries
+			}
 		}
 
 		// Check if an entry with the same brand already exists
@@ -1026,6 +1064,14 @@ class Master extends DBConnection
 		if (isset($_POST['brand_name'])) {
 			if (!empty($data)) $data .= ",";
 			$data .= " `brand_name`='" . $this->conn->real_escape_string($brand_name) . "' ";
+		}
+
+		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
+
+
+		// Add the user_id to the data for insertion
+		if (empty($id)) {
+			$data .= ", `user_id` = '{$user_id}' "; // Add user_id for new entries
 		}
 
 		// Check if an entry with the same brand already exists
