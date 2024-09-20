@@ -27,6 +27,7 @@
 						<th>Active Ingredient</th>
 						<th>Brand Name</th>
 						<th>Expiry Date</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -47,6 +48,10 @@
 							<td><?php echo htmlspecialchars($row['active_ingredient'], ENT_QUOTES); ?></td>
 							<td><?php echo htmlspecialchars($row['brand_name'], ENT_QUOTES); ?></td>
 							<td><?php echo htmlspecialchars(date('Y-m-d', strtotime($row['expiry_date'])), ENT_QUOTES); ?></td>
+							<td>
+								<!-- Archive button -->
+								<button type="button" class="btn btn-danger btn-sm archive-btn" data-id="<?php echo $row['id']; ?>">Archive</button>
+							</td>
 						</tr>
 					<?php endwhile; ?>
 				</tbody>
@@ -61,5 +66,29 @@
 			order: [0, 'asc']
 		});
 		$('.dataTable td, .dataTable th').addClass('py-1 px-2 align-middle');
+		$('.archive-btn').click(function() {
+			var id = $(this).attr('data-id');
+			console.log(id); // Debug: Check if ID is captured correctly
+			if (confirm('Are you sure you want to archive this record?')) {
+				$.ajax({
+					url: 'sanitizers/archive_sanitizers.php',
+					method: 'POST',
+					data: {
+						id: id
+					},
+					success: function(resp) {
+						console.log(resp); // Debug: Check server response
+						if (resp == 1) {
+							alert_toast("Record archived successfully", 'success');
+							setTimeout(function() {
+								location.reload();
+							}, 1500);
+						} else {
+							alert_toast("Failed to archive the record: " + resp, 'error'); // Display error message
+						}
+					}
+				});
+			}
+		});
 	});
 </script>

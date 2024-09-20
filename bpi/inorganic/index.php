@@ -31,6 +31,7 @@
 						<th>Crops Applied</th>
 						<th>Frequency</th>
 						<th>Expiry Date</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -53,6 +54,10 @@
 							<td><?php echo $row['crops_applied']; ?></td>
 							<td><?php echo $row['frequency']; ?></td>
 							<td><?php echo $row['expiry_date']; ?></td>
+							<td>
+								<!-- Archive button -->
+								<button type="button" class="btn btn-danger btn-sm archive-btn" data-id="<?php echo $row['id']; ?>">Archive</button>
+							</td>
 						</tr>
 					<?php endwhile; ?>
 				</tbody>
@@ -71,5 +76,30 @@
 			order: [0, 'asc']
 		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
+
+		$('.archive-btn').click(function() {
+			var id = $(this).attr('data-id');
+			console.log(id); // Debug: Check if ID is captured correctly
+			if (confirm('Are you sure you want to archive this record?')) {
+				$.ajax({
+					url: 'inorganic/archive_inorganic.php',
+					method: 'POST',
+					data: {
+						id: id
+					},
+					success: function(resp) {
+						console.log(resp); // Debug: Check server response
+						if (resp == 1) {
+							alert_toast("Record archived successfully", 'success');
+							setTimeout(function() {
+								location.reload();
+							}, 1500);
+						} else {
+							alert_toast("Failed to archive the record: " + resp, 'error'); // Display error message
+						}
+					}
+				});
+			}
+		});
 	})
 </script>
