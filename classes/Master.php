@@ -1139,6 +1139,125 @@ class Master extends DBConnection
 
 		return json_encode($resp);
 	}
+	function ati_register()
+	{
+		extract($_POST);
+		$data = "";
+		$_POST['password'] = md5($_POST['password']); // Hash password
+		$_POST['type'] = 3; // Set type to 2 for farmers
+
+		// Construct the data for insertion/updating, excluding 'id' from INSERT query
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id'))) {
+				if (!empty($data)) $data .= ",";
+				$data .= " `{$k}`='{$v}' ";
+			}
+		}
+
+		// Check if username already exists
+		$check_query = "SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : "");
+		$check = $this->conn->query($check_query)->num_rows;
+
+		if ($this->capture_err())
+			return $this->capture_err();
+
+		if ($check > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Username already taken.";
+			return json_encode($resp);
+			exit;
+		}
+
+		if (empty($id)) {
+			// Insert query - do not include `id`
+			$sql = "INSERT INTO `users` SET {$data}";
+		} else {
+			// Update query
+			$sql = "UPDATE `users` SET {$data} WHERE id = '{$id}'";
+		}
+
+		$save = $this->conn->query($sql);
+
+		if ($save) {
+			$cid = !empty($id) ? $id : $this->conn->insert_id;
+			$resp['status'] = 'success';
+			if (empty($id)) {
+				$this->settings->set_flashdata('success', "Account successfully created.");
+			} else {
+				$this->settings->set_flashdata('success', "Account successfully updated.");
+			}
+			$this->settings->set_userdata('login_type', 3);
+			foreach ($_POST as $k => $v) {
+				$this->settings->set_userdata($k, $v);
+			}
+			$this->settings->set_userdata('id', $cid);
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = $this->conn->error . "[{$sql}]";
+		}
+
+		return json_encode($resp);
+	}
+
+	function bpi_register()
+	{
+		extract($_POST);
+		$data = "";
+		$_POST['password'] = md5($_POST['password']); // Hash password
+		$_POST['type'] = 4; // Set type to 2 for farmers
+
+		// Construct the data for insertion/updating, excluding 'id' from INSERT query
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id'))) {
+				if (!empty($data)) $data .= ",";
+				$data .= " `{$k}`='{$v}' ";
+			}
+		}
+
+		// Check if username already exists
+		$check_query = "SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : "");
+		$check = $this->conn->query($check_query)->num_rows;
+
+		if ($this->capture_err())
+			return $this->capture_err();
+
+		if ($check > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Username already taken.";
+			return json_encode($resp);
+			exit;
+		}
+
+		if (empty($id)) {
+			// Insert query - do not include `id`
+			$sql = "INSERT INTO `users` SET {$data}";
+		} else {
+			// Update query
+			$sql = "UPDATE `users` SET {$data} WHERE id = '{$id}'";
+		}
+
+		$save = $this->conn->query($sql);
+
+		if ($save) {
+			$cid = !empty($id) ? $id : $this->conn->insert_id;
+			$resp['status'] = 'success';
+			if (empty($id)) {
+				$this->settings->set_flashdata('success', "Account successfully created.");
+			} else {
+				$this->settings->set_flashdata('success', "Account successfully updated.");
+			}
+			$this->settings->set_userdata('login_type', 4);
+			foreach ($_POST as $k => $v) {
+				$this->settings->set_userdata($k, $v);
+			}
+			$this->settings->set_userdata('id', $cid);
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = $this->conn->error . "[{$sql}]";
+		}
+
+		return json_encode($resp);
+	}
 }
 
 $Master = new Master();
@@ -1246,6 +1365,12 @@ switch ($action) {
 		break;
 	case 'farmer_register':
 		echo $Master->farmer_register();
+		break;
+	case 'ati_register':
+		echo $Master->ati_register();
+		break;
+	case 'bpi_register':
+		echo $Master->bpi_register();
 		break;
 	default:
 		// echo $sysset->index();

@@ -88,6 +88,18 @@ class Login extends DBConnection
 			redirect('admin/login.php');
 		}
 	}
+	public function logout_ati()
+	{
+		if ($this->settings->sess_des()) {
+			redirect('ati/login.php');
+		}
+	}
+	public function logout_bpi()
+	{
+		if ($this->settings->sess_des()) {
+			redirect('bpi/login.php');
+		}
+	}
 	function login_user()
 	{
 		extract($_POST);
@@ -118,6 +130,62 @@ class Login extends DBConnection
 		}
 		return json_encode($resp);
 	}
+
+	public function login_ati()
+	{
+		extract($_POST);
+
+		$stmt = $this->conn->prepare("SELECT * from users where username = ? and password = ?");
+		$password = md5($password);
+		$stmt->bind_param('ss', $username, $password);
+		$stmt->execute();
+		$result = $stmt->get_result();
+
+		if ($result->num_rows > 0) {
+			$user = $result->fetch_assoc();
+			if ($user['type'] == 3) {
+				foreach ($user as $k => $v) {
+					if ($k != 'password') {
+						$this->settings->set_userdata($k, $v); //ati id
+					}
+				}
+				$this->settings->set_userdata('login_type', 3);
+				return json_encode(array('status' => 'success'));
+			} else {
+				return json_encode(array('status' => 'incorrect_role'));
+			}
+		} else {
+			return json_encode(array('status' => 'incorrect'));
+		}
+	}
+
+	public function login_bpi()
+	{
+		extract($_POST);
+
+		$stmt = $this->conn->prepare("SELECT * from users where username = ? and password = ?");
+		$password = md5($password);
+		$stmt->bind_param('ss', $username, $password);
+		$stmt->execute();
+		$result = $stmt->get_result();
+
+		if ($result->num_rows > 0) {
+			$user = $result->fetch_assoc();
+			if ($user['type'] == 4) {
+				foreach ($user as $k => $v) {
+					if ($k != 'password') {
+						$this->settings->set_userdata($k, $v); //ati id
+					}
+				}
+				$this->settings->set_userdata('login_type', 4);
+				return json_encode(array('status' => 'success'));
+			} else {
+				return json_encode(array('status' => 'incorrect_role'));
+			}
+		} else {
+			return json_encode(array('status' => 'incorrect'));
+		}
+	}
 }
 $action = !isset($_GET['f']) ? 'none' : strtolower($_GET['f']);
 $auth = new Login();
@@ -131,11 +199,23 @@ switch ($action) {
 	case 'login_user':
 		echo $auth->login_user();
 		break;
+	case 'login_ati':
+		echo $auth->login_ati();
+		break;
+	case 'login_bpi':
+		echo $auth->login_bpi();
+		break;
 	case 'logout_farmer':
 		echo $auth->logout_farmer();
 		break;
 	case 'logout_admin':
 		echo $auth->logout_admin();
+		break;
+	case 'logout_ati':
+		echo $auth->logout_ati();
+		break;
+	case 'logout_bpi':
+		echo $auth->logout_bpi();
 		break;
 	default:
 		echo $auth->index();
