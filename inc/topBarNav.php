@@ -45,8 +45,21 @@
           <a href="./?p=my_account" class="text-dark  nav-link text-white"><b> Hi, <?php echo $_settings->userdata('firstname') ?>!</b></a>
           <a href="logout.php" class="text-dark  nav-link text-white"><i class="fa fa-sign-out-alt"></i></a>
         <?php else: ?>
-          <button class="btn btn-outline-dark ml-2" id="login-btn" type="button">Login</button>
+          <div class="dropdown ml-2">
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="loginDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Login as Customer
+            </button>
+            <div class="dropdown-menu" aria-labelledby="loginDropdown">
+              <a class="dropdown-item" id="login-btn">Customer</a>
+              <a class="dropdown-item" href="http://localhost/agri-farm/farmer/login.php">Farmer</a>
+              <a class=" dropdown-item" href="http://localhost/agri-farm/ati/login.php">ATI</a>
+              <a class="dropdown-item" href="http://localhost/agri-farm/bpi/login.php">BPI</a>
+              <a class="dropdown-item" href="http://localhost/agri-farm/admin/login.php">Admin</a>
+            </div>
+          </div>
         <?php endif; ?>
+
+
       </div>
     </div>
   </div>
