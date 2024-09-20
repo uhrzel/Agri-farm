@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:8111
--- Generation Time: Sep 19, 2024 at 08:28 PM
+-- Generation Time: Sep 20, 2024 at 05:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -140,6 +140,7 @@ INSERT INTO `clients` (`id`, `firstname`, `lastname`, `gender`, `contact`, `emai
 
 CREATE TABLE `inorganic_fertilizers` (
   `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
   `brand` varchar(255) NOT NULL,
   `supplier` varchar(255) NOT NULL,
@@ -153,9 +154,10 @@ CREATE TABLE `inorganic_fertilizers` (
 -- Dumping data for table `inorganic_fertilizers`
 --
 
-INSERT INTO `inorganic_fertilizers` (`id`, `type`, `brand`, `supplier`, `crops_applied`, `frequency`, `expiry_date`, `delete_flag`) VALUES
-(1, 'Single Fertilizers-Duofos', 'Sagrez', 'D\'Farmers', 'All Crops', 'First Dose up to fruiting stage', '2024-09-21', 0),
-(2, 'Completed Fertilizers-Unik 16', 'Yara', 'D\'Farmers', 'All Crops', 'First Dose up to fruiting', '2024-09-19', 0);
+INSERT INTO `inorganic_fertilizers` (`id`, `user_id`, `type`, `brand`, `supplier`, `crops_applied`, `frequency`, `expiry_date`, `delete_flag`) VALUES
+(1, 2, 'Single Fertilizers-Duofos', 'Sagrez', 'D\'Farmers', 'All Crops', 'First Dose up to fruiting stage', '2024-09-21', 0),
+(2, 3, 'Completed Fertilizers-Unik 16', 'Yara', 'D\'Farmers', 'All Crops', 'First Dose up to fruiting', '2024-09-19', 0),
+(3, 3, 'Vermicast', 'we', 'D\'Farmers', 'All Crops', 'First Dose up to fruiting', '2024-08-02', 1);
 
 -- --------------------------------------------------------
 
@@ -211,7 +213,7 @@ CREATE TABLE `orders` (
 INSERT INTO `orders` (`id`, `product_id`, `ref_code`, `client_id`, `delivery_address`, `payment_method`, `order_type`, `amount`, `status`, `paid`, `date_created`, `date_updated`) VALUES
 (60, 34, '20240900001', 4, 'Davao City Diversion Rd', 'Online Payment', 0, 10, 0, 1, '2024-09-18 16:14:17', '2024-09-20 00:39:55'),
 (61, 35, '20240900002', 2, 'Sample Address', 'cod', 0, 50, 3, 0, '2024-09-18 16:24:42', '2024-09-20 00:39:59'),
-(63, 35, '20240900004', 2, 'Sample Address', 'cod', 0, 50, 0, 0, '2024-09-18 16:25:19', '2024-09-20 00:40:03'),
+(63, 35, '20240900004', 2, 'Sample Address', 'cod', 0, 50, 0, 1, '2024-09-18 16:25:19', '2024-09-20 00:40:03'),
 (64, 35, '20240900005', 5, 'sekret', 'cod', 0, 50, 3, 1, '2024-09-20 00:43:19', '2024-09-20 00:45:07');
 
 -- --------------------------------------------------------
@@ -247,6 +249,7 @@ INSERT INTO `order_list` (`id`, `order_id`, `inventory_id`, `quantity`, `price`,
 
 CREATE TABLE `organic_fertilizers` (
   `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
   `brand` varchar(255) NOT NULL,
   `supplier` varchar(255) NOT NULL,
@@ -260,9 +263,11 @@ CREATE TABLE `organic_fertilizers` (
 -- Dumping data for table `organic_fertilizers`
 --
 
-INSERT INTO `organic_fertilizers` (`id`, `type`, `brand`, `supplier`, `crops_applied`, `frequency`, `expiry_date`, `delete_flag`) VALUES
-(1, 'Bio-organic ', 'Kael', 'LGU Baybay', 'All Crops', 'for soil media (Seed germination)', '2024-09-18', 0),
-(2, 'Vermicast', '-', 'Own produced', 'All Crops', 'for soil media (Seed germination)', '2024-10-05', 0);
+INSERT INTO `organic_fertilizers` (`id`, `user_id`, `type`, `brand`, `supplier`, `crops_applied`, `frequency`, `expiry_date`, `delete_flag`) VALUES
+(1, 2, 'Bio-organic ', 'Kael', 'LGU Baybay', 'All Crops', 'for soil media (Seed germination)', '2024-09-18', 0),
+(2, 3, 'Vermicast', '-', 'Own produced', 'All Crops', 'for soil media (Seed germination)', '2024-10-05', 0),
+(3, 3, 'ow', '12s', 'D\'Farmers', 'All Crops', 'First Dose up to fruiting ', '2024-10-05', 1),
+(4, 2, 'k', 'k', 'k', 'k', 'k', '2024-10-01', 1);
 
 -- --------------------------------------------------------
 
@@ -272,6 +277,7 @@ INSERT INTO `organic_fertilizers` (`id`, `type`, `brand`, `supplier`, `crops_app
 
 CREATE TABLE `pesticides` (
   `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
   `active_ingredient` varchar(255) NOT NULL,
   `brand_name` varchar(255) NOT NULL,
@@ -287,9 +293,11 @@ CREATE TABLE `pesticides` (
 -- Dumping data for table `pesticides`
 --
 
-INSERT INTO `pesticides` (`id`, `type`, `active_ingredient`, `brand_name`, `supplier`, `crops_applied`, `target_pest`, `frequency`, `expiry_date`, `delete_flag`) VALUES
-(1, 'Fungicide-Ortiva top', 'Azoxystrobin/Difenoconazde', 'Syngenta', 'D\'Farmers', 'Corn, Tomato', 'Leaf blight, Late blight', 'As the need arises', '2023-09-14', 0),
-(2, 'test data', 'test ingredient', 'test brand', 'tes supplier', 'test crops applied', 'test target pest', 'test frequency ', '2024-10-05', 0);
+INSERT INTO `pesticides` (`id`, `user_id`, `type`, `active_ingredient`, `brand_name`, `supplier`, `crops_applied`, `target_pest`, `frequency`, `expiry_date`, `delete_flag`) VALUES
+(1, 2, 'Fungicide-Ortiva top', 'Azoxystrobin/Difenoconazde', 'Syngenta', 'D\'Farmers', 'Corn, Tomato', 'Leaf blight, Late blight', 'As the need arises', '2023-09-14', 0),
+(2, 3, 'test data', 'test ingredient', 'test brand', 'tes supplier', 'test crops applied', 'test target pest', 'test frequency ', '2024-10-05', 0),
+(3, 3, '2', '21', '21sssssssssssssssssss', '1', '1', '1', '1', '2024-09-13', 1),
+(4, 2, '3232', '3232', '3232', '3232', '3232', '2121', '2121', '2024-09-27', 1);
 
 -- --------------------------------------------------------
 
@@ -299,6 +307,7 @@ INSERT INTO `pesticides` (`id`, `type`, `active_ingredient`, `brand_name`, `supp
 
 CREATE TABLE `production_harvesting` (
   `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `crops` varchar(255) NOT NULL,
   `crop_cycle` varchar(255) NOT NULL,
   `date_planted` date NOT NULL,
@@ -313,10 +322,10 @@ CREATE TABLE `production_harvesting` (
 -- Dumping data for table `production_harvesting`
 --
 
-INSERT INTO `production_harvesting` (`id`, `crops`, `crop_cycle`, `date_planted`, `date_harvest`, `hectarage`, `harvest_kg`, `location`, `delete_flag`) VALUES
-(1, 'Sweet Pepper(Emperor F1)', '4 Months', '2021-07-21', '2021-12-18', '2,100 sqm', '3,500 kg', 'Tunnel 6 - 10', 0),
-(2, 'Ampalaya(Galaxy F1)', '3 Months', '2021-08-02', '2021-11-13', '420 sqm', '900 kg', 'Tunnel 3', 0),
-(3, 'Hot Pepper(Vulcan F1)', '4 Months', '2024-10-03', '2024-09-26', '420 sqm', '21', 'Tunnel 3', 1);
+INSERT INTO `production_harvesting` (`id`, `user_id`, `crops`, `crop_cycle`, `date_planted`, `date_harvest`, `hectarage`, `harvest_kg`, `location`, `delete_flag`) VALUES
+(1, 2, 'Sweet Pepper(Emperor F1)', '4 Months', '2021-07-21', '2021-12-18', '2,100 sqm', '3,500 kg', 'Tunnel 6 - 10', 0),
+(2, 3, 'Ampalaya(Galaxy F1)', '3 Months', '2021-08-02', '2021-11-13', '420 sqm', '900 kg', 'Tunnel 3', 0),
+(5, 2, 'Eggplant(Calixto F1)', 'sasss', '2024-10-12', '2024-09-11', '1', '1', '1', 1);
 
 -- --------------------------------------------------------
 
@@ -364,9 +373,9 @@ CREATE TABLE `sales` (
 --
 
 INSERT INTO `sales` (`id`, `order_id`, `clients_id`, `total_amount`, `date_created`) VALUES
-(32, 60, 2, 10, '2024-09-18 16:14:17'),
-(34, 63, 0, 50, '2024-09-18 16:25:19'),
-(35, 64, 0, 50, '2024-09-20 00:43:19');
+(32, 60, 5, 10, '2024-09-18 16:14:17'),
+(34, 63, 5, 50, '2024-09-18 16:25:19'),
+(35, 64, 5, 50, '2024-09-20 00:43:19');
 
 -- --------------------------------------------------------
 
@@ -376,6 +385,7 @@ INSERT INTO `sales` (`id`, `order_id`, `clients_id`, `total_amount`, `date_creat
 
 CREATE TABLE `sanitizers` (
   `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `sanitizer_name` varchar(255) NOT NULL,
   `active_ingredient` varchar(255) NOT NULL,
   `brand_name` varchar(255) NOT NULL,
@@ -389,9 +399,11 @@ CREATE TABLE `sanitizers` (
 -- Dumping data for table `sanitizers`
 --
 
-INSERT INTO `sanitizers` (`id`, `sanitizer_name`, `active_ingredient`, `brand_name`, `intended_use`, `frequency`, `expiry_date`, `delete_flag`) VALUES
-(4, 'Power Detergent', '-', 'Ariel', 'Cleaning', 'As the need arises', '2024-09-24', 0),
-(5, 'Bleach', 'Chloring', 'Zonrox', 'Disinfectant', 'As the need arises', '2024-09-19', 0);
+INSERT INTO `sanitizers` (`id`, `user_id`, `sanitizer_name`, `active_ingredient`, `brand_name`, `intended_use`, `frequency`, `expiry_date`, `delete_flag`) VALUES
+(4, 2, 'Power Detergent', '-', 'Ariel', 'Cleaning', 'As the need arises', '2024-09-24', 0),
+(5, 3, 'Bleach', 'Chloring', 'Zonrox', 'Disinfectant', 'As the need arises', '2024-09-19', 0),
+(6, 3, '1', '1', '1', '1', '1', '2024-09-13', 1),
+(7, 2, '2', '2222222222', '2', '2', '2', '2024-10-04', 1);
 
 -- --------------------------------------------------------
 
@@ -442,7 +454,9 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`) VALUES
 (1, 'Admin', 'Admin1', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'uploads/avatars/1.png?v=1645064505', NULL, 1, '2021-01-20 14:02:37', '2024-09-16 16:12:48'),
 (2, 'Farmer', 'farmer', 'farmer', '97f974881b3726d9a77014b5f3b4d795', 'uploads/avatars/2.png?v=1726475276', NULL, 2, '2021-01-20 14:02:37', '2024-09-16 17:29:39'),
-(3, 'arzel', 'zolina', 'farmer 2', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/3.png?v=1726475208', NULL, 2, '2024-09-16 16:26:29', '2024-09-16 16:27:35');
+(3, 'arzel', 'zolina', 'farmer 2', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/3.png?v=1726475208', NULL, 2, '2024-09-16 16:26:29', '2024-09-16 16:27:35'),
+(7, 'test', 'ati', 'ati', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/7.png?v=1726816821', NULL, 3, '2024-09-20 15:12:17', '2024-09-20 15:20:21'),
+(8, 'test ', 'bpi', 'bpi', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/8.png?v=1726817439', NULL, 4, '2024-09-20 15:27:33', '2024-09-20 15:30:39');
 
 --
 -- Indexes for dumped tables
@@ -480,7 +494,8 @@ ALTER TABLE `clients`
 -- Indexes for table `inorganic_fertilizers`
 --
 ALTER TABLE `inorganic_fertilizers`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `inu_id` (`user_id`);
 
 --
 -- Indexes for table `inventory`
@@ -510,19 +525,22 @@ ALTER TABLE `order_list`
 -- Indexes for table `organic_fertilizers`
 --
 ALTER TABLE `organic_fertilizers`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ouid` (`user_id`);
 
 --
 -- Indexes for table `pesticides`
 --
 ALTER TABLE `pesticides`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pid` (`user_id`);
 
 --
 -- Indexes for table `production_harvesting`
 --
 ALTER TABLE `production_harvesting`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `u_id` (`user_id`);
 
 --
 -- Indexes for table `products`
@@ -545,7 +563,8 @@ ALTER TABLE `sales`
 -- Indexes for table `sanitizers`
 --
 ALTER TABLE `sanitizers`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sid` (`user_id`);
 
 --
 -- Indexes for table `system_info`
@@ -591,7 +610,7 @@ ALTER TABLE `clients`
 -- AUTO_INCREMENT for table `inorganic_fertilizers`
 --
 ALTER TABLE `inorganic_fertilizers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `inventory`
@@ -615,19 +634,19 @@ ALTER TABLE `order_list`
 -- AUTO_INCREMENT for table `organic_fertilizers`
 --
 ALTER TABLE `organic_fertilizers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pesticides`
 --
 ALTER TABLE `pesticides`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `production_harvesting`
 --
 ALTER TABLE `production_harvesting`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -645,7 +664,7 @@ ALTER TABLE `sales`
 -- AUTO_INCREMENT for table `sanitizers`
 --
 ALTER TABLE `sanitizers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `system_info`
@@ -657,7 +676,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
@@ -683,6 +702,12 @@ ALTER TABLE `categories`
   ADD CONSTRAINT `user_id_categories` FOREIGN KEY (`user_id_categories`) REFERENCES `users` (`id`);
 
 --
+-- Constraints for table `inorganic_fertilizers`
+--
+ALTER TABLE `inorganic_fertilizers`
+  ADD CONSTRAINT `inu_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
 -- Constraints for table `inventory`
 --
 ALTER TABLE `inventory`
@@ -703,6 +728,24 @@ ALTER TABLE `order_list`
   ADD CONSTRAINT `order_list_ibfk_2` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `organic_fertilizers`
+--
+ALTER TABLE `organic_fertilizers`
+  ADD CONSTRAINT `ouid` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `pesticides`
+--
+ALTER TABLE `pesticides`
+  ADD CONSTRAINT `pid` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `production_harvesting`
+--
+ALTER TABLE `production_harvesting`
+  ADD CONSTRAINT `u_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
 -- Constraints for table `products`
 --
 ALTER TABLE `products`
@@ -714,7 +757,14 @@ ALTER TABLE `products`
 -- Constraints for table `sales`
 --
 ALTER TABLE `sales`
+  ADD CONSTRAINT `client_id` FOREIGN KEY (`clients_id`) REFERENCES `clients` (`id`),
   ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `sanitizers`
+--
+ALTER TABLE `sanitizers`
+  ADD CONSTRAINT `sid` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
