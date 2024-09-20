@@ -32,10 +32,10 @@
                 </a>
               </li>
               <li class="nav-item dropdown">
-                <a href="<?php echo base_url ?>ati/?page=product" class="nav-link nav-product">
+                <a href="<?php echo base_url ?>ati/?page=farmer" class="nav-link nav-farmer">
                   <i class="nav-icon fas fa-table"></i>
                   <p>
-                    User List
+                    Farmer List
                   </p>
                 </a>
               </li>
