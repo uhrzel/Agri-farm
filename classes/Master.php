@@ -754,26 +754,32 @@ class Master extends DBConnection
 	{
 		extract($_POST);
 		$data = "";
+
+		// Determine the crop value
+		$cropValue = isset($crops) && $crops == 'Other' ? addslashes(htmlentities($customCrop)) : addslashes(htmlentities($crops));
+
 		foreach ($_POST as $k => $v) {
-			if (!in_array($k, array('id', 'crops'))) {
+			if (!in_array($k, array('id', 'crops', 'customCrop'))) {
 				if (!empty($data)) $data .= ",";
 				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
 			}
 		}
-		if (isset($_POST['crops'])) {
+
+		// Store the crop value determined above
+		if (!empty($cropValue)) {
 			if (!empty($data)) $data .= ",";
-			$data .= " `crops`='" . addslashes(htmlentities($crops)) . "' ";
+			$data .= " `crops`='{$cropValue}' ";
 		}
 
 		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
 
-
-		// Add the user_id to the data for insertion
+		// User ID and other checks remain the same...
 		if (empty($id)) {
-			$data .= ", `user_id` = '{$user_id}' "; // Add user_id for new entries
+			$data .= ", `user_id` = '{$user_id}' ";
 		}
 
-		$check = $this->conn->query("SELECT * FROM `production_harvesting` WHERE `crops` = '{$crops}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
+		// Check if crops entry already exists
+		$check = $this->conn->query("SELECT * FROM `production_harvesting` WHERE `crops` = '{$cropValue}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
 
 		if ($this->capture_err()) return $this->capture_err();
 
@@ -784,6 +790,7 @@ class Master extends DBConnection
 			exit;
 		}
 
+		// Database insert or update logic
 		if (empty($id)) {
 			$sql = "INSERT INTO `production_harvesting` SET {$data} ";
 			$save = $this->conn->query($sql);
@@ -805,6 +812,7 @@ class Master extends DBConnection
 
 		return json_encode($resp);
 	}
+
 
 	function delete_production()
 	{

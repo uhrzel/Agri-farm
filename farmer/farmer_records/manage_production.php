@@ -14,7 +14,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
         <div class="form-group">
             <label for="crops" class="control-label">Crops</label>
-            <select id="crops" name="crops" class="form-control form-control-sm rounded-0">
+            <select id="crops" name="crops" class="form-control form-control-sm rounded-0" onchange="toggleCustomCropInput()">
                 <option value="">Select Crop</option>
                 <option value="Sweet Pepper(Emperor F1)" <?php echo isset($crops) && $crops == 'Sweet Pepper(Emperor F1)' ? 'selected' : ''; ?>>Sweet Pepper(Emperor F1)</option>
                 <option value="Ampalaya(Galaxy F1)" <?php echo isset($crops) && $crops == 'Ampalaya(Galaxy F1)' ? 'selected' : ''; ?>>Ampalaya(Galaxy F1)</option>
@@ -23,8 +23,26 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <option value="String Beans(Makisig F1)" <?php echo isset($crops) && $crops == 'String Beans(Makisig F1)' ? 'selected' : ''; ?>>String Beans(Makisig F1)</option>
                 <option value="Hot Pepper(Lava F1)" <?php echo isset($crops) && $crops == 'Hot Pepper(Lava F1)' ? 'selected' : ''; ?>>Hot Pepper(Lava F1)</option>
                 <option value="Sweet Corn(Sweet Supreme)" <?php echo isset($crops) && $crops == 'Sweet Corn(Sweet Supreme)' ? 'selected' : ''; ?>>Sweet Corn(Sweet Supreme)</option>
+                <option value="Other" <?php echo isset($crops) && $crops == 'Other' ? 'selected' : ''; ?>>Other</option>
             </select>
         </div>
+        <div id="customCropContainer" class="form-group" style="display: none;">
+            <label for="customCrop" class="control-label">Please specify the crop:</label>
+            <input type="text" id="customCrop" name="customCrop" class="form-control form-control-sm rounded-0" value="<?php echo isset($crops) && $crops == 'Other' ? $crops : ''; ?>">
+        </div>
+
+        <script>
+            function toggleCustomCropInput() {
+                const selectElement = document.getElementById('crops');
+                const customCropContainer = document.getElementById('customCropContainer');
+                if (selectElement.value === 'Other') {
+                    customCropContainer.style.display = 'block';
+                } else {
+                    customCropContainer.style.display = 'none';
+                }
+            }
+        </script>
+
         <div class="form-group">
             <label for="crop_cycle" class="control-label">Crop Cycle</label>
             <input type="text" name="crop_cycle" id="crop_cycle" class="form-control form-control-sm rounded-0" value="<?php echo isset($crop_cycle) ? $crop_cycle : ''; ?>" />
