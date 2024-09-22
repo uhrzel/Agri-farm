@@ -32,7 +32,7 @@
 							<th>Date Harvested</th>
 							<th>Hectarage</th>
 							<th>Harvest (kg)</th>
-							<th>Actions</th>
+							<!-- 	<th>Actions</th> -->
 						</tr>
 					</thead>
 					<tbody>
@@ -55,10 +55,10 @@
 								<td><?php echo $row['date_harvest']; ?></td>
 								<td><?php echo $row['hectarage']; ?></td>
 								<td><?php echo $row['harvest_kg']; ?></td>
-								<td>
-									<!-- Archive button -->
+								<!-- 	<td>
+								
 									<button type="button" class="btn btn-danger btn-sm archive-btn" data-id="<?php echo $row['id']; ?>">Archive</button>
-								</td>
+								</td> -->
 							</tr>
 						<?php endwhile; ?>
 					</tbody>

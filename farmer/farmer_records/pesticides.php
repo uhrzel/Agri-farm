@@ -70,6 +70,8 @@
                                         <a class="dropdown-item edit_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+                                        <a class="dropdown-item archive_btn" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-archive text-success"></span> Archive</a>
+
                                     </div>
                                 </td>
                             </tr>
@@ -105,6 +107,30 @@
             order: [0, 'asc']
         });
         $('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
+        $('.archive_btn').click(function() {
+            var id = $(this).attr('data-id');
+            console.log(id); // Debug: Check if ID is captured correctly
+            if (confirm('Are you sure you want to archive this record?')) {
+                $.ajax({
+                    url: 'farmer_records/archive_pesticides.php',
+                    method: 'POST',
+                    data: {
+                        id: id
+                    },
+                    success: function(resp) {
+                        console.log(resp); // Debug: Check server response
+                        if (resp == 1) {
+                            alert_toast("Record archived successfully", 'success');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            alert_toast("Failed to archive the record: " + resp, 'error'); // Display error message
+                        }
+                    }
+                });
+            }
+        });
     })
 
     function delete_pesticides($id) {

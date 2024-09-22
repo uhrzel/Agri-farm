@@ -66,7 +66,7 @@
                   <p>Sanitizers</p>
                 </a>
               </li>
-              <li class="nav-header">Documented History</li>
+              <!--   <li class="nav-header">Documented History</li>
               <li class="nav-item dropdown">
                 <a href="<?php echo base_url ?>ati/?page=archive" class="nav-link nav-archive">
                   <i class="nav-icon fas fa-archive"></i>
@@ -78,7 +78,7 @@
                   <i class="nav-icon fas fa-history"></i>
                   <p>History</p>
                 </a>
-              </li>
+              </li> -->
 
             </ul>
           </nav>

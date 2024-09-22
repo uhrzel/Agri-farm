@@ -30,7 +30,7 @@
 						<th>Crops Applied</th>
 						<th>Target Pest</th>
 						<th>Expiry Date</th>
-						<th>Actions</th>
+						<!-- 				<th>Actions</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -53,10 +53,10 @@
 							<td><?php echo $row['crops_applied']; ?></td>
 							<td><?php echo $row['target_pest']; ?></td>
 							<td><?php echo $row['expiry_date']; ?></td>
-							<td>
-								<!-- Archive button -->
+							<!-- <td>
+							
 								<button type="button" class="btn btn-danger btn-sm archive-btn" data-id="<?php echo $row['id']; ?>">Archive</button>
-							</td>
+							</td> -->
 						</tr>
 					<?php endwhile; ?>
 				</tbody>

@@ -120,6 +120,20 @@
                 </a>
               </li>
 
+              <li class="nav-header">Documented History</li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>farmer/?page=archive" class="nav-link nav-archive">
+                  <i class="nav-icon fas fa-archive"></i>
+                  <p>Archive</p>
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="<?php echo base_url ?>farmer/?page=history" class="nav-link nav-history">
+                  <i class="nav-icon fas fa-history"></i>
+                  <p>History</p>
+                </a>
+              </li>
+
               <!--  <li class="nav-item dropdown">
                 <a href="<?php echo base_url ?>farmer/?page=system_info" class="nav-link nav-system_info">
                   <i class="nav-icon fas fa-cogs"></i>

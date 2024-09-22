@@ -27,7 +27,7 @@
 						<th>Active Ingredient</th>
 						<th>Brand Name</th>
 						<th>Expiry Date</th>
-						<th>Actions</th>
+						<!-- 	<th>Actions</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -48,10 +48,10 @@
 							<td><?php echo htmlspecialchars($row['active_ingredient'], ENT_QUOTES); ?></td>
 							<td><?php echo htmlspecialchars($row['brand_name'], ENT_QUOTES); ?></td>
 							<td><?php echo htmlspecialchars(date('Y-m-d', strtotime($row['expiry_date'])), ENT_QUOTES); ?></td>
-							<td>
-								<!-- Archive button -->
+							<!-- <td>
+							
 								<button type="button" class="btn btn-danger btn-sm archive-btn" data-id="<?php echo $row['id']; ?>">Archive</button>
-							</td>
+							</td> -->
 						</tr>
 					<?php endwhile; ?>
 				</tbody>

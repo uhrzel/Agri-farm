@@ -1137,62 +1137,52 @@ class Master extends DBConnection
 	function farmer_register()
 	{
 		extract($_POST);
-		$data = "";
 		$_POST['password'] = md5($_POST['password']); // Hash password
 		$_POST['type'] = 2; // Set type to 2 for farmers
 
+		// Convert arrays to JSON
+		if (isset($_POST['required_documents'])) {
+			$_POST['required_documents'] = json_encode($_POST['required_documents']);
+		} else {
+			$_POST['required_documents'] = null; // or handle default
+		}
+
+		if (isset($_POST['additional_documents'])) {
+			$_POST['additional_documents'] = json_encode($_POST['additional_documents']);
+		} else {
+			$_POST['additional_documents'] = null; // or handle default
+		}
+
 		// Construct the data for insertion/updating, excluding 'id' from INSERT query
+		$data = "";
 		foreach ($_POST as $k => $v) {
 			if (!in_array($k, array('id'))) {
 				if (!empty($data)) $data .= ",";
-				$data .= " `{$k}`='{$v}' ";
+				// Check if $v is an array and handle accordingly
+				if (is_array($v)) {
+					$v = json_encode($v); // You can encode arrays to JSON
+				}
+				$data .= " `{$k}`='{$this->conn->real_escape_string($v)}' "; // Use real_escape_string for safety
 			}
 		}
 
-		// Check if username already exists
 		$check_query = "SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : "");
 		$check = $this->conn->query($check_query)->num_rows;
 
-		if ($this->capture_err())
-			return $this->capture_err();
-
 		if ($check > 0) {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Username already taken.";
-			return json_encode($resp);
-			exit;
+			return json_encode(['status' => 'failed', 'msg' => "Username already taken."]);
 		}
 
-		if (empty($id)) {
-			// Insert query - do not include `id`
-			$sql = "INSERT INTO `users` SET {$data}";
+		// Insert query
+		$insert_query = "INSERT INTO `users` SET {$data}";
+		if ($this->conn->query($insert_query)) {
+			return json_encode(['status' => 'success', 'msg' => "Registration successful."]);
 		} else {
-			// Update query
-			$sql = "UPDATE `users` SET {$data} WHERE id = '{$id}'";
+			return json_encode(['status' => 'failed', 'msg' => "Registration failed: " . $this->conn->error]);
 		}
-
-		$save = $this->conn->query($sql);
-
-		if ($save) {
-			$cid = !empty($id) ? $id : $this->conn->insert_id;
-			$resp['status'] = 'success';
-			if (empty($id)) {
-				$this->settings->set_flashdata('success', "Account successfully created.");
-			} else {
-				$this->settings->set_flashdata('success', "Account successfully updated.");
-			}
-			$this->settings->set_userdata('login_type', 2);
-			foreach ($_POST as $k => $v) {
-				$this->settings->set_userdata($k, $v);
-			}
-			$this->settings->set_userdata('id', $cid);
-		} else {
-			$resp['status'] = 'failed';
-			$resp['err'] = $this->conn->error . "[{$sql}]";
-		}
-
-		return json_encode($resp);
 	}
+
+
 	function ati_register()
 	{
 		extract($_POST);
