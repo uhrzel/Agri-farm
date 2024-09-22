@@ -139,6 +139,11 @@ class Users extends DBConnection
 		}
 
 		foreach ($_POST as $k => $v) {
+			// Handle checkbox arrays (e.g. additional_requirements, required_documents)
+			if (is_array($v)) {
+				$v = json_encode($v); // Convert the array to JSON format before saving
+			}
+
 			if (!in_array($k, array('id', 'password'))) {
 				if (!empty($data)) $data .= " , ";
 				$data .= " {$k} = '{$v}' ";
@@ -186,6 +191,7 @@ class Users extends DBConnection
 			}
 		}
 	}
+
 
 	private function handle_file_upload($id)
 	{
