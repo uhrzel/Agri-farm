@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:8111
--- Generation Time: Sep 20, 2024 at 05:18 PM
+-- Generation Time: Sep 22, 2024 at 04:23 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -323,9 +323,9 @@ CREATE TABLE `production_harvesting` (
 --
 
 INSERT INTO `production_harvesting` (`id`, `user_id`, `crops`, `crop_cycle`, `date_planted`, `date_harvest`, `hectarage`, `harvest_kg`, `location`, `delete_flag`) VALUES
-(1, 2, 'Sweet Pepper(Emperor F1)', '4 Months', '2021-07-21', '2021-12-18', '2,100 sqm', '3,500 kg', 'Tunnel 6 - 10', 0),
-(2, 3, 'Ampalaya(Galaxy F1)', '3 Months', '2021-08-02', '2021-11-13', '420 sqm', '900 kg', 'Tunnel 3', 0),
-(5, 2, 'Eggplant(Calixto F1)', 'sasss', '2024-10-12', '2024-09-11', '1', '1', '1', 1);
+(1, 2, 'Sweet Pepper(Emperor F1)', '4 Months', '2021-07-21', '2021-12-18', '2,100 sqm', '3,500 kg', 'Tunnel 6 - 10', 1),
+(2, 3, 'Ampalaya(Galaxy F1)', '3 Months', '2021-08-02', '2021-11-13', '420 sqm', '900 kg', 'Tunnel 3', 1),
+(5, 2, 'Eggplant(Calixto F1)', 'sasss', '2024-10-12', '2024-09-11', '1', '1', '1', 0);
 
 -- --------------------------------------------------------
 
@@ -439,24 +439,41 @@ CREATE TABLE `users` (
   `firstname` varchar(250) NOT NULL,
   `lastname` varchar(250) NOT NULL,
   `username` text NOT NULL,
+  `type_application` varchar(250) NOT NULL,
+  `farm_name` varchar(250) NOT NULL,
+  `hectarage_farm_size` varchar(250) NOT NULL,
+  `street` varchar(250) NOT NULL,
+  `barangay` varchar(250) NOT NULL,
+  `city` varchar(250) NOT NULL,
+  `province` varchar(250) NOT NULL,
+  `crop` varchar(250) NOT NULL,
+  `variety` varchar(250) NOT NULL,
+  `hectarage_crop` varchar(250) NOT NULL,
+  `harvest` varchar(250) NOT NULL,
+  `purpose` varchar(250) NOT NULL,
   `password` text NOT NULL,
   `avatar` text DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
   `type` tinyint(1) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp()
+  `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `required_documents` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`required_documents`)),
+  `additional_documents` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`additional_documents`)),
+  `email_address` varchar(250) DEFAULT NULL,
+  `mobile_number` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`) VALUES
-(1, 'Admin', 'Admin1', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'uploads/avatars/1.png?v=1645064505', NULL, 1, '2021-01-20 14:02:37', '2024-09-16 16:12:48'),
-(2, 'Farmer', 'farmer', 'farmer', '97f974881b3726d9a77014b5f3b4d795', 'uploads/avatars/2.png?v=1726475276', NULL, 2, '2021-01-20 14:02:37', '2024-09-16 17:29:39'),
-(3, 'arzel', 'zolina', 'farmer 2', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/3.png?v=1726475208', NULL, 2, '2024-09-16 16:26:29', '2024-09-16 16:27:35'),
-(7, 'test', 'ati', 'ati', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/7.png?v=1726816821', NULL, 3, '2024-09-20 15:12:17', '2024-09-20 15:20:21'),
-(8, 'test ', 'bpi', 'bpi', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/8.png?v=1726817439', NULL, 4, '2024-09-20 15:27:33', '2024-09-20 15:30:39');
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `type_application`, `farm_name`, `hectarage_farm_size`, `street`, `barangay`, `city`, `province`, `crop`, `variety`, `hectarage_crop`, `harvest`, `purpose`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`, `required_documents`, `additional_documents`, `email_address`, `mobile_number`) VALUES
+(1, 'Admin', 'Admin1', 'admin', '', '', '', '', '', '', '', '', '', '', '', '', '21232f297a57a5a743894a0e4a801fc3', 'uploads/avatars/1.png?v=1645064505', NULL, 1, '2021-01-20 14:02:37', '2024-09-16 16:12:48', NULL, NULL, NULL, NULL),
+(2, 'Farmer', 'farmer', 'farmer', '', '', '', '', '', '', '', '', '', '', '', '', '97f974881b3726d9a77014b5f3b4d795', 'uploads/avatars/2.png?v=1726475276', NULL, 2, '2021-01-20 14:02:37', '2024-09-16 17:29:39', NULL, NULL, NULL, NULL),
+(3, 'arzel', 'zolina', 'farmer 2', '', '', '', '', '', '', '', '', '', '', '', '', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/3.png?v=1726475208', NULL, 2, '2024-09-16 16:26:29', '2024-09-16 16:27:35', NULL, NULL, NULL, NULL),
+(7, 'test', 'ati', 'ati', '', '', '', '', '', '', '', '', '', '', '', '', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/7.png?v=1726816821', NULL, 3, '2024-09-20 15:12:17', '2024-09-20 15:20:21', NULL, NULL, NULL, NULL),
+(8, 'test ', 'bpi', 'bpi', '', '', '', '', '', '', '', '', '', '', '', '', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/8.png?v=1726817439', NULL, 4, '2024-09-20 15:27:33', '2024-09-20 15:30:39', NULL, NULL, NULL, NULL),
+(18, '1', '1', '1', '[\"New\"]', '21', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', 'c4ca4238a0b923820dcc509a6f75849b', NULL, NULL, 2, '2024-09-22 10:22:27', NULL, '[\"Farm or organization profile\"]', '[\"Quality Management System\\/Internal Control System\"]', '21@gmail.com', '121');
 
 --
 -- Indexes for dumped tables
@@ -676,7 +693,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Constraints for dumped tables
