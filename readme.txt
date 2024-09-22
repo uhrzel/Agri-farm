@@ -36,6 +36,11 @@ customer
 user: customer
 pass: customer
 
-ATI/BPI
-to be followed
+ATI
+user: ati
+pass: 123
+
+BPI
+user: ati
+pass: 123
 
