@@ -5,13 +5,13 @@
 <?php endif; ?>
 <div class="card card-outline card-primary">
     <div class="card-header">
-        <h3 class="card-title">Archive of Production and Harvesting Records</h3>
+        <h3 class="card-title">History</h3>
 
     </div>
     <div class="card-body">
         <div class="container-fluid">
             <div class="container-fluid">
-                <table class="table table-hover table-striped">
+                <!--   <table class="table table-hover table-striped">
                     <colgroup>
                         <col width="5%">
                         <col width="15%">
@@ -61,7 +61,7 @@
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
-                </table>
+                </table> -->
 
             </div>
         </div>

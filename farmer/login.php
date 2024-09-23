@@ -201,7 +201,7 @@
               <input type="checkbox" name="required_documents[]" value="Production and Harvesting Records"> Production and Harvesting Records<br>
               <input type="checkbox" name="required_documents[]" value="List of Farm inputs(Annex B)"> List of Farm inputs(Annex B)<br>
               <input type="checkbox" name="required_documents[]" value="Certificate of Nutrient Soil Analysis"> Certificate of Nutrient Soil Analysis<br>
-              <input type="checkbox" name="required_documents[]" value=" Certificate of training on GAP conducted by ATI, BPI, LGU, DA RFO, SUCs or by ATI accredited service providers"> Certificate of training on GAP conducted by ATI, BPI, LGU, DA RFO, SUCs or by ATI accredited service providers<br>
+              <input type="checkbox" name="required_documents[]" value="Certificate of training on GAP conducted by ATI, BPI, LGU, DA RFO, SUCs or by ATI accredited service providers"> Certificate of training on GAP conducted by ATI, BPI, LGU, DA RFO, SUCs or by ATI accredited service providers<br>
               <input type="checkbox" name="required_documents[]" value="Certification of Registration and other permits e.g. RSBSA, SEC, DTI,CDA(as applicable)"> Certification of Registration and other permits e.g. RSBSA, SEC, DTI,CDA(as applicable)<br>
             </div>
 

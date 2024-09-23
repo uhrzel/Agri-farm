@@ -145,7 +145,7 @@ foreach ($user->fetch_array() as $k => $v) {
 				<button class="btn btn-sm btn-primary" form="manage-user">Update</button>
 				<form id="generate-pdf-form" action="user/generate_pdf.php" method="POST" target="_blank">
 					<input type="hidden" name="id" value="<?php echo $_settings->userdata('id') ?>">
-					<button type="submit" class="btn btn-sm btn-warning">Generate PDF</button>
+					<button type="submit" class="btn btn-sm btn-warning" style="background-color: red; color: white;">Generate PDF</button>
 				</form>
 				<button class="btn btn-sm btn-default" type="button" id="close">Close</button>
 			</div>
