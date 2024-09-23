@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:8111
--- Generation Time: Sep 22, 2024 at 04:23 AM
+-- Generation Time: Sep 23, 2024 at 07:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -469,11 +469,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `type_application`, `farm_name`, `hectarage_farm_size`, `street`, `barangay`, `city`, `province`, `crop`, `variety`, `hectarage_crop`, `harvest`, `purpose`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`, `required_documents`, `additional_documents`, `email_address`, `mobile_number`) VALUES
 (1, 'Admin', 'Admin1', 'admin', '', '', '', '', '', '', '', '', '', '', '', '', '21232f297a57a5a743894a0e4a801fc3', 'uploads/avatars/1.png?v=1645064505', NULL, 1, '2021-01-20 14:02:37', '2024-09-16 16:12:48', NULL, NULL, NULL, NULL),
-(2, 'Farmer', 'farmer', 'farmer', '', '', '', '', '', '', '', '', '', '', '', '', '97f974881b3726d9a77014b5f3b4d795', 'uploads/avatars/2.png?v=1726475276', NULL, 2, '2021-01-20 14:02:37', '2024-09-16 17:29:39', NULL, NULL, NULL, NULL),
+(2, 'Farmer', 'farmer', 'farmer', '[\"New\"]', 'Kablon farm', '1.5 hectarage', 'test street', 'Kablon', 'Tupi', 'South Cotabato', 'highbreed', 'test variety', '20.5 hectarage', 'day 20', 'to income', '97f974881b3726d9a77014b5f3b4d795', 'uploads/avatars/2.png?v=1726475276', NULL, 2, '2021-01-20 14:02:37', '2024-09-23 13:01:25', '[\"Farm or organization profile\",\"Farm map\",\"Farm layout\",\"Field operation Procedures\",\"Production and Harvesting Records\",\"List of Farm inputs (Annex B)\",\"Certificate of Nutrient Soil Analysis\",\"Certificate of training on GAP conducted by ATI, BPI, LGU, DA RFO, SUCs or by ATI accredited service providers\",\"Certification of Registration and other permits e.g. RSBSA, SEC, DTI, CDA (as applicable)\"]', '[\"Quality Management System/Internal Control System\",\"Procedure for accreditation of farmers/growers\",\"Manual of Procedure for outgrowership scheme\"]', 'kablon@gmail.com', '09090937257'),
 (3, 'arzel', 'zolina', 'farmer 2', '', '', '', '', '', '', '', '', '', '', '', '', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/3.png?v=1726475208', NULL, 2, '2024-09-16 16:26:29', '2024-09-16 16:27:35', NULL, NULL, NULL, NULL),
 (7, 'test', 'ati', 'ati', '', '', '', '', '', '', '', '', '', '', '', '', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/7.png?v=1726816821', NULL, 3, '2024-09-20 15:12:17', '2024-09-20 15:20:21', NULL, NULL, NULL, NULL),
 (8, 'test ', 'bpi', 'bpi', '', '', '', '', '', '', '', '', '', '', '', '', '202cb962ac59075b964b07152d234b70', 'uploads/avatars/8.png?v=1726817439', NULL, 4, '2024-09-20 15:27:33', '2024-09-20 15:30:39', NULL, NULL, NULL, NULL),
-(18, '1', '1', '1', '[\"New\"]', '21', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', 'c4ca4238a0b923820dcc509a6f75849b', NULL, NULL, 2, '2024-09-22 10:22:27', NULL, '[\"Farm or organization profile\"]', '[\"Quality Management System\\/Internal Control System\"]', '21@gmail.com', '121');
+(18, '1', '1', '1', '[\"New\"]', '21', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', 'c4ca4238a0b923820dcc509a6f75849b', 'uploads/avatars/18.png?v=1727017807', NULL, 2, '2024-09-22 10:22:27', '2024-09-22 23:18:53', '[\"Farm or organization profile\"]', '[\"Quality Management System/Internal Control System\"]', '21@gmail.com', '121');
 
 --
 -- Indexes for dumped tables
