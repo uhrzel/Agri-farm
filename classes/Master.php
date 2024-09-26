@@ -758,8 +758,26 @@ class Master extends DBConnection
 		// Determine the crop value
 		$cropValue = isset($crops) && $crops == 'Other' ? addslashes(htmlentities($customCrop)) : addslashes(htmlentities($crops));
 
+		// Concatenate the selected months and days into a single string
+		$cropCycle = '';
+		if (!empty($crop_cycle_month) && $crop_cycle_month > 0) {
+			$cropCycle .= "{$crop_cycle_month} month" . ($crop_cycle_month > 1 ? 's' : '');
+		}
+		if (!empty($crop_cycle_day) && $crop_cycle_day > 0) {
+			if (!empty($cropCycle)) {
+				$cropCycle .= ', '; // Add a comma if there are both months and days
+			}
+			$cropCycle .= "{$crop_cycle_day} day" . ($crop_cycle_day > 1 ? 's' : '');
+		}
+
+		// Add the formatted crop cycle to the data to be stored
+		if (!empty($cropCycle)) {
+			if (!empty($data)) $data .= ",";
+			$data .= " `crop_cycle`='" . $this->conn->real_escape_string($cropCycle) . "' ";
+		}
+
 		foreach ($_POST as $k => $v) {
-			if (!in_array($k, array('id', 'crops', 'customCrop'))) {
+			if (!in_array($k, array('id', 'crops', 'customCrop', 'crop_cycle_month', 'crop_cycle_day'))) {
 				if (!empty($data)) $data .= ",";
 				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
 			}
@@ -773,7 +791,6 @@ class Master extends DBConnection
 
 		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
 
-		// User ID and other checks remain the same...
 		if (empty($id)) {
 			$data .= ", `user_id` = '{$user_id}' ";
 		}
@@ -787,7 +804,6 @@ class Master extends DBConnection
 			$resp['status'] = 'failed';
 			$resp['msg'] = "Crops entry already exists.";
 			return json_encode($resp);
-			exit;
 		}
 
 		// Database insert or update logic

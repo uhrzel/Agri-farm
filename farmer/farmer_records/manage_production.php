@@ -45,16 +45,60 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
         <div class="form-group">
             <label for="crop_cycle" class="control-label">Crop Cycle</label>
-            <input type="text" name="crop_cycle" id="crop_cycle" class="form-control form-control-sm rounded-0" value="<?php echo isset($crop_cycle) ? $crop_cycle : ''; ?>" />
+
+            <!-- Dropdown for selecting the number of months -->
+            <select id="month_select" name="crop_cycle_month" class="form-control form-control-sm rounded-0 mt-2" onchange="calculateHarvestDate()">
+                <option value="">Select Number of Months</option>
+                <!-- Generate month options from 1 to 12 -->
+                <?php for ($i = 1; $i <= 12; $i++): ?>
+                    <option value="<?php echo $i; ?>"><?php echo $i; ?> Month(s)</option>
+                <?php endfor; ?>
+            </select>
+
+            <!-- Dropdown for selecting the number of days -->
+            <select id="day_select" name="crop_cycle_day" class="form-control form-control-sm rounded-0 mt-2" onchange="calculateHarvestDate()">
+                <option value="">Select Number of Days</option>
+                <!-- Generate day options from 1 to 31 -->
+                <?php for ($i = 1; $i <= 31; $i++): ?>
+                    <option value="<?php echo $i; ?>"><?php echo $i; ?> Day(s)</option>
+                <?php endfor; ?>
+            </select>
         </div>
+
         <div class="form-group">
             <label for="date_planted" class="control-label">Date Planted</label>
             <input type="date" name="date_planted" id="date_planted" class="form-control form-control-sm rounded-0" value="<?php echo isset($date_planted) && $date_planted != '0000-00-00' ? $date_planted : ''; ?>" />
         </div>
+
+
         <div class="form-group">
             <label for="date_harvest" class="control-label">Date Harvest</label>
             <input type="date" name="date_harvest" id="date_harvest" class="form-control form-control-sm rounded-0" value="<?php echo isset($date_harvest) && $date_harvest != '0000-00-00' ? $date_harvest : ''; ?>" />
         </div>
+
+        <script>
+            function calculateHarvestDate() {
+                // Get the selected number of months and days from the correct IDs
+                var months = parseInt(document.getElementById('month_select').value) || 0;
+                var days = parseInt(document.getElementById('day_select').value) || 0;
+
+                // Create a new Date object for the current date
+                var currentDate = new Date();
+
+                // Add the selected number of months and days to the current date
+                currentDate.setMonth(currentDate.getMonth() + months); // Add months
+                currentDate.setDate(currentDate.getDate() + days); // Add days
+
+                // Format the new date in YYYY-MM-DD format
+                var harvestDate = currentDate.toISOString().split('T')[0];
+
+                // Set the harvest date in the date_harvest input field
+                document.getElementById('date_harvest').value = harvestDate;
+
+
+            }
+        </script>
+
         <div class="form-group">
             <label for="hectarage" class="control-label">Hectarage</label>
             <input type="text" name="hectarage" id="hectarage" class="form-control form-control-sm rounded-0" value="<?php echo isset($hectarage) ? $hectarage : ''; ?>" />

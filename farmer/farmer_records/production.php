@@ -47,15 +47,14 @@
                         // Adjust query to select from production_harvesting table
                         $qry = $conn->query("SELECT * FROM `production_harvesting` WHERE `user_id` = {$user_id} AND `delete_flag` = 0 ORDER BY `id` DESC");
                         while ($row = $qry->fetch_assoc()):
-                            // Format the harvest date range if needed
-                            $harvest_date = $row['date_planted'] . ' to ' . $row['date_harvest'];
+
                         ?>
                             <tr>
                                 <td class="text-center"><?php echo $i++; ?></td>
                                 <td><?php echo htmlspecialchars($row['crops']); ?></td>
                                 <td><?php echo htmlspecialchars($row['crop_cycle']); ?></td>
-                                <td><?php echo date("Y-m-d", strtotime($row['date_planted'])); ?></td>
-                                <td><?php echo htmlspecialchars($harvest_date); ?></td>
+                                <td><?php echo date("F j, Y", strtotime($row['date_planted'])); ?></td>
+                                <td><?php echo date("F j, Y", strtotime($row['date_harvest'])); ?></td>
                                 <td><?php echo htmlspecialchars($row['hectarage']); ?></td>
                                 <td><?php echo htmlspecialchars($row['harvest_kg']); ?></td>
                                 <td><?php echo htmlspecialchars($row['location']); ?></td>
