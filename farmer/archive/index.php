@@ -33,6 +33,7 @@
                             <th>Hectarage</th>
                             <th>Estimated Harvest</th>
                             <th>Location</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,6 +53,20 @@
                                 <td><?php echo htmlspecialchars($row['hectarage']); ?></td>
                                 <td><?php echo htmlspecialchars($row['harvest_kg']); ?></td>
                                 <td><?php echo htmlspecialchars($row['location']); ?></td>
+                                <td align="center">
+                                    <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                        Action
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu" role="menu">
+                                        <!--   <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-eye text-dark"></span> View</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item edit_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+                                       --> <a class="dropdown-item unarchive_btn_product" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-archive text-success"></span> Unarchive</a>
+                                    </div>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -69,6 +84,7 @@
                             <th>Crops Applied</th>
                             <th>Frequency</th>
                             <th>Expiry Date</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,6 +100,20 @@
                                 <td><?php echo htmlspecialchars($row['crops_applied']); ?></td>
                                 <td><?php echo htmlspecialchars($row['frequency']); ?></td>
                                 <td><?php echo htmlspecialchars($row['expiry_date']); ?></td>
+                                <td align="center">
+                                    <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                        Action
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu" role="menu">
+                                        <!--   <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-eye text-dark"></span> View</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item edit_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+                                       --> <a class="dropdown-item unarchive_btn_inorganic" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-archive text-success"></span> Unarchive</a>
+                                    </div>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -101,6 +131,7 @@
                             <th>Crops Applied</th>
                             <th>Frequency</th>
                             <th>Expiry Date</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,6 +147,20 @@
                                 <td><?php echo htmlspecialchars($row['crops_applied']); ?></td>
                                 <td><?php echo htmlspecialchars($row['frequency']); ?></td>
                                 <td><?php echo htmlspecialchars($row['expiry_date']); ?></td>
+                                <td align="center">
+                                    <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                        Action
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu" role="menu">
+                                        <!--   <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-eye text-dark"></span> View</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item edit_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+                                       --> <a class="dropdown-item unarchive_btn_organic" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-archive text-success"></span> Unarchive</a>
+                                    </div>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -135,6 +180,7 @@
                             <th>Target Pest</th>
                             <th>Frequency</th>
                             <th>Expiry Date</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -152,6 +198,20 @@
                                 <td><?php echo htmlspecialchars($row['target_pest']); ?></td>
                                 <td><?php echo htmlspecialchars($row['frequency']); ?></td>
                                 <td><?php echo htmlspecialchars($row['expiry_date']); ?></td>
+                                <td align="center">
+                                    <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                        Action
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu" role="menu">
+                                        <!--   <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-eye text-dark"></span> View</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item edit_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+                                       --> <a class="dropdown-item unarchive_btn_pesticides" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-archive text-success"></span> Unarchive</a>
+                                    </div>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -168,6 +228,7 @@
                             <th>Intended Use</th>
                             <th>Frequency</th>
                             <th>Expiry Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -182,8 +243,21 @@
                                 <td><?php echo htmlspecialchars($row['active_ingredient']); ?></td>
                                 <td><?php echo htmlspecialchars($row['brand_name']); ?></td>
                                 <td><?php echo htmlspecialchars($row['intended_use']); ?></td>
-
                                 <td><?php echo htmlspecialchars($row['expiry_date']); ?></td>
+                                <td align="center">
+                                    <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                        Action
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu" role="menu">
+                                        <!--   <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-eye text-dark"></span> View</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item edit_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+                                       --> <a class="dropdown-item unarchive_btn_sanitizers" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-archive text-success"></span> Unarchive</a>
+                                    </div>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -203,5 +277,126 @@
             order: [0, 'asc']
         });
         $('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
+
+        $('.unarchive_btn_product').click(function() {
+            var id = $(this).attr('data-id');
+            console.log(id); // Debug: Check if ID is captured correctly
+            if (confirm('Are you sure you want to unarchive this record?')) {
+                $.ajax({
+                    url: 'archive/unarchive_production_harvesting.php',
+                    method: 'POST',
+                    data: {
+                        id: id
+                    },
+                    success: function(resp) {
+                        console.log(resp); // Debug: Check server response
+                        if (resp == 1) {
+                            alert_toast("Record unarchived successfully", 'success');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            alert_toast("Failed to unaarchive the record: " + resp, 'error'); // Display error message
+                        }
+                    }
+                });
+            }
+        });
+        $('.unarchive_btn_inorganic').click(function() {
+            var id = $(this).attr('data-id');
+            console.log(id); // Debug: Check if ID is captured correctly
+            if (confirm('Are you sure you want to unarchive this record?')) {
+                $.ajax({
+                    url: 'archive/unarchive_inorganic.php',
+                    method: 'POST',
+                    data: {
+                        id: id
+                    },
+                    success: function(resp) {
+                        console.log(resp); // Debug: Check server response
+                        if (resp == 1) {
+                            alert_toast("Record unarchived successfully", 'success');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            alert_toast("Failed to unaarchive the record: " + resp, 'error'); // Display error message
+                        }
+                    }
+                });
+            }
+        });
+        $('.unarchive_btn_organic').click(function() {
+            var id = $(this).attr('data-id');
+            console.log(id); // Debug: Check if ID is captured correctly
+            if (confirm('Are you sure you want to unarchive this record?')) {
+                $.ajax({
+                    url: 'archive/unarchive_organic.php',
+                    method: 'POST',
+                    data: {
+                        id: id
+                    },
+                    success: function(resp) {
+                        console.log(resp); // Debug: Check server response
+                        if (resp == 1) {
+                            alert_toast("Record unarchived successfully", 'success');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            alert_toast("Failed to unarchive the record: " + resp, 'error'); // Display error message
+                        }
+                    }
+                });
+            }
+        });
+        $('.unarchive_btn_pesticides').click(function() {
+            var id = $(this).attr('data-id');
+            console.log(id); // Debug: Check if ID is captured correctly
+            if (confirm('Are you sure you want to unarchive this record?')) {
+                $.ajax({
+                    url: 'archive/unarchive_pesticides.php',
+                    method: 'POST',
+                    data: {
+                        id: id
+                    },
+                    success: function(resp) {
+                        console.log(resp); // Debug: Check server response
+                        if (resp == 1) {
+                            alert_toast("Record unarchived successfully", 'success');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            alert_toast("Failed to unarchive the record: " + resp, 'error'); // Display error message
+                        }
+                    }
+                });
+            }
+        });
+        $('.unarchive_btn_sanitizers').click(function() {
+            var id = $(this).attr('data-id');
+            console.log(id); // Debug: Check if ID is captured correctly
+            if (confirm('Are you sure you want to unarchive this record?')) {
+                $.ajax({
+                    url: 'archive/unarchive_sanitizers.php',
+                    method: 'POST',
+                    data: {
+                        id: id
+                    },
+                    success: function(resp) {
+                        console.log(resp); // Debug: Check server response
+                        if (resp == 1) {
+                            alert_toast("Record unarchived successfully", 'success');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            alert_toast("Failed to unarchive the record: " + resp, 'error'); // Display error message
+                        }
+                    }
+                });
+            }
+        });
     });
 </script>
