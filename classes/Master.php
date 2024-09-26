@@ -1,5 +1,11 @@
 <?php
 require_once('../config.php');
+require __DIR__ . '/../vendor/autoload.php'; // Ensure this path is correct
+
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class Master extends DBConnection
 {
 	private $settings;
@@ -438,6 +444,13 @@ class Master extends DBConnection
 			}
 		}
 		$check = $this->conn->query("SELECT * FROM `clients` where `email` = '{$email}' " . (!empty($id) ? " and id != {$id} " : "") . " ")->num_rows;
+
+		// Check if firstname and lastname combination is unique
+		$check_name = $this->conn->query("SELECT * FROM `clients` WHERE `firstname` = '{$firstname}' AND `lastname` = '{$lastname}' " . (!empty($id) ? " AND id != {$id} " : "") . " ");
+
+
+		$check_contact = $this->conn->query("SELECT * FROM `clients` WHERE `contact` = '{$contact}' " . (!empty($id) ? " AND id != {$id} " : "") . " ");
+
 		if ($this->capture_err())
 			return $this->capture_err();
 		if ($check > 0) {
@@ -446,6 +459,22 @@ class Master extends DBConnection
 			return json_encode($resp);
 			exit;
 		}
+
+		if ($check_name->num_rows > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "The name '{$firstname} {$lastname}' is already registered.";
+			return json_encode($resp);
+			exit;
+		}
+
+		// Check for existing mobile number
+		if ($check_contact->num_rows > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Mobile number '{$contact}' is already registered.";
+			return json_encode($resp);
+			exit;
+		}
+
 		if (empty($id)) {
 			$sql = "INSERT INTO `clients` set {$data} ";
 		} else {
@@ -455,15 +484,21 @@ class Master extends DBConnection
 		if ($save) {
 			$cid = !empty($id) ? $id : $this->conn->insert_id;
 			$resp['status'] = 'success';
-			if (empty($id))
-				$this->settings->set_flashdata('success', "Account successfully created.");
-			else
-				$this->settings->set_flashdata('success', "Account successfully updated.");
+			$resp['msg'] = empty($id) ? "Account successfully created." : "Account successfully updated.";
 			$this->settings->set_userdata('login_type', 2);
 			foreach ($_POST as $k => $v) {
 				$this->settings->set_userdata($k, $v);
 			}
 			$this->settings->set_userdata('id', $cid);
+
+			// Send email and capture the response
+			$email_response = $this->send_email($firstname, $lastname, $email);
+			$email_result = json_decode($email_response, true);
+
+			if ($email_result['status'] === 'failed') {
+				$resp['status'] = 'warning'; // Change status to indicate email issue
+				$resp['msg'] .= " Email could not be sent. Please check the error log.";
+			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['err'] = $this->conn->error . "[{$sql}]";
@@ -1150,6 +1185,8 @@ class Master extends DBConnection
 		}
 		return json_encode($resp);
 	}
+	// Assuming the PHPMailer library is already included and set up
+
 	function farmer_register()
 	{
 		extract($_POST);
@@ -1157,46 +1194,134 @@ class Master extends DBConnection
 		$_POST['type'] = 2; // Set type to 2 for farmers
 
 		// Convert arrays to JSON
-		if (isset($_POST['required_documents'])) {
-			$_POST['required_documents'] = json_encode($_POST['required_documents']);
-		} else {
-			$_POST['required_documents'] = null; // or handle default
-		}
-
-		if (isset($_POST['additional_documents'])) {
-			$_POST['additional_documents'] = json_encode($_POST['additional_documents']);
-		} else {
-			$_POST['additional_documents'] = null; // or handle default
-		}
+		$_POST['required_documents'] = isset($_POST['required_documents']) ? json_encode($_POST['required_documents']) : null;
+		$_POST['additional_documents'] = isset($_POST['additional_documents']) ? json_encode($_POST['additional_documents']) : null;
 
 		// Construct the data for insertion/updating, excluding 'id' from INSERT query
 		$data = "";
 		foreach ($_POST as $k => $v) {
 			if (!in_array($k, array('id'))) {
 				if (!empty($data)) $data .= ",";
-				// Check if $v is an array and handle accordingly
 				if (is_array($v)) {
-					$v = json_encode($v); // You can encode arrays to JSON
+					$v = json_encode($v);
 				}
-				$data .= " `{$k}`='{$this->conn->real_escape_string($v)}' "; // Use real_escape_string for safety
+				$data .= " `{$k}`='{$this->conn->real_escape_string($v)}' ";
 			}
 		}
 
-		$check_query = "SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : "");
-		$check = $this->conn->query($check_query)->num_rows;
-
-		if ($check > 0) {
+		// Check if username is already taken
+		$check_username = $this->conn->query("SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_username->num_rows > 0) {
 			return json_encode(['status' => 'failed', 'msg' => "Username already taken."]);
 		}
+
+		// Check if mobile number is already taken
+		$check_mobile = $this->conn->query("SELECT * FROM `users` WHERE `mobile_number` = '{$mobile_number}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_mobile->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "Mobile number '{$mobile_number}' is already registered."]);
+		}
+
+		// Check if first name and last name combination is unique
+		$check_name = $this->conn->query("SELECT * FROM `users` WHERE `firstname` = '{$firstname}' AND `lastname` = '{$lastname}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_name->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "The name '{$firstname} {$lastname}' is already registered."]);
+		}
+
+		$check_name = $this->conn->query("SELECT * FROM `users` WHERE `firstname` = '{$firstname}' AND `lastname` = '{$lastname}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_name->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "The name '{$firstname} {$lastname}' is already registered."]);
+		}
+
+		$check_email = $this->conn->query("SELECT * FROM `users` WHERE `email_address` = '{$email_address}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_email->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "The name '{$email_address}' is already registered."]);
+		}
+
 
 		// Insert query
 		$insert_query = "INSERT INTO `users` SET {$data}";
 		if ($this->conn->query($insert_query)) {
-			return json_encode(['status' => 'success', 'msg' => "Registration successful."]);
+			// Registration successful, now send the email
+			$registration_successful = true;
+			// Move the email sending logic here
+			$mail = new PHPMailer(true);
+
+			try {
+				// Server settings
+				$mail->isSMTP();
+				$mail->Host = 'smtp.gmail.com';
+				$mail->SMTPAuth = true;
+				$mail->Username = 'ojt.rms.group.4@gmail.com';
+				$mail->Password = 'hbpezpowjedwoctl'; // Consider using environment variables for sensitive data
+				$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Change this
+				$mail->Port = 465; // Use 587 if using ENCRYPTION_STARTTLS
+
+				// Recipients
+				$mail->setFrom('ojt.rms.group.4@gmail.com', 'Farmer Registration');
+				$mail->addAddress($email_address);
+
+				// Content
+				$mail->isHTML(true);
+				$mail->Subject = 'Registration Successful';
+				$mail->Body    = '
+    <html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+                padding: 20px;
+                line-height: 1.6;
+            }
+            .container {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #4CAF50; /* Green color for the heading */
+            }
+            p {
+                margin: 0 0 10px;
+            }
+            .footer {
+                margin-top: 20px;
+                font-size: 0.9em;
+                color: #666;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Welcome to Our Farm Registration</h1>
+            <p>Dear ' . htmlspecialchars($firstname . ' ' . $lastname) . ',</p>
+            <p>Thank you for registering with us! We are excited to have you join our community of farmers.</p>
+            <p>If you have any questions or need assistance, feel free to reach out to us.</p>
+            <p>Best Regards,<br>Your Farm Team</p>
+        </div>
+        <div class="footer">
+            <p>This email was sent to you as a part of the registration process. If you did not register, please ignore this message.</p>
+        </div>
+    </body>
+    </html>
+';
+				$mail->AltBody = 'Dear ' . htmlspecialchars($firstname . ' ' . $lastname) . ', Thank you for registering with us! We are excited to have you join our community of farmers.';
+
+				$mail->send();
+				echo json_encode(['status' => 'success', 'msg' => "Registration successful. Email has been sent."]);
+			} catch (Exception $e) {
+				// Log the error to a file
+				error_log("Email could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, 'email_errors.log');
+				echo json_encode(['status' => 'failed', 'msg' => "Registration successful but email could not be sent. Please check the error log."]);
+			}
 		} else {
 			return json_encode(['status' => 'failed', 'msg' => "Registration failed: " . $this->conn->error]);
 		}
 	}
+
+
 
 
 	function ati_register()
@@ -1204,7 +1329,7 @@ class Master extends DBConnection
 		extract($_POST);
 		$data = "";
 		$_POST['password'] = md5($_POST['password']); // Hash password
-		$_POST['type'] = 3; // Set type to 2 for farmers
+		$_POST['type'] = 3; // Set type to 3 for farmers
 
 		// Construct the data for insertion/updating, excluding 'id' from INSERT query
 		foreach ($_POST as $k => $v) {
@@ -1215,42 +1340,56 @@ class Master extends DBConnection
 		}
 
 		// Check if username already exists
-		$check_query = "SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : "");
-		$check = $this->conn->query($check_query)->num_rows;
-
-		if ($this->capture_err())
-			return $this->capture_err();
-
-		if ($check > 0) {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Username already taken.";
-			return json_encode($resp);
-			exit;
+		$check_username = $this->conn->query("SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_username->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "Username already taken."]);
 		}
 
-		if (empty($id)) {
-			// Insert query - do not include `id`
-			$sql = "INSERT INTO `users` SET {$data}";
-		} else {
-			// Update query
-			$sql = "UPDATE `users` SET {$data} WHERE id = '{$id}'";
+		// Check if mobile number is already taken
+		$check_mobile = $this->conn->query("SELECT * FROM `users` WHERE `mobile_number` = '{$mobile_number}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_mobile->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "Mobile number '{$mobile_number}' is already registered."]);
 		}
 
+		// Check if first name and last name combination is unique
+		$check_name = $this->conn->query("SELECT * FROM `users` WHERE `firstname` = '{$firstname}' AND `lastname` = '{$lastname}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_name->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "The name '{$firstname} {$lastname}' is already registered."]);
+		}
+
+		$check_name = $this->conn->query("SELECT * FROM `users` WHERE `firstname` = '{$firstname}' AND `lastname` = '{$lastname}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_name->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "The name '{$firstname} {$lastname}' is already registered."]);
+		}
+
+		$check_email = $this->conn->query("SELECT * FROM `users` WHERE `email_address` = '{$email_address}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_email->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "The name '{$email_address}' is already registered."]);
+		}
+
+
+		// Prepare the SQL query for insertion or updating
+		$sql = empty($id) ? "INSERT INTO `users` SET {$data}" : "UPDATE `users` SET {$data} WHERE id = '{$id}'";
 		$save = $this->conn->query($sql);
 
 		if ($save) {
 			$cid = !empty($id) ? $id : $this->conn->insert_id;
 			$resp['status'] = 'success';
-			if (empty($id)) {
-				$this->settings->set_flashdata('success', "Account successfully created.");
-			} else {
-				$this->settings->set_flashdata('success', "Account successfully updated.");
-			}
+			$resp['msg'] = empty($id) ? "Account successfully created." : "Account successfully updated.";
 			$this->settings->set_userdata('login_type', 3);
 			foreach ($_POST as $k => $v) {
 				$this->settings->set_userdata($k, $v);
 			}
 			$this->settings->set_userdata('id', $cid);
+
+			// Send email and capture the response
+			$email_response = $this->send_email($firstname, $lastname, $email_address);
+			$email_result = json_decode($email_response, true);
+
+			if ($email_result['status'] === 'failed') {
+				$resp['status'] = 'warning'; // Change status to indicate email issue
+				$resp['msg'] .= " Email could not be sent. Please check the error log.";
+			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['err'] = $this->conn->error . "[{$sql}]";
@@ -1275,18 +1414,33 @@ class Master extends DBConnection
 		}
 
 		// Check if username already exists
-		$check_query = "SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : "");
-		$check = $this->conn->query($check_query)->num_rows;
-
-		if ($this->capture_err())
-			return $this->capture_err();
-
-		if ($check > 0) {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Username already taken.";
-			return json_encode($resp);
-			exit;
+		$check_username = $this->conn->query("SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_username->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "Username already taken."]);
 		}
+
+		// Check if mobile number is already taken
+		$check_mobile = $this->conn->query("SELECT * FROM `users` WHERE `mobile_number` = '{$mobile_number}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_mobile->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "Mobile number '{$mobile_number}' is already registered."]);
+		}
+
+		// Check if first name and last name combination is unique
+		$check_name = $this->conn->query("SELECT * FROM `users` WHERE `firstname` = '{$firstname}' AND `lastname` = '{$lastname}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_name->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "The name '{$firstname} {$lastname}' is already registered."]);
+		}
+
+		$check_name = $this->conn->query("SELECT * FROM `users` WHERE `firstname` = '{$firstname}' AND `lastname` = '{$lastname}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_name->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "The name '{$firstname} {$lastname}' is already registered."]);
+		}
+
+		$check_email = $this->conn->query("SELECT * FROM `users` WHERE `email_address` = '{$email_address}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		if ($check_email->num_rows > 0) {
+			return json_encode(['status' => 'failed', 'msg' => "The name '{$email_address}' is already registered."]);
+		}
+
 
 		if (empty($id)) {
 			// Insert query - do not include `id`
@@ -1297,26 +1451,109 @@ class Master extends DBConnection
 		}
 
 		$save = $this->conn->query($sql);
-
 		if ($save) {
 			$cid = !empty($id) ? $id : $this->conn->insert_id;
 			$resp['status'] = 'success';
-			if (empty($id)) {
-				$this->settings->set_flashdata('success', "Account successfully created.");
-			} else {
-				$this->settings->set_flashdata('success', "Account successfully updated.");
-			}
+			$resp['msg'] = empty($id) ? "Account successfully created." : "Account successfully updated.";
 			$this->settings->set_userdata('login_type', 4);
 			foreach ($_POST as $k => $v) {
 				$this->settings->set_userdata($k, $v);
 			}
 			$this->settings->set_userdata('id', $cid);
+
+			// Send email and capture the response
+			$email_response = $this->send_email($firstname, $lastname, $email_address);
+			$email_result = json_decode($email_response, true);
+
+			if ($email_result['status'] === 'failed') {
+				$resp['status'] = 'warning'; // Change status to indicate email issue
+				$resp['msg'] .= " Email could not be sent. Please check the error log.";
+			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['err'] = $this->conn->error . "[{$sql}]";
 		}
 
 		return json_encode($resp);
+	}
+
+	function send_email($firstname, $lastname, $email_address)
+	{
+		$mail = new PHPMailer(true);
+
+		try {
+			// Server settings
+			$mail->isSMTP();
+			$mail->Host = 'smtp.gmail.com';
+			$mail->SMTPAuth = true;
+			$mail->Username = 'ojt.rms.group.4@gmail.com';
+			$mail->Password = 'hbpezpowjedwoctl'; // Consider using environment variables for sensitive data
+			$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Change this
+			$mail->Port = 465; // Use 587 if using ENCRYPTION_STARTTLS
+
+			// Recipients
+			$mail->setFrom('ojt.rms.group.4@gmail.com', 'Agri Farm Registration');
+			$mail->addAddress($email_address);
+
+			// Content
+			$mail->isHTML(true);
+			$mail->Subject = 'Registration Successful';
+			$mail->Body    = '
+    <html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+                padding: 20px;
+                line-height: 1.6;
+            }
+            .container {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #4CAF50; /* Green color for the heading */
+            }
+            p {
+                margin: 0 0 10px;
+            }
+            .footer {
+                margin-top: 20px;
+                font-size: 0.9em;
+                color: #666;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Welcome to Agri-Farm Registration</h1>
+          <p style="font-size: 20px; font-weight: bold; color: #333; margin: 0; padding: 10px; background-color: #f4f4f4; border-radius: 5px;">
+    Dear <span style="color: #4CAF50;">' . htmlspecialchars($firstname . ' ' . $lastname) . '</span>,
+</p>
+
+            <p>Thank you for registering with us! We are excited to have you join our community</p>
+            <p>If you have any questions or need assistance, feel free to reach out to us.</p>
+            <p>Best Regards,<br>Your Agri-Farm Support</p>
+        </div>
+        <div class="footer">
+            <p>This email was sent to you as a part of the registration process. If you did not register, please ignore this message.</p>
+        </div>
+    </body>
+    </html>
+';
+			$mail->AltBody = 'Your plain text body here.';
+
+			$mail->send();
+			return json_encode(['status' => 'success', 'msg' => "Registration successful. Email has been sent."]);
+		} catch (Exception $e) {
+			// Log the error to a file
+			error_log("Email could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, 'email_errors.log');
+			return json_encode(['status' => 'failed', 'msg' => "Email could not be sent. Please check the error log."]);
+		}
 	}
 }
 

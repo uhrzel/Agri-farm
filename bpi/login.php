@@ -103,6 +103,14 @@
               <input type="text" class="form-control" id="bpi-username" name="username" placeholder="Enter your username">
             </div>
             <div class="form-group">
+              <label for="mobile-number">Mobile Number</label>
+              <input type="text" class="form-control" id="mobile-number" name="mobile_number" placeholder="Enter your mobile number">
+            </div>
+            <div class="form-group">
+              <label for="email-address">Email Address</label>
+              <input type="email" class="form-control" id="email-address" name="email_address" placeholder="Enter your email address">
+            </div>
+            <div class="form-group">
               <label for="bpi-password">Bpi Password</label>
               <input type="password" class="form-control" id="bpi-password" name="password" placeholder="Enter your password">
             </div>
