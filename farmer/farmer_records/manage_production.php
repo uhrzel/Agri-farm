@@ -16,16 +16,25 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <label for="crops" class="control-label">Crops</label>
             <select id="crops" name="crops" class="form-control form-control-sm rounded-0" onchange="toggleCustomCropInput()">
                 <option value="">Select Crop</option>
-                <option value="Sweet Pepper(Emperor F1)" <?php echo isset($crops) && $crops == 'Sweet Pepper(Emperor F1)' ? 'selected' : ''; ?>>Sweet Pepper(Emperor F1)</option>
-                <option value="Ampalaya(Galaxy F1)" <?php echo isset($crops) && $crops == 'Ampalaya(Galaxy F1)' ? 'selected' : ''; ?>>Ampalaya(Galaxy F1)</option>
-                <option value="Hot Pepper(Vulcan F1)" <?php echo isset($crops) && $crops == 'Hot Pepper(Vulcan F1)' ? 'selected' : ''; ?>>Hot Pepper(Vulcan F1)</option>
-                <option value="Eggplant(Calixto F1)" <?php echo isset($crops) && $crops == 'Eggplant(Calixto F1)' ? 'selected' : ''; ?>>Eggplant(Calixto F1)</option>
-                <option value="String Beans(Makisig F1)" <?php echo isset($crops) && $crops == 'String Beans(Makisig F1)' ? 'selected' : ''; ?>>String Beans(Makisig F1)</option>
-                <option value="Hot Pepper(Lava F1)" <?php echo isset($crops) && $crops == 'Hot Pepper(Lava F1)' ? 'selected' : ''; ?>>Hot Pepper(Lava F1)</option>
-                <option value="Sweet Corn(Sweet Supreme)" <?php echo isset($crops) && $crops == 'Sweet Corn(Sweet Supreme)' ? 'selected' : ''; ?>>Sweet Corn(Sweet Supreme)</option>
+
+                <?php
+                // Fetch crops from the database
+                $query = "SELECT crops_name FROM crops WHERE delete_flag = 0"; // Adjust query based on your logic
+                $result = $conn->query($query); // Assuming $conn is your MySQLi or PDO connection
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $selected = isset($crops) && $crops == $row['crops_name'] ? 'selected' : '';
+                        echo "<option value='" . htmlspecialchars($row['crops_name']) . "' $selected>" . htmlspecialchars($row['crops_name']) . "</option>";
+                    }
+                }
+                ?>
+
+                <!-- Static 'Other' option -->
                 <option value="Other" <?php echo isset($crops) && $crops == 'Other' ? 'selected' : ''; ?>>Other</option>
             </select>
         </div>
+
         <div id="customCropContainer" class="form-group" style="display: none;">
             <label for="customCrop" class="control-label">Please specify the crop:</label>
             <input type="text" id="customCrop" name="customCrop" class="form-control form-control-sm rounded-0" value="<?php echo isset($crops) && $crops == 'Other' ? $crops : ''; ?>">

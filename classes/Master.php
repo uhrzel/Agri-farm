@@ -241,12 +241,12 @@ class Master extends DBConnection
 			$data .= " `crops_description`='" . addslashes(htmlentities($crops_description)) . "' ";
 		}
 
-		$check = $this->conn->query("SELECT * FROM `crops` WHERE `crops_name` = '{$crops_name}' " . (!empty($id) ? " AND id != {$id}" : ""))->num_rows;
+		$check = $this->conn->query("SELECT * FROM `crops` WHERE `crops_location` = '{$crops_location}' " . (!empty($id) ? " AND id != {$id}" : ""))->num_rows;
 		if ($this->capture_err())
 			return $this->capture_err();
 		if ($check > 0) {
 			$resp['status'] = 'failed';
-			$resp['msg'] = "Crops Name already exists.";
+			$resp['msg'] = "Crops Location already exists.";
 			return json_encode($resp);
 			exit;
 		}
@@ -907,13 +907,13 @@ class Master extends DBConnection
 		}
 
 		// Check if crops entry already exists
-		$check = $this->conn->query("SELECT * FROM `production_harvesting` WHERE `crops` = '{$cropValue}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
+		$check = $this->conn->query("SELECT * FROM `production_harvesting` WHERE `location` = '{$location}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
 
 		if ($this->capture_err()) return $this->capture_err();
 
 		if ($check > 0) {
 			$resp['status'] = 'failed';
-			$resp['msg'] = "Crops entry already exists.";
+			$resp['msg'] = "Crops location entry already exists.";
 			return json_encode($resp);
 		}
 
