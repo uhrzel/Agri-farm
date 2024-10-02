@@ -212,6 +212,82 @@ class Master extends DBConnection
 		}
 		return json_encode($resp);
 	}
+
+
+	function save_crops()
+	{
+		// Check if user is logged in
+		if (!isset($_SESSION['userdata']['id'])) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "User not logged in.";
+			return json_encode($resp);
+			exit;
+		}
+
+		$user_id = $_SESSION['userdata']['id'];
+
+		extract($_POST);
+		$data = "";
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id', 'crops_description'))) {
+				if (!empty($data)) $data .= ",";
+				$data .= " `{$k}`='{$v}' ";
+			}
+		}
+
+
+		if (isset($_POST['crops_description'])) {
+			if (!empty($data)) $data .= ",";
+			$data .= " `crops_description`='" . addslashes(htmlentities($crops_description)) . "' ";
+		}
+
+		$check = $this->conn->query("SELECT * FROM `crops` WHERE `crops_name` = '{$crops_name}' " . (!empty($id) ? " AND id != {$id}" : ""))->num_rows;
+		if ($this->capture_err())
+			return $this->capture_err();
+		if ($check > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Crops Name already exists.";
+			return json_encode($resp);
+			exit;
+		}
+
+		if (empty($id)) {
+			$data .= ", `user_id_crops` = '{$user_id}'";  // Include user_id in the insert
+			$sql = "INSERT INTO `crops` SET {$data}";
+		} else {
+			$sql = "UPDATE `crops` SET {$data} WHERE id = '{$id}' AND user_id_crops = '{$user_id}'"; // Ensure the category belongs to the user
+		}
+
+		// Execute SQL query
+		$save = $this->conn->query($sql);
+		if ($save) {
+			$resp['status'] = 'success';
+			if (empty($id))
+				$this->settings->set_flashdata('success', "New Crops successfully saved.");
+			else
+				$this->settings->set_flashdata('success', "Crops successfully updated.");
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = $this->conn->error . "[{$sql}]";
+		}
+
+		return json_encode($resp);
+	}
+
+	function delete_crops()
+	{
+		extract($_POST);
+		$del = $this->conn->query("UPDATE `crops` set delete_flag = 1 where id = '{$id}'");
+		if ($del) {
+			$resp['status'] = 'success';
+			$this->settings->set_flashdata('success', " Crops successfully deleted.");
+		} else {
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
+
 	function save_product()
 	{
 		// Check if user is logged in
@@ -1197,7 +1273,6 @@ class Master extends DBConnection
 		$_POST['required_documents'] = isset($_POST['required_documents']) ? json_encode($_POST['required_documents']) : null;
 		$_POST['additional_documents'] = isset($_POST['additional_documents']) ? json_encode($_POST['additional_documents']) : null;
 
-		// Construct the data for insertion/updating, excluding 'id' from INSERT query
 		$data = "";
 		foreach ($_POST as $k => $v) {
 			if (!in_array($k, array('id'))) {
@@ -1209,19 +1284,19 @@ class Master extends DBConnection
 			}
 		}
 
-		// Check if username is already taken
+
 		$check_username = $this->conn->query("SELECT * FROM `users` WHERE `username` = '{$username}'" . (!empty($id) ? " AND id != {$id}" : ""));
 		if ($check_username->num_rows > 0) {
 			return json_encode(['status' => 'failed', 'msg' => "Username already taken."]);
 		}
 
-		// Check if mobile number is already taken
+
 		$check_mobile = $this->conn->query("SELECT * FROM `users` WHERE `mobile_number` = '{$mobile_number}'" . (!empty($id) ? " AND id != {$id}" : ""));
 		if ($check_mobile->num_rows > 0) {
 			return json_encode(['status' => 'failed', 'msg' => "Mobile number '{$mobile_number}' is already registered."]);
 		}
 
-		// Check if first name and last name combination is unique
+
 		$check_name = $this->conn->query("SELECT * FROM `users` WHERE `firstname` = '{$firstname}' AND `lastname` = '{$lastname}'" . (!empty($id) ? " AND id != {$id}" : ""));
 		if ($check_name->num_rows > 0) {
 			return json_encode(['status' => 'failed', 'msg' => "The name '{$firstname} {$lastname}' is already registered."]);
@@ -1237,8 +1312,6 @@ class Master extends DBConnection
 			return json_encode(['status' => 'failed', 'msg' => "The name '{$email_address}' is already registered."]);
 		}
 
-
-		// Insert query
 		$insert_query = "INSERT INTO `users` SET {$data}";
 		if ($this->conn->query($insert_query)) {
 			// Registration successful, now send the email
@@ -1572,6 +1645,12 @@ switch ($action) {
 		break;
 	case 'delete_category':
 		echo $Master->delete_category();
+		break;
+	case 'save_crops':
+		echo $Master->save_crops();
+		break;
+	case 'delete_crops':
+		echo $Master->delete_crops();
 		break;
 		/* 	case 'save_sub_category':
 		echo $Master->save_sub_category();
