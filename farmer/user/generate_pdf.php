@@ -6,6 +6,11 @@ use setasign\Fpdi\Tcpdf\Fpdi;
 
 if (isset($_POST['id'])) {
   $user = $conn->query("SELECT * FROM users WHERE id = " . $_POST['id'])->fetch_assoc();
+  /* 
+
+  $userproduction = $conn->query("SELECT * FROM production_harvesting  WHERE user_id = " . $_POST['id'])->fetch_assoc();
+ */
+
 
   if ($user) {
     // Create a new PDF instance
@@ -96,9 +101,13 @@ if (isset($_POST['id'])) {
     $pdf->SetXY(160, 103);
     $pdf->Write(0, $user['province3']);
 
+
+    //proodution and harvesting
+    /*     $pdf->SetXY(25, 120);
+    $pdf->Write(0, $userproduction['crops']); */
+
     $pdf->SetXY(18, 127);
     $pdf->Write(0, $user['crop']);
-
 
     $pdf->SetXY(60, 127);
     $pdf->Write(0, $user['variety']);
