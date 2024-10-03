@@ -35,6 +35,7 @@
                             <th>Hectarage</th>
                             <th>Estimated Harvest</th>
                             <th>Location</th>
+                            <th>Plat</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -58,6 +59,7 @@
                                 <td><?php echo htmlspecialchars($row['hectarage']); ?></td>
                                 <td><?php echo htmlspecialchars($row['harvest_kg']); ?></td>
                                 <td><?php echo htmlspecialchars($row['location']); ?></td>
+                                <td><?php echo htmlspecialchars($row['plat']); ?></td>
                                 <td align="center">
                                     <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
                                         Action

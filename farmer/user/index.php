@@ -83,15 +83,42 @@ foreach ($user->fetch_array() as $k => $v) {
 					<input type="text" name="mobile_number" id="mobile_number" class="form-control" value="<?php echo isset($meta['mobile_number']) ? $meta['mobile_number'] : '' ?>">
 				</div>
 				<div class="form-group">
-					<label for="hectarage_farm_size">Farm Size (Hectarage)</label>
+					<label for="hectarage_farm_size">Farm Size (Hectarage) 1</label>
 					<input type="text" name="hectarage_farm_size" id="hectarage_farm_size" class="form-control" value="<?php echo isset($meta['hectarage_farm_size']) ? $meta['hectarage_farm_size'] : '' ?>">
 				</div>
 				<div class="form-group">
-					<label>Address</label>
+					<label>Address 1</label>
 					<input type="text" name="street" class="form-control" placeholder="Street" value="<?php echo isset($meta['street']) ? $meta['street'] : '' ?>">
 					<input type="text" name="barangay" class="form-control" placeholder="Barangay" value="<?php echo isset($meta['barangay']) ? $meta['barangay'] : '' ?>">
 					<input type="text" name="city" class="form-control" placeholder="City" value="<?php echo isset($meta['city']) ? $meta['city'] : '' ?>">
 					<input type="text" name="province" class="form-control" placeholder="Province" value="<?php echo isset($meta['province']) ? $meta['province'] : '' ?>">
+				</div>
+
+
+				<div class="form-group">
+					<label for="hectarage_farm_size2">Farm Size (Hectarage) 2</label>
+					<input type="text" name="hectarage_farm_size2" id="hectarage_farm_size" class="form-control" value="<?php echo isset($meta['hectarage_farm_size2']) ? $meta['hectarage_farm_size2'] : '' ?>">
+				</div>
+				<div class="form-group">
+					<label>Address 2</label>
+					<input type="text" name="street2" class="form-control" placeholder="Street" value="<?php echo isset($meta['street2']) ? $meta['street2'] : '' ?>">
+					<input type="text" name="barangay2" class="form-control" placeholder="Barangay" value="<?php echo isset($meta['barangay2']) ? $meta['barangay2'] : '' ?>">
+					<input type="text" name="city2" class="form-control" placeholder="City" value="<?php echo isset($meta['city2']) ? $meta['city2'] : '' ?>">
+					<input type="text" name="province2" class="form-control" placeholder="Province" value="<?php echo isset($meta['province2']) ? $meta['province2'] : '' ?>">
+				</div>
+
+
+
+				<div class="form-group">
+					<label for="hectarage_farm_size3">Farm Size (Hectarage) 3</label>
+					<input type="text" name="hectarage_farm_size3" id="hectarage_farm_size3" class="form-control" value="<?php echo isset($meta['hectarage_farm_size3']) ? $meta['hectarage_farm_size3'] : '' ?>">
+				</div>
+				<div class="form-group">
+					<label>Address 3</label>
+					<input type="text" name="street3" class="form-control" placeholder="Street" value="<?php echo isset($meta['street3']) ? $meta['street3'] : '' ?>">
+					<input type="text" name="barangay3" class="form-control" placeholder="Barangay" value="<?php echo isset($meta['barangay3']) ? $meta['barangay3'] : '' ?>">
+					<input type="text" name="city3" class="form-control" placeholder="City" value="<?php echo isset($meta['city3']) ? $meta['city3'] : '' ?>">
+					<input type="text" name="province3" class="form-control" placeholder="Province" value="<?php echo isset($meta['province3']) ? $meta['province3'] : '' ?>">
 				</div>
 
 				<!-- Crops Applied for Certification -->

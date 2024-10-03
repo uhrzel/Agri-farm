@@ -958,42 +958,35 @@ class Master extends DBConnection
 	{
 		extract($_POST);
 		$data = "";
+
+		// Combine crops_applied_amount and crops_applied_unit to form the full crops_applied value
+		if (isset($crops_applied_amount) && isset($crops_applied_unit)) {
+			$crops_applied = $crops_applied_amount . ' ' . $crops_applied_unit;
+		}
+
 		foreach ($_POST as $k => $v) {
-			if (!in_array($k, array('id', 'crops_applied'))) {
+			// Skip id, crops_applied_amount, and crops_applied_unit in the loop
+			if (!in_array($k, array('id', 'crops_applied_amount', 'crops_applied_unit'))) {
 				if (!empty($data)) $data .= ",";
 				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
 			}
 		}
 
-		// Add crops_applied if it's not already included in the loop
-		if (isset($_POST['crops_applied']) && !empty($crops_applied)) {
+		// Add the combined crops_applied value to the data string
+		if (!empty($crops_applied)) {
 			if (!empty($data)) $data .= ",";
 			$data .= " `crops_applied`='" . $this->conn->real_escape_string($crops_applied) . "' ";
 		}
 
+		// Handle user_id if session data is available
 		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
 
-
-		// Add the user_id to the data for insertion
+		// Add the user_id to the data for new entries
 		if (empty($id)) {
-			$data .= ", `user_id` = '{$user_id}' "; // Add user_id for new entries
+			$data .= ", `user_id` = '{$user_id}' ";
 		}
 
-		// Check if an entry with the same brand already exists
-		$check = $this->conn->query("SELECT * FROM `inorganic_fertilizers` WHERE `brand` = '{$brand}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
-		if ($this->capture_err()) {
-			return $this->capture_err();
-		}
-
-
-		if ($check > 0) {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Brand entry already exists.";
-			return json_encode($resp);
-			exit;
-		}
-
-		// Insert or update depending on whether an ID is provided
+		// Insert or update based on the presence of the ID
 		if (empty($id)) {
 			$sql = "INSERT INTO `inorganic_fertilizers` SET {$data} ";
 			$save = $this->conn->query($sql);
@@ -1002,6 +995,7 @@ class Master extends DBConnection
 			$save = $this->conn->query($sql);
 		}
 
+		// Prepare the response
 		if ($save) {
 			$resp['status'] = 'success';
 			if (empty($id)) {
@@ -1017,6 +1011,7 @@ class Master extends DBConnection
 		// Return the response as JSON
 		return json_encode($resp);
 	}
+
 
 	function delete_inorganic_fertilizers()
 	{
@@ -1035,19 +1030,26 @@ class Master extends DBConnection
 	{
 		extract($_POST);
 		$data = "";
+
+
+
+		if (isset($crops_applied_amount) && isset($crops_applied_unit)) {
+			$crops_applied = $crops_applied_amount . ' ' . $crops_applied_unit;
+		}
+
 		foreach ($_POST as $k => $v) {
-			if (!in_array($k, array('id', 'crops_applied'))) {
+			// Skip id, crops_applied_amount, and crops_applied_unit in the loop
+			if (!in_array($k, array('id', 'crops_applied_amount', 'crops_applied_unit'))) {
 				if (!empty($data)) $data .= ",";
 				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
 			}
 		}
 
-		// Add crops_applied if it's not already included in the loop
-		if (isset($_POST['crops_applied']) && !empty($crops_applied)) {
+		// Add the combined crops_applied value to the data string
+		if (!empty($crops_applied)) {
 			if (!empty($data)) $data .= ",";
 			$data .= " `crops_applied`='" . $this->conn->real_escape_string($crops_applied) . "' ";
 		}
-
 		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
 
 
@@ -1057,7 +1059,7 @@ class Master extends DBConnection
 		}
 
 		// Check if an entry with the same brand already exists
-		$check = $this->conn->query("SELECT * FROM `organic_fertilizers` WHERE `brand` = '{$brand}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
+		/* 	$check = $this->conn->query("SELECT * FROM `organic_fertilizers` WHERE `brand` = '{$brand}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
 		if ($this->capture_err()) {
 			return $this->capture_err();
 		}
@@ -1068,7 +1070,7 @@ class Master extends DBConnection
 			$resp['msg'] = "Brand entry already exists.";
 			return json_encode($resp);
 			exit;
-		}
+		} */
 
 		// Insert or update depending on whether an ID is provided
 		if (empty($id)) {
@@ -1108,68 +1110,67 @@ class Master extends DBConnection
 		}
 		return json_encode($resp);
 	}
+
 	function save_pesticides()
 	{
 		extract($_POST);
 		$data = "";
+
+		// Combine crops_applied_amount and crops_applied_unit to form crops_applied
+		if (isset($crops_applied_amount) && isset($crops_applied_unit)) {
+			$crops_applied = $crops_applied_amount . ' ' . $crops_applied_unit;
+		}
+
+		// Build the $data string by excluding specific fields
 		foreach ($_POST as $k => $v) {
-			if (!in_array($k, array('id', 'brand_name'))) {
+			if (!in_array($k, array('id', 'brand_name', 'crops_applied_amount', 'crops_applied_unit'))) {
 				if (!empty($data)) $data .= ",";
 				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
 			}
 		}
 
-		if (isset($_POST['brand_name']) && !empty($crops_applied)) {
+		// Append brand_name and crops_applied if they are set
+		if (isset($brand_name)) {
 			if (!empty($data)) $data .= ",";
 			$data .= " `brand_name`='" . $this->conn->real_escape_string($brand_name) . "' ";
-
-			$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
-
-
-			// Add the user_id to the data for insertion
-			if (empty($id)) {
-				$data .= ", `user_id` = '{$user_id}' "; // Add user_id for new entries
-			}
 		}
 
-		// Check if an entry with the same brand already exists
-		$check = $this->conn->query("SELECT * FROM `pesticides` WHERE `brand_name` = '{$brand_name}' " . (!empty($id) ? " AND id != {$id} " : "") . " ")->num_rows;
-		if ($this->capture_err()) {
-			return $this->capture_err();
+		if (!empty($crops_applied)) {
+			if (!empty($data)) $data .= ",";
+			$data .= " `crops_applied`='" . $this->conn->real_escape_string($crops_applied) . "' ";
 		}
 
-
-		if ($check > 0) {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Brand Name entry already exists.";
-			return json_encode($resp);
-			exit;
-		}
-
-		// Insert or update depending on whether an ID is provided
+		// Handle user_id if session data is available
+		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
 		if (empty($id)) {
-			$sql = "INSERT INTO `pesticides` SET {$data} ";
+			$data .= ", `user_id` = '{$user_id}' ";
+		}
+
+		// Insert or update based on the presence of the ID
+		if (empty($id)) {
+			$sql = "INSERT INTO `pesticides` SET {$data}";
 			$save = $this->conn->query($sql);
 		} else {
-			$sql = "UPDATE `pesticides` SET {$data} WHERE id = '{$id}' ";
+			$sql = "UPDATE `pesticides` SET {$data} WHERE id = '{$id}'";
 			$save = $this->conn->query($sql);
 		}
 
+		// Return response based on save result
 		if ($save) {
 			$resp['status'] = 'success';
 			if (empty($id)) {
 				$this->settings->set_flashdata('success', "Pesticides entry successfully saved.");
 			} else {
-				$this->settings->set_flashdata('success', "Pesticides Fertilizer entry successfully updated.");
+				$this->settings->set_flashdata('success', "Pesticides entry successfully updated.");
 			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['err'] = $this->conn->error . "[{$sql}]";
 		}
 
-		// Return the response as JSON
 		return json_encode($resp);
 	}
+
 
 	function delete_pesticides()
 	{

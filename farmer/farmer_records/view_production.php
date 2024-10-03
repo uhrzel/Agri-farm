@@ -33,6 +33,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <dd class="pl-4"><?= isset($harvest_kg) ? $harvest_kg : "N/A" ?></dd>
         <dt class="muted">Location</dt>
         <dd class="pl-4"><?= isset($location) ? $location : "N/A" ?></dd>
+        <dt class="muted">Plat</dt>
+        <dd class="pl-4"><?= isset($plat) ? $plat : "N/A" ?></dd>
 
     </dl>
     <div class="clear-fix mb-3"></div>

@@ -57,6 +57,45 @@ if (isset($_POST['id'])) {
     $pdf->SetXY(160, 89);
     $pdf->Write(0, $user['province']);
 
+
+    //2
+    $pdf->SetXY(25, 96.5);
+    $pdf->Write(0, $user['hectarage_farm_size2']);
+
+
+    $pdf->SetXY(53, 96.5);
+    $pdf->Write(0, $user['street2']);
+
+
+    $pdf->SetXY(87, 96.5);
+    $pdf->Write(0, $user['barangay2']);
+
+    $pdf->SetXY(125, 96.5);
+    $pdf->Write(0, $user['city2']);
+
+
+    $pdf->SetXY(160, 96.5);
+    $pdf->Write(0, $user['province2']);
+
+    //3
+
+    $pdf->SetXY(25, 103);
+    $pdf->Write(0, $user['hectarage_farm_size3']);
+
+    $pdf->SetXY(53, 103);
+    $pdf->Write(0, $user['street3']);
+
+
+    $pdf->SetXY(87, 103);
+    $pdf->Write(0, $user['barangay3']);
+
+    $pdf->SetXY(125, 103);
+    $pdf->Write(0, $user['city3']);
+
+
+    $pdf->SetXY(160, 103);
+    $pdf->Write(0, $user['province3']);
+
     $pdf->SetXY(18, 127);
     $pdf->Write(0, $user['crop']);
 
@@ -198,7 +237,7 @@ if (isset($_POST['id'])) {
     }
 
     if (in_array(
-      'Quality Management System/Internal Control System',
+      'Manual of Procedure for outgrowership scheme',
       $additional_documents
     )) {
       $pdf->SetXY(109.5, 172);
@@ -210,7 +249,7 @@ if (isset($_POST['id'])) {
     $template = $pdf->importPage(2);
     $pdf->useTemplate($template);
 
-    $pdf->Output('farmer_details.pdf', 'D');
+    $pdf->Output('farmer_details.pdf', 'I');
   } else {
     echo "No user found with this ID.";
   }

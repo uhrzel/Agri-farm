@@ -33,9 +33,20 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
         <!-- Crops Applied -->
         <div class="form-group">
-            <label for="crops_applied" class="control-label">Crops Applied</label>
-            <input type="text" name="crops_applied" id="crops_applied" class="form-control form-control-sm rounded-0" value="<?php echo isset($crops_applied) ? $crops_applied : ''; ?>" required />
+            <label for="crops_applied" class="control-label">Crops Applied (e.g., 100 liters or 500 ml)</label>
+            <div class="input-group">
+                <!-- Input for amount -->
+                <input type="text" name="crops_applied_amount" id="crops_applied_amount" class="form-control form-control-sm rounded-0" value="<?php echo isset($crops_applied_amount) ? $crops_applied_amount : ''; ?>" placeholder="Enter amount" required />
+
+                <!-- Dropdown for unit -->
+                <select name="crops_applied_unit" id="crops_applied_unit" class="form-control form-control-sm rounded-0" required>
+                    <option value="liters" <?php echo (isset($crops_applied_unit) && $crops_applied_unit == 'liters') ? 'selected' : ''; ?>>Liters</option>
+                    <option value="ml" <?php echo (isset($crops_applied_unit) && $crops_applied_unit == 'ml') ? 'selected' : ''; ?>>ml</option>
+                </select>
+            </div>
         </div>
+
+
 
         <!-- Frequency of Application -->
         <div class="form-group">

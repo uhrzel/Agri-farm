@@ -148,7 +148,7 @@
               <input type="text" class="form-control" id="mobile-number" name="mobile_number" placeholder="Enter your mobile number">
             </div>
 
-            <label>Farm Size and Address</label>
+            <label>Farm Size and Address 1</label>
             <div class="form-group">
               <label for="hectarage-farm-size">Hectarage (Farm Size)</label>
               <input type="number" class="form-control" id="hectarage-farm-size" name="hectarage_farm_size" placeholder="Enter farm size in hectares">
@@ -168,6 +168,51 @@
             <div class="form-group">
               <label for="province">Province</label>
               <input type="text" class="form-control" id="province" name="province" placeholder="Enter province">
+            </div>
+
+
+            <label>Farm Size and Address 2</label>
+            <div class="form-group">
+              <label for="hectarage-farm-size2">Hectarage (Farm Size)</label>
+              <input type="number" class="form-control" id="hectarage-farm-size2" name="hectarage_farm_size2" placeholder="Enter farm size in hectares">
+            </div>
+            <div class="form-group">
+              <label for="street2">Street</label>
+              <input type="text" class="form-control" id="street2" name="street2" placeholder="Enter street">
+            </div>
+            <div class="form-group">
+              <label for="barangay2">Barangay</label>
+              <input type="text" class="form-control" id="barangay2" name="barangay2" placeholder="Enter barangay">
+            </div>
+            <div class="form-group">
+              <label for="city2">City</label>
+              <input type="text" class="form-control" id="city2" name="city2" placeholder="Enter city">
+            </div>
+            <div class="form-group">
+              <label for="province2">Province</label>
+              <input type="text" class="form-control" id="province2" name="province2" placeholder="Enter province">
+            </div>
+
+            <label>Farm Size and Address 3</label>
+            <div class="form-group">
+              <label for="hectarage-farm-size3">Hectarage (Farm Size)</label>
+              <input type="number" class="form-control" id="hectarage-farm-size3" name="hectarage_farm_size3" placeholder="Enter farm size in hectares">
+            </div>
+            <div class="form-group">
+              <label for="street3">Street</label>
+              <input type="text" class="form-control" id="street3" name="street3" placeholder="Enter street">
+            </div>
+            <div class="form-group">
+              <label for="barangay3">Barangay</label>
+              <input type="text" class="form-control" id="barangay3" name="barangay3" placeholder="Enter barangay">
+            </div>
+            <div class="form-group">
+              <label for="city3">City</label>
+              <input type="text" class="form-control" id="city3" name="city3" placeholder="Enter city">
+            </div>
+            <div class="form-group">
+              <label for="province3">Province</label>
+              <input type="text" class="form-control" id="province3" name="province3" placeholder="Enter province">
             </div>
 
             <label>Crops Applied for PhilGap Certification</label>

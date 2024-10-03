@@ -120,6 +120,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <label for="location" class="control-label">Location</label>
             <input type="text" name="location" id="location" class="form-control form-control-sm rounded-0" value="<?php echo isset($location) ? $location : ''; ?>" />
         </div>
+        <div class="form-group">
+            <label for="plat" class="control-label">Plat</label>
+            <input type="text" name="plat" id="plat" class="form-control form-control-sm rounded-0" value="<?php echo isset($plat) ? $plat : ''; ?>" />
+        </div>
     </form>
 </div>
 <script>
