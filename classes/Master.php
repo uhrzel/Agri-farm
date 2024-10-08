@@ -869,6 +869,9 @@ class Master extends DBConnection
 		// Determine the crop value
 		$cropValue = isset($crops) && $crops == 'Other' ? addslashes(htmlentities($customCrop)) : addslashes(htmlentities($crops));
 
+		// Determine the hectarage value
+		$hectarageValue = isset($hectarage) && $hectarage == 'custom' ? addslashes(htmlentities($customHectarage)) : addslashes(htmlentities($hectarage));
+
 		// Concatenate the selected months and days into a single string
 		$cropCycle = '';
 		if (!empty($crop_cycle_month) && $crop_cycle_month > 0) {
@@ -887,8 +890,9 @@ class Master extends DBConnection
 			$data .= " `crop_cycle`='" . $this->conn->real_escape_string($cropCycle) . "' ";
 		}
 
+		// Process the form data
 		foreach ($_POST as $k => $v) {
-			if (!in_array($k, array('id', 'crops', 'customCrop', 'crop_cycle_month', 'crop_cycle_day'))) {
+			if (!in_array($k, array('id', 'crops', 'customCrop', 'hectarage', 'customHectarage', 'crop_cycle_month', 'crop_cycle_day'))) {
 				if (!empty($data)) $data .= ",";
 				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
 			}
@@ -898,6 +902,12 @@ class Master extends DBConnection
 		if (!empty($cropValue)) {
 			if (!empty($data)) $data .= ",";
 			$data .= " `crops`='{$cropValue}' ";
+		}
+
+		// Store the hectarage value determined above
+		if (!empty($hectarageValue)) {
+			if (!empty($data)) $data .= ",";
+			$data .= " `hectarage`='{$hectarageValue}' ";
 		}
 
 		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
@@ -940,77 +950,6 @@ class Master extends DBConnection
 		return json_encode($resp);
 	}
 
-
-	function delete_production()
-	{
-		extract($_POST);
-		$del = $this->conn->query("UPDATE `production_harvesting` set delete_flag = 1 where id = '{$id}'");
-		if ($del) {
-			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success', " Product and Harvesting Details Successfully Deleted.");
-		} else {
-			$resp['status'] = 'failed';
-			$resp['error'] = $this->conn->error;
-		}
-		return json_encode($resp);
-	}
-	function save_inorganic_fertilizers()
-	{
-		extract($_POST);
-		$data = "";
-
-		// Combine crops_applied_amount and crops_applied_unit to form the full crops_applied value
-		if (isset($crops_applied_amount) && isset($crops_applied_unit)) {
-			$crops_applied = $crops_applied_amount . ' ' . $crops_applied_unit;
-		}
-
-		foreach ($_POST as $k => $v) {
-			// Skip id, crops_applied_amount, and crops_applied_unit in the loop
-			if (!in_array($k, array('id', 'crops_applied_amount', 'crops_applied_unit'))) {
-				if (!empty($data)) $data .= ",";
-				$data .= " `{$k}`='" . $this->conn->real_escape_string($v) . "' ";
-			}
-		}
-
-		// Add the combined crops_applied value to the data string
-		if (!empty($crops_applied)) {
-			if (!empty($data)) $data .= ",";
-			$data .= " `crops_applied`='" . $this->conn->real_escape_string($crops_applied) . "' ";
-		}
-
-		// Handle user_id if session data is available
-		$user_id = isset($_SESSION['userdata']['id']) ? $_SESSION['userdata']['id'] : null;
-
-		// Add the user_id to the data for new entries
-		if (empty($id)) {
-			$data .= ", `user_id` = '{$user_id}' ";
-		}
-
-		// Insert or update based on the presence of the ID
-		if (empty($id)) {
-			$sql = "INSERT INTO `inorganic_fertilizers` SET {$data} ";
-			$save = $this->conn->query($sql);
-		} else {
-			$sql = "UPDATE `inorganic_fertilizers` SET {$data} WHERE id = '{$id}' ";
-			$save = $this->conn->query($sql);
-		}
-
-		// Prepare the response
-		if ($save) {
-			$resp['status'] = 'success';
-			if (empty($id)) {
-				$this->settings->set_flashdata('success', "New Inorganic Fertilizer entry successfully saved.");
-			} else {
-				$this->settings->set_flashdata('success', "Inorganic Fertilizer entry successfully updated.");
-			}
-		} else {
-			$resp['status'] = 'failed';
-			$resp['err'] = $this->conn->error . "[{$sql}]";
-		}
-
-		// Return the response as JSON
-		return json_encode($resp);
-	}
 
 
 	function delete_inorganic_fertilizers()

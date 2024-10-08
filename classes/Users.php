@@ -138,10 +138,18 @@ class Users extends DBConnection
 			}
 		}
 
+		// Handle missing checkbox fields by setting them to an empty array if not present
+		if (!isset($_POST['type_application'])) {
+			$_POST['type_application'] = [];
+		}
+		if (!isset($_POST['required_documents'])) {
+			$_POST['required_documents'] = [];
+		}
+
+		// Convert checkbox arrays to JSON format before saving
 		foreach ($_POST as $k => $v) {
-			// Handle checkbox arrays (e.g. additional_requirements, required_documents)
 			if (is_array($v)) {
-				$v = json_encode($v); // Convert the array to JSON format before saving
+				$v = json_encode($v);
 			}
 
 			if (!in_array($k, array('id', 'password'))) {
@@ -150,12 +158,14 @@ class Users extends DBConnection
 			}
 		}
 
+		// Handle password hashing and update
 		if (!empty($password) && !empty($id)) {
 			$password = md5($password);
 			if (!empty($data)) $data .= " , ";
 			$data .= " `password` = '{$password}' ";
 		}
 
+		// Insert or update logic
 		if (empty($id)) {
 			$qry = $this->conn->query("INSERT INTO users SET {$data}");
 			if ($qry) {
@@ -167,7 +177,6 @@ class Users extends DBConnection
 						$this->settings->set_userdata($k, $v);
 					}
 				}
-				// Handle file upload and avatar update
 				$this->handle_file_upload($id);
 				return 1;
 			} else {
@@ -183,7 +192,6 @@ class Users extends DBConnection
 						$this->settings->set_userdata($k, $v);
 					}
 				}
-				// Handle file upload and avatar update
 				$this->handle_file_upload($id);
 				return 1;
 			} else {
@@ -191,6 +199,7 @@ class Users extends DBConnection
 			}
 		}
 	}
+
 
 
 	private function handle_file_upload($id)

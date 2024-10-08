@@ -23,12 +23,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <dd class="pl-4"><?= isset($crops) ? $crops : "N/A" ?></dd>
         <dt class="muted">Crops cycle</dt>
         <dd class="pl-4"><?= isset($crop_cycle) ? $crop_cycle : "N/A" ?></dd>
+        <dt class="muted">Variety</dt>
+        <dd class="pl-4"><?= isset($variety) ? $variety : "N/A" ?></dd>
         <dt class="muted">Date Planted</dt>
         <dd class="pl-4"><?= isset($date_planted) ? $date_planted : "N/A" ?></dd>
         <dt class="muted">Date Harvested</dt>
         <dd class="pl-4"><?= isset($date_harvest) ? $date_harvest : "N/A" ?></dd>
         <dt class="muted">Hectarage</dt>
         <dd class="pl-4"><?= isset($hectarage) ? $hectarage : "N/A" ?></dd>
+        <dt class="muted">Area</dt>
+        <dd class="pl-4"><?= isset($area) ? $area : "N/A" ?></dd>
         <dt class="muted">Estimated Harvest (kg)</dt>
         <dd class="pl-4"><?= isset($harvest_kg) ? $harvest_kg : "N/A" ?></dd>
         <dt class="muted">Location</dt>

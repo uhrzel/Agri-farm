@@ -76,12 +76,19 @@
             <div class="col-8">
               <a href="#" id="signup-link">Sign Up</a>
             </div>
-            <!-- /.col -->
             <div class="col-4">
               <button type="submit" class="btn btn-primary btn-block">Sign In</button>
             </div>
             <!-- /.col -->
           </div>
+
+          <div class="row mt-2">
+            <div class="col-12 text-center">
+              <a href="#" id="forgot-password-link" data-toggle="modal" data-target="#forgotPasswordModal">Forgot Password?</a>
+
+            </div>
+          </div>
+
         </form>
         <!-- /.social-auth-links -->
 
@@ -272,6 +279,9 @@ accreditation of farmer/grower, sanctions, etc."> Manual of Procedure for outgro
       </div>
     </div>
   </div>
+
+
+
 
   <!-- jQuery -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">

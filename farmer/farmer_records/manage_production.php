@@ -65,13 +65,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </select>
 
             <!-- Dropdown for selecting the number of days -->
-            <select id="day_select" name="crop_cycle_day" class="form-control form-control-sm rounded-0 mt-2" onchange="calculateHarvestDate()">
-                <option value="">Select Number of Days</option>
-                <!-- Generate day options from 1 to 31 -->
-                <?php for ($i = 1; $i <= 31; $i++): ?>
-                    <option value="<?php echo $i; ?>"><?php echo $i; ?> Day(s)</option>
-                <?php endfor; ?>
-            </select>
+            <input type="text" name="variety" class="form-control form-control-sm rounded-0 mt-2" placeholder="Enter variety">
         </div>
 
         <div class="form-group">
@@ -107,10 +101,43 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
             }
         </script>
-
         <div class="form-group">
             <label for="hectarage" class="control-label">Hectarage</label>
-            <input type="text" name="hectarage" id="hectarage" class="form-control form-control-sm rounded-0" value="<?php echo isset($hectarage) ? $hectarage : ''; ?>" />
+            <select name="hectarage" id="hectarage" class="form-control form-control-sm rounded-0">
+                <option value="0.54 sqm" <?php echo (isset($hectarage) && $hectarage == '0.54 sqm') ? 'selected' : ''; ?>>0.54 sqm</option>
+                <option value="1.00 sqm" <?php echo (isset($hectarage) && $hectarage == '1.00 sqm') ? 'selected' : ''; ?>>1.00 sqm</option>
+                <option value="2.00 sqm" <?php echo (isset($hectarage) && $hectarage == '2.00 sqm') ? 'selected' : ''; ?>>2.00 sqm</option>
+                <option value="custom" <?php echo (isset($hectarage) && !in_array($hectarage, ['0.54 sqm', '1.00 sqm', '2.00 sqm'])) ? 'selected' : ''; ?>>Custom</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="customHectarageDiv" style="display: none;">
+            <label for="customHectarage" class="control-label">Custom Hectarage (sqm)</label>
+            <input type="text" name="customHectarage" id="customHectarage" class="form-control form-control-sm rounded-0" value="<?php echo isset($hectarage) && !in_array($hectarage, ['0.54 sqm', '1.00 sqm', '2.00 sqm']) ? $hectarage : ''; ?>" placeholder="Enter custom hectarage" />
+        </div>
+
+        <script>
+            document.getElementById('hectarage').addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    document.getElementById('customHectarageDiv').style.display = 'block';
+                } else {
+                    document.getElementById('customHectarageDiv').style.display = 'none';
+                    document.getElementById('customHectarage').value = ''; // Clear the custom input
+                }
+            });
+
+            // Show the custom field if it's already selected
+            window.onload = function() {
+                var selectedValue = document.getElementById('hectarage').value;
+                if (selectedValue === 'custom') {
+                    document.getElementById('customHectarageDiv').style.display = 'block';
+                }
+            };
+        </script>
+
+        <div class="form-group">
+            <label for="area" class="control-label">Area</label>
+            <input type="text" name="area" id="area" class="form-control form-control-sm rounded-0" value="<?php echo isset($area) ? $area : ''; ?>" />
         </div>
         <div class="form-group">
             <label for="harvest_kg" class="control-label">Estimated Harvest (kg)</label>

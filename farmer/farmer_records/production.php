@@ -30,9 +30,11 @@
                             <th>ID</th>
                             <th>Crops</th>
                             <th>Crop Cycle</th>
+                            <th>Variety</th>
                             <th>Date Planted</th>
                             <th>Date of Harvest</th>
                             <th>Hectarage</th>
+                            <th>Area</th>
                             <th>Estimated Harvest</th>
                             <th>Location</th>
                             <th>Plat</th>
@@ -54,9 +56,11 @@
                                 <td class="text-center"><?php echo $i++; ?></td>
                                 <td><?php echo htmlspecialchars($row['crops']); ?></td>
                                 <td><?php echo htmlspecialchars($row['crop_cycle']); ?></td>
+                                <td><?php echo htmlspecialchars($row['variety']); ?></td>
                                 <td><?php echo date("F j, Y", strtotime($row['date_planted'])); ?></td>
                                 <td><?php echo date("F j, Y", strtotime($row['date_harvest'])); ?></td>
                                 <td><?php echo htmlspecialchars($row['hectarage']); ?></td>
+                                <td><?php echo htmlspecialchars($row['area']); ?></td>
                                 <td><?php echo htmlspecialchars($row['harvest_kg']); ?></td>
                                 <td><?php echo htmlspecialchars($row['location']); ?></td>
                                 <td><?php echo htmlspecialchars($row['plat']); ?></td>
